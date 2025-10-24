@@ -8,30 +8,7 @@ import { Button } from "@/components/ui/button";
 import { SITE_CONFIG } from "@/lib/constants";
 import { useState, useEffect } from "react";
 import { useGitHubUser } from "@/hooks/useGitHub";
-
-const TypewriterText = ({
-  text,
-  delay = 0,
-}: {
-  text: string;
-  delay?: number;
-}) => {
-  const [displayedText, setDisplayedText] = useState("");
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (currentIndex < text.length) {
-        setDisplayedText((prev) => prev + text[currentIndex]);
-        setCurrentIndex((prev) => prev + 1);
-      }
-    }, delay + currentIndex * 50);
-
-    return () => clearTimeout(timeout);
-  }, [currentIndex, text, delay]);
-
-  return <span>{displayedText}</span>;
-};
+import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
 
 export function Hero() {
   const [mounted, setMounted] = useState(false);
@@ -146,13 +123,11 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <p className="text-muted-foreground text-lg mb-2 font-mono">
-                <TypewriterText text="Hi, I'm" />
-              </p>
+              <p className="text-muted-foreground text-lg mb-2">Hi, I&apos;m</p>
             </motion.div>
 
             <motion.h1
-              className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 bg-linear-to-r from-primary via-purple-500 to-accent bg-clip-text text-transparent"
+              className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 gradient-text"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
@@ -161,15 +136,21 @@ export function Hero() {
             </motion.h1>
 
             <motion.div
-              className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-foreground mb-4"
+              className="flex justify-center mb-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <span className="font-mono text-muted-foreground text-lg">$</span>{" "}
-              <TypewriterText
-                text="Full Stack Developer | AI/ML Enthusiast"
-                delay={500}
+              <TypewriterEffectSmooth
+                words={[
+                  { text: "Full", className: "text-primary" },
+                  { text: "Stack", className: "text-primary" },
+                  { text: "Developer", className: "text-foreground" },
+                  { text: "|", className: "text-muted-foreground" },
+                  { text: "AI/ML", className: "text-accent" },
+                  { text: "Enthusiast", className: "text-accent" },
+                ]}
+                className="text-2xl sm:text-3xl lg:text-4xl"
               />
             </motion.div>
 
@@ -194,7 +175,7 @@ export function Hero() {
               Next.js, and SAP.
             </motion.p>
 
-            {/* CTA Buttons */}
+            {/* CTA Buttons - Enhanced */}
             <motion.div
               className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12"
               initial={{ opacity: 0, y: 20 }}
@@ -204,11 +185,9 @@ export function Hero() {
               <Button
                 size="lg"
                 onClick={() => {
-                  document
-                    .querySelector("#projects")
-                    ?.scrollIntoView({ behavior: "smooth" });
+                  window.location.href = "/projects";
                 }}
-                className="group relative overflow-hidden"
+                className="group relative overflow-hidden shadow-lg hover:shadow-primary/50 transition-all"
               >
                 <span className="relative z-10">View Projects</span>
                 <motion.div
@@ -219,7 +198,12 @@ export function Hero() {
                 />
               </Button>
 
-              <Button size="lg" variant="outline" asChild className="group">
+              <Button
+                size="lg"
+                variant="outline"
+                asChild
+                className="group hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
+              >
                 <a href="/resume.pdf" download>
                   <Download className="mr-2 h-4 w-4 group-hover:translate-y-1 transition-transform" />
                   Download Resume

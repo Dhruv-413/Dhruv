@@ -27,7 +27,7 @@ interface ProjectCardProps {
   onClick: () => void;
 }
 
-const iconMap: Record<string, any> = {
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   database: Database,
   search: Search,
   users: Users,
@@ -77,7 +77,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
 
         {/* Category gradient line */}
         <div
-          className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${
+          className={`absolute top-0 left-0 right-0 h-1 bg-linear-to-r ${
             categoryColors[project.category]
           }`}
         />
@@ -90,10 +90,34 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
             {project.description}
           </p>
 
-          {/* Category badge */}
-          <span className="inline-block px-2 py-1 bg-secondary/10 text-secondary text-xs rounded-md">
-            {project.category}
-          </span>
+          <div className="flex items-center gap-2 flex-wrap">
+            {/* Category badge */}
+            <span className="inline-block px-2 py-1 bg-secondary/10 text-secondary text-xs rounded-md">
+              {project.category}
+            </span>
+
+            {/* Status badges */}
+            {project.badges?.map((badge, idx) => (
+              <span
+                key={idx}
+                className={`
+                  ${badge.type === "live" ? "badge-live" : ""}
+                  ${badge.type === "deployed" ? "badge-deployed" : ""}
+                  ${badge.type === "performance" ? "badge-performance" : ""}
+                  ${
+                    badge.type === "build"
+                      ? "inline-flex items-center gap-1.5 px-3 py-1.5 bg-cyan-500/10 text-cyan-500 border border-cyan-500/20 rounded-full text-xs font-semibold"
+                      : ""
+                  }
+                `}
+              >
+                {badge.type === "live" && (
+                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                )}
+                {badge.value}
+              </span>
+            ))}
+          </div>
         </div>
 
         {/* Metrics */}
@@ -103,7 +127,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
             return (
               <div
                 key={idx}
-                className="text-center p-2 bg-card/50 rounded-lg border border-border"
+                className="text-center p-2 bg-card/50 rounded-lg border border-border hover-glow"
               >
                 <Icon className="h-4 w-4 mx-auto mb-1 text-primary" />
                 <div className="text-sm font-semibold">{metric.value}</div>
@@ -122,7 +146,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
             return (
               <div
                 key={idx}
-                className="flex items-center gap-1 px-2 py-1 bg-muted rounded-md"
+                className="flex items-center gap-1 px-2 py-1 bg-muted rounded-md hover:bg-muted/80 transition-colors"
                 title={tech}
               >
                 {icon}
@@ -137,45 +161,46 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
           )}
         </div>
 
-        {/* Links */}
-        <div className="flex gap-2 pt-4 border-t border-border">
-          {project.links.github && (
-            <Button
-              variant="outline"
-              size="sm"
-              asChild
-              onClick={(e) => e.stopPropagation()}
-              className="flex-1"
-            >
-              <a
-                href={project.links.github}
-                target="_blank"
-                rel="noopener noreferrer"
+        {/* Links - Enhanced CTAs */}
+        {project.links && (project.links.github || project.links.live) && (
+          <div className="flex gap-2 pt-4 border-t border-border">
+            {project.links.github && (
+              <Button
+                variant="outline"
+                size="sm"
+                asChild
+                onClick={(e) => e.stopPropagation()}
+                className="flex-1 group/btn hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
               >
-                <Github className="h-4 w-4 mr-2" />
-                Code
-              </a>
-            </Button>
-          )}
-          {project.links.live && (
-            <Button
-              variant="outline"
-              size="sm"
-              asChild
-              onClick={(e) => e.stopPropagation()}
-              className="flex-1"
-            >
-              <a
-                href={project.links.live}
-                target="_blank"
-                rel="noopener noreferrer"
+                <a
+                  href={project.links.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Github className="h-4 w-4 mr-2 group-hover/btn:rotate-12 transition-transform" />
+                  Code
+                </a>
+              </Button>
+            )}
+            {project.links.live && (
+              <Button
+                size="sm"
+                asChild
+                onClick={(e) => e.stopPropagation()}
+                className="flex-1 group/btn bg-primary hover:bg-primary/90 shadow-lg hover:shadow-primary/50 transition-all"
               >
-                <ExternalLink className="h-4 w-4 mr-2" />
-                Live
-              </a>
-            </Button>
-          )}
-        </div>
+                <a
+                  href={project.links.live}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <ExternalLink className="h-4 w-4 mr-2 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                  Live Demo
+                </a>
+              </Button>
+            )}
+          </div>
+        )}
       </Card>
     </motion.div>
   );

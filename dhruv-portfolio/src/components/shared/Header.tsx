@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -11,9 +12,9 @@ import { Button } from "@/components/ui/button";
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("");
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
+  const pathname = usePathname();
 
   // Prevent hydration mismatch - this is the standard Next.js pattern for theme
   // The setState in useEffect is intentional here to detect client-side mounting
@@ -24,33 +25,20 @@ export function Header() {
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
-
-      // Update active section based on scroll position
-      const sections = NAV_ITEMS.map((item) => item.href.slice(1));
-      const currentSection = sections.find((section) => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
-        }
-        return false;
-      });
-
-      if (currentSection) {
-        setActiveSection(`#${currentSection}`);
-      }
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleNavClick = (href: string) => {
+  const handleNavClick = () => {
     setIsMobileMenuOpen(false);
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
+  };
+
+  const isActive = (href: string) => {
+    if (href === "/" && pathname === "/") return true;
+    if (href !== "/" && pathname.startsWith(href)) return true;
+    return false;
   };
 
   return (
@@ -77,24 +65,23 @@ export function Header() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {NAV_ITEMS.map((item) => (
-              <button
+              <Link
                 key={item.href}
-                onClick={() => handleNavClick(item.href)}
+                href={item.href}
+                onClick={handleNavClick}
                 className={`text-sm font-medium transition-colors hover:text-primary relative ${
-                  activeSection === item.href
-                    ? "text-primary"
-                    : "text-muted-foreground"
+                  isActive(item.href) ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {item.label}
-                {activeSection === item.href && (
+                {isActive(item.href) && (
                   <motion.div
                     className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary"
                     layoutId="activeSection"
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
-              </button>
+              </Link>
             ))}
           </div>
 
@@ -143,17 +130,18 @@ export function Header() {
             >
               <div className="px-2 pt-2 pb-3 space-y-1">
                 {NAV_ITEMS.map((item) => (
-                  <button
+                  <Link
                     key={item.href}
-                    onClick={() => handleNavClick(item.href)}
+                    href={item.href}
+                    onClick={handleNavClick}
                     className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                      activeSection === item.href
+                      isActive(item.href)
                         ? "bg-primary/10 text-primary"
                         : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                     }`}
                   >
                     {item.label}
-                  </button>
+                  </Link>
                 ))}
               </div>
             </motion.div>

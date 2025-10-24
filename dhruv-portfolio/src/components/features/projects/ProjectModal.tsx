@@ -116,6 +116,31 @@ export function ProjectModal({
                           Featured
                         </span>
                       )}
+                      {/* Status badges */}
+                      {project.badges?.map((badge, idx) => (
+                        <span
+                          key={idx}
+                          className={`
+                            ${badge.type === "live" ? "badge-live" : ""}
+                            ${badge.type === "deployed" ? "badge-deployed" : ""}
+                            ${
+                              badge.type === "performance"
+                                ? "badge-performance"
+                                : ""
+                            }
+                            ${
+                              badge.type === "build"
+                                ? "inline-flex items-center gap-1.5 px-3 py-1.5 bg-cyan-500/10 text-cyan-500 border border-cyan-500/20 rounded-full text-xs font-semibold"
+                                : ""
+                            }
+                          `}
+                        >
+                          {badge.type === "live" && (
+                            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                          )}
+                          {badge.label}: {badge.value}
+                        </span>
+                      ))}
                     </div>
                   </div>
 
@@ -126,6 +151,28 @@ export function ProjectModal({
                       <p className="text-muted-foreground leading-relaxed">
                         {project.longDescription}
                       </p>
+                    </div>
+                  )}
+
+                  {/* Code Snippet */}
+                  {project.codeSnippet && (
+                    <div className="mb-6">
+                      <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                        <span className="font-mono text-primary">{"</>"}</span>
+                        Code Showcase
+                      </h3>
+                      <div className="code-snippet relative">
+                        <div className="absolute top-2 right-2 flex gap-1">
+                          <div className="w-3 h-3 rounded-full bg-red-500/50"></div>
+                          <div className="w-3 h-3 rounded-full bg-yellow-500/50"></div>
+                          <div className="w-3 h-3 rounded-full bg-green-500/50"></div>
+                        </div>
+                        <pre className="text-xs sm:text-sm overflow-x-auto pt-6">
+                          <code className="text-muted-foreground font-mono">
+                            {project.codeSnippet}
+                          </code>
+                        </pre>
+                      </div>
                     </div>
                   )}
 
@@ -172,45 +219,61 @@ export function ProjectModal({
                     </div>
                   </div>
 
-                  {/* Links */}
-                  <div className="flex gap-3">
-                    {project.links.github && (
-                      <Button asChild>
-                        <a
-                          href={project.links.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <Github className="h-4 w-4 mr-2" />
-                          View Code
-                        </a>
-                      </Button>
+                  {/* Links - Enhanced CTAs */}
+                  {project.links &&
+                    (project.links.github ||
+                      project.links.live ||
+                      project.links.demo) && (
+                      <div className="flex gap-3 pt-4 border-t border-border">
+                        {project.links.github && (
+                          <Button
+                            asChild
+                            variant="outline"
+                            className="group/btn hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
+                          >
+                            <a
+                              href={project.links.github}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <Github className="h-4 w-4 mr-2 group-hover/btn:rotate-12 transition-transform" />
+                              View Code
+                            </a>
+                          </Button>
+                        )}
+                        {project.links.live && (
+                          <Button
+                            asChild
+                            className="group/btn shadow-lg hover:shadow-primary/50 transition-all"
+                          >
+                            <a
+                              href={project.links.live}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <ExternalLink className="h-4 w-4 mr-2 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                              Live Demo
+                            </a>
+                          </Button>
+                        )}
+                        {project.links.demo && (
+                          <Button
+                            variant="outline"
+                            asChild
+                            className="hover:bg-accent hover:text-accent-foreground transition-all"
+                          >
+                            <a
+                              href={project.links.demo}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <ExternalLink className="h-4 w-4 mr-2" />
+                              Demo Video
+                            </a>
+                          </Button>
+                        )}
+                      </div>
                     )}
-                    {project.links.live && (
-                      <Button variant="outline" asChild>
-                        <a
-                          href={project.links.live}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <ExternalLink className="h-4 w-4 mr-2" />
-                          Live Demo
-                        </a>
-                      </Button>
-                    )}
-                    {project.links.demo && (
-                      <Button variant="outline" asChild>
-                        <a
-                          href={project.links.demo}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <ExternalLink className="h-4 w-4 mr-2" />
-                          Demo Video
-                        </a>
-                      </Button>
-                    )}
-                  </div>
                 </div>
               </div>
             </div>

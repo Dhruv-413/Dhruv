@@ -6,6 +6,12 @@ export interface Project {
   category: "AI/ML" | "Full-Stack" | "Computer Vision" | "Enterprise";
   featured: boolean;
   technologies: string[];
+  codeSnippet?: string;
+  badges?: {
+    type: "live" | "deployed" | "performance" | "build";
+    label: string;
+    value: string;
+  }[];
   metrics: {
     label: string;
     value: string;
