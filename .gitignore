@@ -1,36 +1,210 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# ============================================
+# GO
+# ============================================
+# Binaries for programs and plugins
+.github
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
 
-# dependencies
-/node_modules
-/.pnp
+# Test binary, built with `go test -c`
+*.test
+
+# Code coverage profiles and other test artifacts
+*.out
+coverage.*
+*.coverprofile
+profile.cov
+
+# Dependency directories
+vendor/
+
+# Go workspace file
+go.work
+go.work.sum
+
+# ============================================
+# PYTHON
+# ============================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.pytest_cache/
+.pytype/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+htmlcov/
+.hypothesis/
+*.ipynb_checkpoints
+.python-version
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.spyderproject
+.spyproject
+.ropeproject
+
+# ============================================
+# NEXT.JS / REACT / NODE.JS
+# ============================================
+# Dependencies
+node_modules/
+.pnp
 .pnp.js
 
-# testing
-/coverage
+# Next.js
+.next/
+out/
+.vercel
+*.tsbuildinfo
+next-env.d.ts
 
-# next.js
-/.next/
-/out/
+# Build outputs
+build/
+dist/
+dist-ssr/
+*.local
 
-# production
-/build
+# Testing
+coverage/
+.nyc_output/
 
-# misc
-.DS_Store
-*.pem
-
-# debug
+# Logs
+logs/
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# local env files
-.env*.local
-.env
+# Misc
+*.pem
+.turbo
+.eslintcache
 
-# vercel
-.vercel
+# Debug
+*.pid
+*.seed
+*.pid.lock
 
-# typescript
+# TypeScript
 *.tsbuildinfo
-next-env.d.ts
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn
+.yarn-integrity
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# parcel-bundler cache
+.parcel-cache
+
+# ============================================
+# TAILWIND CSS
+# ============================================
+# Tailwind build outputs (usually covered by dist/build)
+# Add specific tailwind output files here if needed
+
+# ============================================
+# ENVIRONMENT VARIABLES
+# ============================================
+# .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
+# ============================================
+# OS
+# ============================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ============================================
+# IDEs and EDITORS
+# ============================================
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*.swo
+*~
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.history/
+
+# ============================================
+# TEMPORARY FOLDERS
+# ============================================
+tmp/
+temp/
+
+# Ignore vscode AI rules
+.github\instructions\codacy.instructions.md
+.vscode/
