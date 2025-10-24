@@ -1,0 +1,157 @@
+[
+  {
+    "id": "crave-connect",
+    "title": "Crave Connect",
+    "description": "REST API with semantic search using pgvector for intelligent food service discovery",
+    "longDescription": "Built a comprehensive REST API architecture featuring semantic search capabilities powered by pgvector embeddings. The system enables intelligent querying across 20+ data models with advanced PostgreSQL optimization.",
+    "category": "Full-Stack",
+    "featured": true,
+    "technologies": ["Python", "PostgreSQL", "FastAPI", "Docker", "pgvector"],
+    "metrics": [
+      {
+        "label": "Data Models",
+        "value": "20+",
+        "icon": "database"
+      },
+      {
+        "label": "Search Type",
+        "value": "Semantic",
+        "icon": "search"
+      },
+      {
+        "label": "Deployment",
+        "value": "Docker",
+        "icon": "container"
+      }
+    ],
+    "links": {
+      "github": "https://github.com/Dhruv-413/Crave-Connect"
+    },
+    "images": ["/images/projects/crave-connect.jpg"],
+    "date": "2024-08-01"
+  },
+  {
+    "id": "muj-placement-portal",
+    "title": "MUJ Placement Portal",
+    "description": "Full-stack placement management system with JWT authentication serving 500+ active users",
+    "longDescription": "Developed a comprehensive placement portal featuring role-based access control, bulk processing capabilities, and real-time updates. Achieved 100% login success rate and reduced manual data entry by 80%.",
+    "category": "Full-Stack",
+    "featured": true,
+    "technologies": ["React.js", "PostgreSQL", "JWT", "REST API", "Node.js"],
+    "metrics": [
+      {
+        "label": "Active Users",
+        "value": "500+",
+        "icon": "users"
+      },
+      {
+        "label": "Login Success",
+        "value": "100%",
+        "icon": "shield-check"
+      },
+      {
+        "label": "Time Saved",
+        "value": "80%",
+        "icon": "clock"
+      }
+    ],
+    "links": {
+      "github": "https://github.com/Dhruv-413/MUJ-Placement-Portal"
+    },
+    "images": ["/images/projects/muj-portal.jpg"],
+    "date": "2024-06-01"
+  },
+  {
+    "id": "stock-analysis",
+    "title": "Stock Analysis System",
+    "description": "Multi-agent NLP system for stock market analysis with 87% query accuracy",
+    "longDescription": "Engineered a sophisticated multi-agent NLP system integrating 5 data providers (Yahoo Finance, Alpha Vantage, CNBC, MarketWatch, and The Motley Fool) to deliver comprehensive stock analysis with 60% faster query response times.",
+    "category": "AI/ML",
+    "featured": false,
+    "technologies": ["Python", "Google ADK", "FastAPI", "NLP", "BeautifulSoup"],
+    "metrics": [
+      {
+        "label": "Query Accuracy",
+        "value": "87%",
+        "icon": "target"
+      },
+      {
+        "label": "Speed Improvement",
+        "value": "60%",
+        "icon": "zap"
+      },
+      {
+        "label": "Data Sources",
+        "value": "5",
+        "icon": "database"
+      }
+    ],
+    "links": {
+      "github": "https://github.com/Dhruv-413/Stock-Analysis"
+    },
+    "images": ["/images/projects/stock-analysis.jpg"],
+    "date": "2024-04-01"
+  },
+  {
+    "id": "eye-gaze-tracking",
+    "title": "Eye Gaze Tracking",
+    "description": "Real-time computer vision system for eye gaze estimation with 80%+ accuracy",
+    "longDescription": "Developed a real-time eye gaze tracking system using MediaPipe and ResNet50, achieving 80%+ accuracy at 30 FPS with 5.3° mean error. Implements advanced computer vision techniques for facial landmark detection and gaze estimation.",
+    "category": "Computer Vision",
+    "featured": false,
+    "technologies": ["Python", "MediaPipe", "OpenCV", "ResNet50", "TensorFlow"],
+    "metrics": [
+      {
+        "label": "Accuracy",
+        "value": "80%+",
+        "icon": "eye"
+      },
+      {
+        "label": "Frame Rate",
+        "value": "30 FPS",
+        "icon": "video"
+      },
+      {
+        "label": "Mean Error",
+        "value": "5.3°",
+        "icon": "crosshair"
+      }
+    ],
+    "links": {
+      "github": "https://github.com/Dhruv-413/Eye-Gaze-Tracking"
+    },
+    "images": ["/images/projects/eye-gaze.jpg"],
+    "date": "2024-02-01"
+  },
+  {
+    "id": "ecohive",
+    "title": "EcoHive",
+    "description": "Sustainable credit trading platform - SAP India Hackfest Top 50 from 2000+ entries",
+    "longDescription": "Created an innovative sustainable credit trading platform that secured Top 50 position at SAP India's National Hackfest from over 2000 nationwide entries. Built with React.js and Tailwind CSS featuring real-time trading and analytics.",
+    "category": "Full-Stack",
+    "featured": true,
+    "technologies": ["React.js", "Tailwind CSS", "JavaScript", "REST API"],
+    "metrics": [
+      {
+        "label": "Competition Rank",
+        "value": "Top 50",
+        "icon": "trophy"
+      },
+      {
+        "label": "Total Entries",
+        "value": "2000+",
+        "icon": "users"
+      },
+      {
+        "label": "Event",
+        "value": "SAP Hackfest",
+        "icon": "award"
+      }
+    ],
+    "links": {
+      "github": "https://github.com/Dhruv-413/EcoHive"
+    },
+    "images": ["/images/projects/ecohive.jpg"],
+    "date": "2024-07-01"
+  }
+]
