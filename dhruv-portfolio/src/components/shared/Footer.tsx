@@ -1,11 +1,23 @@
 "use client";
 
-import Link from "next/link";
-import { Github, Linkedin, Mail, ArrowUp } from "lucide-react";
-import { SITE_CONFIG, NAV_ITEMS } from "@/lib/constants";
+import { useState, useEffect } from "react";
+import { Github, Linkedin, Mail, ArrowUp, Terminal, Code2 } from "lucide-react";
+import { motion } from "framer-motion";
+import { SITE_CONFIG } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 
 export function Footer() {
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -13,101 +25,141 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-card border-t border-border">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          {/* About */}
-          <div>
-            <h3 className="text-lg font-bold mb-4 bg-linear-to-r from-primary via-purple-500 to-accent bg-clip-text text-transparent">
-              {SITE_CONFIG.name}
-            </h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              Full-Stack Developer & AI/ML Engineer passionate about building
-              innovative solutions with modern technologies.
-            </p>
-            <div className="flex space-x-4">
-              <Link
-                href={SITE_CONFIG.links.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                <Github className="h-5 w-5" />
-                <span className="sr-only">GitHub</span>
-              </Link>
-              <Link
-                href={SITE_CONFIG.links.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                <Linkedin className="h-5 w-5" />
-                <span className="sr-only">LinkedIn</span>
-              </Link>
-              <Link
-                href={SITE_CONFIG.links.email}
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                <Mail className="h-5 w-5" />
-                <span className="sr-only">Email</span>
-              </Link>
+    <footer
+      className="relative bg-card/30 backdrop-blur-sm border-t border-primary/10 overflow-hidden"
+      role="contentinfo"
+    >
+      {/* Subtle Background Pattern */}
+      <div
+        className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-size-[32px_32px] opacity-40"
+        aria-hidden="true"
+      />
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+        {/* Single Row Footer - Same height as header */}
+        <div className="flex items-center justify-between h-16 lg:h-20">
+          {/* Brand - Left Side */}
+          <div className="flex items-center gap-2">
+            <motion.div
+              animate={{
+                rotate: [0, 5, -5, 0],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            >
+              <Terminal className="h-4 w-4 text-primary" aria-hidden="true" />
+            </motion.div>
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground font-mono">
+              <span>© {currentYear}</span>
+              <span className="text-primary hidden sm:inline">•</span>
+              <span className="bg-linear-to-r from-primary to-purple-400 bg-clip-text text-transparent font-semibold hidden sm:inline">
+                {SITE_CONFIG.name}
+              </span>
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-            <nav className="flex flex-col space-y-2">
-              {NAV_ITEMS.map((item) => (
-                <button
-                  key={item.href}
-                  onClick={() => {
-                    const element = document.querySelector(item.href);
-                    element?.scrollIntoView({ behavior: "smooth" });
-                  }}
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors text-left"
-                >
-                  {item.label}
-                </button>
-              ))}
-            </nav>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Contact</h3>
-            <div className="space-y-2 text-sm text-muted-foreground">
-              <p>
+          {/* Right Side - Social + Tech Badge */}
+          <div className="flex items-center gap-3">
+            {/* Social Links */}
+            <div className="hidden md:flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110"
+                asChild
+              >
                 <a
-                  href={SITE_CONFIG.links.email}
-                  className="hover:text-primary transition-colors"
+                  href={SITE_CONFIG.links.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub Profile"
                 >
-                  {SITE_CONFIG.contact.email}
+                  <Github className="h-3.5 w-3.5" aria-hidden="true" />
                 </a>
-              </p>
-              <p>{SITE_CONFIG.contact.phone}</p>
-              <p>{SITE_CONFIG.contact.location}</p>
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110"
+                asChild
+              >
+                <a
+                  href={SITE_CONFIG.links.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn Profile"
+                >
+                  <Linkedin className="h-3.5 w-3.5" aria-hidden="true" />
+                </a>
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110"
+                asChild
+              >
+                <a href={SITE_CONFIG.links.email} aria-label="Send Email">
+                  <Mail className="h-3.5 w-3.5" aria-hidden="true" />
+                </a>
+              </Button>
             </div>
-          </div>
-        </div>
 
-        {/* Bottom Bar */}
-        <div className="flex flex-col sm:flex-row justify-between items-center pt-8 border-t border-border">
-          <p className="text-sm text-muted-foreground mb-4 sm:mb-0">
-            © {currentYear} {SITE_CONFIG.name}. Built with Next.js, TypeScript &
-            Tailwind CSS.
-          </p>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={scrollToTop}
-            className="rounded-full"
-          >
-            <ArrowUp className="h-4 w-4" />
-            <span className="sr-only">Back to top</span>
-          </Button>
+            {/* Tech Badge */}
+            <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-primary/5 border border-primary/20 rounded-md">
+              <Code2 className="h-3 w-3 text-primary" aria-hidden="true" />
+              <span className="text-xs font-mono text-muted-foreground hidden sm:inline">
+                Next.js
+              </span>
+            </div>
+
+            {/* Scroll to Top - Desktop */}
+            {showScrollTop && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                className="hidden md:block"
+              >
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={scrollToTop}
+                  className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all hover:scale-110 group"
+                  aria-label="Scroll to top"
+                >
+                  <ArrowUp
+                    className="h-3.5 w-3.5 group-hover:-translate-y-0.5 transition-transform"
+                    aria-hidden="true"
+                  />
+                </Button>
+              </motion.div>
+            )}
+          </div>
         </div>
       </div>
+
+      {/* Floating Scroll to Top - Mobile */}
+      {showScrollTop && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          className="fixed bottom-6 right-6 md:hidden z-40"
+        >
+          <Button
+            variant="default"
+            size="icon"
+            onClick={scrollToTop}
+            className="h-12 w-12 rounded-full shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all hover:scale-110"
+            aria-label="Scroll to top"
+          >
+            <ArrowUp className="h-5 w-5" aria-hidden="true" />
+          </Button>
+        </motion.div>
+      )}
     </footer>
   );
 }

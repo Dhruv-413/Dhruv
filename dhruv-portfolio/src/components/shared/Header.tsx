@@ -67,10 +67,10 @@ export function Header() {
             aria-label="Home - Dhruv Gupta Portfolio"
           >
             <div className="flex flex-col">
-              <span className="text-lg lg:text-xl font-bold font-mono bg-linear-to-r from-primary via-purple-400 to-accent bg-clip-text text-transparent group-hover:opacity-80 transition-opacity pl-20">
+              <span className="text-lg lg:text-xl font-bold font-mono bg-linear-to-r from-primary via-purple-400 to-accent bg-clip-text text-transparent group-hover:opacity-80 transition-opacity pl-4">
                 {"<DG />"}
               </span>
-              <span className="text-[10px] text-muted-foreground font-mono hidden sm:block pl-20">
+              <span className="text-[10px] text-muted-foreground font-mono hidden sm:block pl-4">
                 {"> Learner"}
               </span>
             </div>
