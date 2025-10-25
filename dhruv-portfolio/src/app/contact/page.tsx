@@ -1,4 +1,5 @@
 import { ContactSection } from "@/components/features/contact/ContactSection";
+import { AnimatedBackground } from "@/components/ui/AnimatedBackground";
 
 export const metadata = {
   title: "Contact - Dhruv Gupta",
@@ -7,8 +8,11 @@ export const metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen pt-20">
-      <ContactSection />
-    </div>
+    <>
+      <AnimatedBackground />
+      <div className="min-h-screen pt-20 relative">
+        <ContactSection />
+      </div>
+    </>
   );
 }

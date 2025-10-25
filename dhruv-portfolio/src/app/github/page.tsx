@@ -1,4 +1,5 @@
 import { GitHubSection } from "@/components/features/github/GitHubSection";
+import { AnimatedBackground } from "@/components/ui/AnimatedBackground";
 
 export const metadata = {
   title: "GitHub - Dhruv Gupta",
@@ -7,8 +8,11 @@ export const metadata = {
 
 export default function GitHubPage() {
   return (
-    <div className="min-h-screen pt-20">
-      <GitHubSection />
-    </div>
+    <>
+      <AnimatedBackground />
+      <div className="min-h-screen pt-20 relative">
+        <GitHubSection />
+      </div>
+    </>
   );
 }
