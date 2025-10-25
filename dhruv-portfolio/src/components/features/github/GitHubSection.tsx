@@ -51,6 +51,8 @@ export function GitHubSection() {
   const [hoveredDay, setHoveredDay] = useState<{
     date: string;
     count: number;
+    x: number;
+    y: number;
   } | null>(null);
 
   // Refs for scroll animations - Matching Projects page pattern
@@ -701,41 +703,12 @@ export function GitHubSection() {
                 </p>
               </div>
 
-              <Card className="p-6 bg-card/50 backdrop-blur-sm border-2 border-border/50 hover:border-primary/30 transition-all duration-300 flex-1 flex flex-col">
+              <Card className="p-6 bg-card/50 backdrop-blur-sm border-2 border-border/50 hover:border-primary/30 transition-all duration-300 flex-1 flex flex-col relative">
                 {contributions && contributions.weeks.length > 0 ? (
                   <div className="flex-1 flex flex-col">
-                    {/* Interactive Tooltip Display */}
-                    {hoveredDay && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="mb-4 p-3 bg-linear-to-r from-primary/10 to-primary/5 border border-primary/20 rounded-lg"
-                      >
-                        <div className="text-sm font-mono text-center">
-                          <span className="text-primary font-bold text-lg">
-                            {hoveredDay.count}
-                          </span>{" "}
-                          <span className="text-muted-foreground">
-                            contributions on
-                          </span>{" "}
-                          <span className="text-foreground font-semibold block mt-1">
-                            {new Date(hoveredDay.date).toLocaleDateString(
-                              "en-US",
-                              {
-                                weekday: "short",
-                                month: "short",
-                                day: "numeric",
-                                year: "numeric",
-                              }
-                            )}
-                          </span>
-                        </div>
-                      </motion.div>
-                    )}
-
                     {/* Heatmap */}
                     <div
-                      className="overflow-x-auto mb-4 flex-1 flex items-center"
+                      className="overflow-x-auto mb-4 flex-1 flex items-center relative"
                       aria-label="Contribution heatmap"
                     >
                       <div className="flex gap-0.5 mx-auto">
@@ -769,19 +742,47 @@ export function GitHubSection() {
                                       delay: 0.4 + weekIndex * 0.003,
                                     }}
                                     whileHover={{ scale: 1.8, zIndex: 10 }}
-                                    onMouseEnter={() =>
+                                    onMouseEnter={(e) => {
+                                      const rect =
+                                        e.currentTarget.getBoundingClientRect();
+                                      const tooltipWidth = 220; // Approximate tooltip width
+                                      const viewportWidth = window.innerWidth;
+
+                                      // Calculate x position - offset to the right of the dot
+                                      let xPos = rect.right + 10;
+
+                                      // If tooltip would go off right edge, show on left side
+                                      if (xPos + tooltipWidth > viewportWidth) {
+                                        xPos = rect.left - tooltipWidth - 10;
+                                      }
+
                                       setHoveredDay({
                                         date: day.date,
                                         count: day.count,
-                                      })
-                                    }
+                                        x: xPos,
+                                        y: rect.top + rect.height / 2,
+                                      });
+                                    }}
                                     onMouseLeave={() => setHoveredDay(null)}
-                                    onFocus={() =>
+                                    onFocus={(e) => {
+                                      const rect =
+                                        e.currentTarget.getBoundingClientRect();
+                                      const tooltipWidth = 220;
+                                      const viewportWidth = window.innerWidth;
+
+                                      let xPos = rect.right + 10;
+
+                                      if (xPos + tooltipWidth > viewportWidth) {
+                                        xPos = rect.left - tooltipWidth - 10;
+                                      }
+
                                       setHoveredDay({
                                         date: day.date,
                                         count: day.count,
-                                      })
-                                    }
+                                        x: xPos,
+                                        y: rect.top + rect.height / 2,
+                                      });
+                                    }}
                                     onBlur={() => setHoveredDay(null)}
                                     className={`w-2.5 h-2.5 rounded-sm ${
                                       greenColors[day.level]
@@ -897,6 +898,46 @@ export function GitHubSection() {
                 )}
               </Card>
             </motion.div>
+
+            {/* Floating Tooltip - Portal-like rendering outside Card */}
+            {hoveredDay && (
+              <div
+                className="fixed pointer-events-none"
+                style={{
+                  left: `${hoveredDay.x}px`,
+                  top: `${hoveredDay.y}px`,
+                  transform: "translateY(-50%)",
+                  zIndex: 9999,
+                }}
+              >
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.15 }}
+                  className="bg-card/95 backdrop-blur-md border-2 border-primary/40 rounded-lg shadow-2xl shadow-primary/20 p-3 w-[220px]"
+                >
+                  <div className="text-sm font-mono">
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <span className="text-primary font-bold text-2xl tabular-nums">
+                        {hoveredDay.count}
+                      </span>
+                      <span className="text-muted-foreground text-xs">
+                        contribution{hoveredDay.count !== 1 ? "s" : ""}
+                      </span>
+                    </div>
+                    <div className="text-foreground font-semibold text-xs border-t border-border/50 pt-2 mt-1">
+                      {new Date(hoveredDay.date).toLocaleDateString("en-US", {
+                        weekday: "short",
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            )}
 
             {/* Top 5 Languages Distribution */}
             <motion.div
