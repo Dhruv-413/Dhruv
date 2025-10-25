@@ -58,7 +58,7 @@ const developer = {
   passion: [
     "Building scalable solutions",
     "AI/ML innovations",
-    "Open source contributions"
+    "Full Stack Development"
   ],
 
   currentFocus: "Enterprise Software & AI",
