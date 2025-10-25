@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { Code2, Folder, Star, Sparkles } from "lucide-react";
+import { Code2, Folder, Star, Sparkles, Terminal } from "lucide-react";
 import { ProjectCard } from "./ProjectCard";
 import { ProjectModal } from "./ProjectModal";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
@@ -13,6 +13,7 @@ import { useRef } from "react";
 export function ProjectsSection() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeFilter, setActiveFilter] = useState<string>("All");
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
@@ -24,8 +25,29 @@ export function ProjectsSection() {
     return new Date(b.date).getTime() - new Date(a.date).getTime();
   });
 
-  const featuredProjects = projects.filter((p) => p.featured);
-  const otherProjects = projects.filter((p) => !p.featured);
+  // Get popular technologies for filter buttons (top 6)
+  const technologyCounts = projects
+    .flatMap((p) => p.technologies)
+    .reduce((acc, tech) => {
+      acc[tech] = (acc[tech] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+  const popularTechnologies = Object.entries(technologyCounts)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 6)
+    .map(([tech]) => tech);
+
+  const filterOptions = ["All", ...popularTechnologies];
+
+  // Filter projects based on active filter
+  const filteredProjects =
+    activeFilter === "All"
+      ? projects
+      : projects.filter((p) => p.technologies.includes(activeFilter));
+
+  const featuredProjects = filteredProjects.filter((p) => p.featured);
+  const otherProjects = filteredProjects.filter((p) => !p.featured);
 
   // Calculate stats
   const totalProjects = projects.length;
@@ -39,17 +61,21 @@ export function ProjectsSection() {
 
   const handleNext = () => {
     if (!selectedProject) return;
-    const currentIndex = projects.findIndex((p) => p.id === selectedProject.id);
-    const nextIndex = (currentIndex + 1) % projects.length;
-    setSelectedProject(projects[nextIndex]);
+    const currentIndex = filteredProjects.findIndex(
+      (p) => p.id === selectedProject.id
+    );
+    const nextIndex = (currentIndex + 1) % filteredProjects.length;
+    setSelectedProject(filteredProjects[nextIndex]);
   };
 
   const handlePrevious = () => {
     if (!selectedProject) return;
-    const currentIndex = projects.findIndex((p) => p.id === selectedProject.id);
+    const currentIndex = filteredProjects.findIndex(
+      (p) => p.id === selectedProject.id
+    );
     const previousIndex =
-      (currentIndex - 1 + projects.length) % projects.length;
-    setSelectedProject(projects[previousIndex]);
+      (currentIndex - 1 + filteredProjects.length) % filteredProjects.length;
+    setSelectedProject(filteredProjects[previousIndex]);
   };
 
   return (
@@ -101,6 +127,7 @@ export function ProjectsSection() {
               transition={{ duration: 0.5 }}
               className="flex items-center gap-2 mb-6"
             >
+              <Terminal className="h-4 w-4 text-primary" />
               <span className="text-primary font-mono text-sm">~/projects</span>
               <motion.span
                 animate={{ opacity: [1, 0, 1] }}
@@ -221,6 +248,52 @@ export function ProjectsSection() {
                 </div>
               </motion.div>
             </motion.div>
+
+            {/* Technology Filters */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="mb-8"
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <Code2 className="h-4 w-4 text-primary" />
+                <span className="text-sm font-mono text-muted-foreground">
+                  Filter by Technology:
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                {filterOptions.map((filter, index) => (
+                  <motion.button
+                    key={filter}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                    transition={{ delay: 0.5 + index * 0.05 }}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setActiveFilter(filter)}
+                    className={`px-4 py-2 rounded-lg font-mono text-sm transition-all border ${
+                      activeFilter === filter
+                        ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/30"
+                        : "bg-card/50 text-muted-foreground border-border/50 hover:border-primary/30 hover:bg-primary/5 hover:text-primary"
+                    }`}
+                  >
+                    {filter}
+                    {filter !== "All" && (
+                      <span className="ml-2 text-xs opacity-70">
+                        (
+                        {
+                          projects.filter((p) =>
+                            p.technologies.includes(filter)
+                          ).length
+                        }
+                        )
+                      </span>
+                    )}
+                  </motion.button>
+                ))}
+              </div>
+            </motion.div>
           </div>
         </ScrollReveal>
 
@@ -238,6 +311,9 @@ export function ProjectsSection() {
                 <span className="text-sm font-mono text-primary font-semibold">
                   Featured Work
                 </span>
+                <span className="text-xs font-mono text-primary/70">
+                  ({featuredProjects.length})
+                </span>
               </div>
               <div className="h-px flex-1 bg-linear-to-l from-transparent via-primary/50 to-primary" />
             </motion.div>
@@ -251,10 +327,11 @@ export function ProjectsSection() {
                   key={project.id}
                   layout
                   initial={{ opacity: 0, y: 30 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
                   transition={{
-                    duration: 0.5,
-                    delay: index * 0.1,
+                    duration: 0.4,
+                    delay: index * 0.05,
                     type: "spring",
                     stiffness: 100,
                   }}
@@ -284,6 +361,9 @@ export function ProjectsSection() {
                 <span className="text-sm font-mono text-muted-foreground font-semibold">
                   More Projects
                 </span>
+                <span className="text-xs font-mono text-muted-foreground/70">
+                  ({otherProjects.length})
+                </span>
               </div>
               <div className="h-px flex-1 bg-linear-to-l from-transparent via-border to-primary/30" />
             </motion.div>
@@ -297,10 +377,11 @@ export function ProjectsSection() {
                   key={project.id}
                   layout
                   initial={{ opacity: 0, y: 30 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
                   transition={{
-                    duration: 0.5,
-                    delay: 0.5 + index * 0.1,
+                    duration: 0.4,
+                    delay: 0.2 + index * 0.05,
                     type: "spring",
                     stiffness: 100,
                   }}
@@ -315,13 +396,38 @@ export function ProjectsSection() {
           </div>
         )}
 
+        {/* No Results Message */}
+        {filteredProjects.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center py-16"
+          >
+            <div className="inline-flex items-center justify-center p-6 rounded-full bg-muted/50 border border-border/50 mb-4">
+              <Code2 className="h-12 w-12 text-muted-foreground" />
+            </div>
+            <h3 className="text-xl font-bold mb-2">No projects found</h3>
+            <p className="text-muted-foreground mb-6">
+              No projects match the selected technology filter.
+            </p>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setActiveFilter("All")}
+              className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-mono text-sm hover:shadow-lg hover:shadow-primary/30 transition-all"
+            >
+              Show All Projects
+            </motion.button>
+          </motion.div>
+        )}
+
         {/* Modal */}
         <ProjectModal
           project={selectedProject}
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          onNext={projects.length > 1 ? handleNext : undefined}
-          onPrevious={projects.length > 1 ? handlePrevious : undefined}
+          onNext={filteredProjects.length > 1 ? handleNext : undefined}
+          onPrevious={filteredProjects.length > 1 ? handlePrevious : undefined}
         />
       </div>
     </section>
