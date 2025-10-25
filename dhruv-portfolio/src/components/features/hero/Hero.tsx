@@ -439,9 +439,9 @@ export function Hero() {
                 />
 
                 <div className="relative w-48 h-48 sm:w-64 sm:h-64 lg:w-72 lg:h-72 rounded-full overflow-hidden border-4 border-primary/20 shadow-2xl shadow-primary/20">
-                  {user?.avatar_url ? (
+                  {user?.avatarUrl ? (
                     <Image
-                      src={user.avatar_url}
+                      src={user.avatarUrl}
                       alt="Dhruv Gupta"
                       fill
                       className="object-cover"
