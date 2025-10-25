@@ -44,22 +44,23 @@ export function ProjectModal({
             className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50"
           />
 
-          {/* Modal */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-4 md:inset-8 lg:inset-16 z-50 overflow-auto"
-          >
-            <div className="min-h-full flex items-center justify-center p-4">
-              <div className="bg-card border border-border rounded-xl shadow-2xl max-w-4xl w-full relative">
+          {/* Modal Container - Fixed with internal scroll */}
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 pointer-events-none">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.2 }}
+              className="bg-card border border-border rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] relative flex flex-col pointer-events-auto"
+            >
+              {/* Fixed Header - Title and Navigation */}
+              <div className="shrink-0 relative border-b border-border">
                 {/* Close button */}
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={onClose}
-                  className="absolute top-4 right-4 z-10 rounded-full"
+                  className="absolute top-4 right-4 z-10 rounded-full hover:bg-destructive/10"
                 >
                   <X className="h-5 w-5" />
                   <span className="sr-only">Close</span>
@@ -71,7 +72,7 @@ export function ProjectModal({
                     variant="ghost"
                     size="icon"
                     onClick={onPrevious}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full"
+                    className="absolute left-4 top-4 rounded-full"
                   >
                     <ChevronLeft className="h-6 w-6" />
                     <span className="sr-only">Previous project</span>
@@ -82,69 +83,67 @@ export function ProjectModal({
                     variant="ghost"
                     size="icon"
                     onClick={onNext}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full"
+                    className="absolute right-16 top-4 rounded-full"
                   >
                     <ChevronRight className="h-6 w-6" />
                     <span className="sr-only">Next project</span>
                   </Button>
                 )}
 
-                <div className="p-8">
-                  {/* Header */}
-                  <div className="mb-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex-1 pr-12">
-                        <h2 className="text-3xl font-bold mb-2">
-                          {project.title}
-                        </h2>
-                        <p className="text-muted-foreground">
-                          {project.description}
-                        </p>
-                      </div>
-                    </div>
+                {/* Title Section */}
+                <div className="p-8 pb-6">
+                  <h2 className="text-3xl font-bold mb-2 pr-24">
+                    {project.title}
+                  </h2>
+                  <p className="text-muted-foreground pr-12">
+                    {project.description}
+                  </p>
 
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4" />
-                        {format(new Date(project.date), "MMMM yyyy")}
-                      </div>
-                      <span className="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-xs font-semibold">
-                        {project.category}
+                  {/* Badges Row */}
+                  <div className="flex flex-wrap items-center gap-3 mt-4 text-sm">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Calendar className="h-4 w-4" />
+                      {format(new Date(project.date), "MMMM yyyy")}
+                    </div>
+                    <span className="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-xs font-semibold">
+                      {project.category}
+                    </span>
+                    {project.featured && (
+                      <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-semibold">
+                        Featured
                       </span>
-                      {project.featured && (
-                        <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-semibold">
-                          Featured
-                        </span>
-                      )}
-                      {/* Status badges */}
-                      {project.badges?.map((badge, idx) => (
-                        <span
-                          key={idx}
-                          className={`
-                            ${badge.type === "live" ? "badge-live" : ""}
-                            ${badge.type === "deployed" ? "badge-deployed" : ""}
-                            ${
-                              badge.type === "performance"
-                                ? "badge-performance"
-                                : ""
-                            }
-                            ${
-                              badge.type === "build"
-                                ? "inline-flex items-center gap-1.5 px-3 py-1.5 bg-cyan-500/10 text-cyan-500 border border-cyan-500/20 rounded-full text-xs font-semibold"
-                                : ""
-                            }
-                          `}
-                        >
-                          {badge.type === "live" && (
-                            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                          )}
-                          {badge.label}: {badge.value}
-                        </span>
-                      ))}
-                    </div>
+                    )}
+                    {project.badges?.map((badge, idx) => (
+                      <span
+                        key={idx}
+                        className={`
+                          ${badge.type === "live" ? "badge-live" : ""}
+                          ${badge.type === "deployed" ? "badge-deployed" : ""}
+                          ${
+                            badge.type === "performance"
+                              ? "badge-performance"
+                              : ""
+                          }
+                          ${
+                            badge.type === "build"
+                              ? "inline-flex items-center gap-1.5 px-3 py-1.5 bg-cyan-500/10 text-cyan-500 border border-cyan-500/20 rounded-full text-xs font-semibold"
+                              : ""
+                          }
+                        `}
+                      >
+                        {badge.type === "live" && (
+                          <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                        )}
+                        {badge.label}: {badge.value}
+                      </span>
+                    ))}
                   </div>
+                </div>
+              </div>
 
-                  {/* Long description */}
+              {/* Scrollable Content Area */}
+              <div className="flex-1 overflow-y-auto">
+                <div className="p-8 space-y-6">
                   {project.longDescription && (
                     <div className="mb-6">
                       <h3 className="text-lg font-semibold mb-3">About</h3>
@@ -276,8 +275,8 @@ export function ProjectModal({
                     )}
                 </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>

@@ -60,12 +60,19 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -5 }}
+      whileHover={{ y: -5, scale: 1.01 }}
       transition={{ duration: 0.3 }}
       onClick={onClick}
-      className="cursor-pointer h-full"
+      className="cursor-pointer h-full group"
     >
-      <Card className="p-6 h-full flex flex-col hover:border-primary/50 transition-colors relative overflow-hidden group">
+      <Card className="p-6 h-full flex flex-col hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all relative overflow-hidden bg-card/95 backdrop-blur-sm">
+        {/* Category gradient line */}
+        <div
+          className={`absolute top-0 left-0 right-0 h-1 bg-linear-to-r ${
+            categoryColors[project.category]
+          }`}
+        />
+
         {/* Featured badge */}
         {project.featured && (
           <div className="absolute top-4 right-4">
@@ -75,29 +82,22 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
           </div>
         )}
 
-        {/* Category gradient line */}
-        <div
-          className={`absolute top-0 left-0 right-0 h-1 bg-linear-to-r ${
-            categoryColors[project.category]
-          }`}
-        />
-
         <div className="mt-2 mb-4">
           <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
             {project.title}
           </h3>
-          <p className="text-sm text-muted-foreground mb-3">
+          <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
             {project.description}
           </p>
 
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-2 flex-wrap mb-3">
             {/* Category badge */}
-            <span className="inline-block px-2 py-1 bg-secondary/10 text-secondary text-xs rounded-md">
+            <span className="inline-block px-2 py-1 bg-secondary/10 text-secondary text-xs rounded-md font-medium">
               {project.category}
             </span>
 
             {/* Status badges */}
-            {project.badges?.map((badge, idx) => (
+            {project.badges?.slice(0, 2).map((badge, idx) => (
               <span
                 key={idx}
                 className={`
@@ -106,7 +106,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
                   ${badge.type === "performance" ? "badge-performance" : ""}
                   ${
                     badge.type === "build"
-                      ? "inline-flex items-center gap-1.5 px-3 py-1.5 bg-cyan-500/10 text-cyan-500 border border-cyan-500/20 rounded-full text-xs font-semibold"
+                      ? "inline-flex items-center gap-1.5 px-2 py-1 bg-cyan-500/10 text-cyan-500 border border-cyan-500/20 rounded-md text-xs font-semibold"
                       : ""
                   }
                 `}
@@ -120,14 +120,14 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
           </div>
         </div>
 
-        {/* Metrics */}
+        {/* Metrics - Simple display */}
         <div className="grid grid-cols-3 gap-2 mb-4">
           {project.metrics.slice(0, 3).map((metric, idx) => {
             const Icon = getIcon(metric.icon);
             return (
               <div
                 key={idx}
-                className="text-center p-2 bg-card/50 rounded-lg border border-border hover-glow"
+                className="text-center p-2 bg-muted/50 rounded-lg border border-border"
               >
                 <Icon className="h-4 w-4 mx-auto mb-1 text-primary" />
                 <div className="text-sm font-semibold">{metric.value}</div>
@@ -139,45 +139,45 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
           })}
         </div>
 
-        {/* Technologies */}
-        <div className="flex flex-wrap gap-2 mt-auto">
+        {/* Technologies - Simple badges */}
+        <div className="flex flex-wrap gap-2 mb-4">
           {project.technologies.slice(0, 5).map((tech, idx) => {
             const icon = <TechIcon name={tech} className="h-4 w-4" />;
             return (
               <div
                 key={idx}
-                className="flex items-center gap-1 px-2 py-1 bg-muted rounded-md hover:bg-muted/80 transition-colors"
+                className="flex items-center gap-1 px-2 py-1 bg-muted/80 rounded-md hover:bg-muted transition-colors"
                 title={tech}
               >
                 {icon}
-                <span className="text-xs text-muted-foreground">{tech}</span>
+                <span className="text-xs">{tech}</span>
               </div>
             );
           })}
           {project.technologies.length > 5 && (
             <span className="px-2 py-1 bg-muted text-xs rounded-md text-muted-foreground">
-              +{project.technologies.length - 5} more
+              +{project.technologies.length - 5}
             </span>
           )}
         </div>
 
-        {/* Links - Enhanced CTAs */}
+        {/* Links - Simple CTAs */}
         {project.links && (project.links.github || project.links.live) && (
-          <div className="flex gap-2 pt-4 border-t border-border">
+          <div className="flex gap-2 mt-auto pt-4 border-t border-border">
             {project.links.github && (
               <Button
                 variant="outline"
                 size="sm"
                 asChild
                 onClick={(e) => e.stopPropagation()}
-                className="flex-1 group/btn hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
+                className="flex-1 hover:bg-primary hover:text-primary-foreground transition-all"
               >
                 <a
                   href={project.links.github}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Github className="h-4 w-4 mr-2 group-hover/btn:rotate-12 transition-transform" />
+                  <Github className="h-4 w-4 mr-2" />
                   Code
                 </a>
               </Button>
@@ -187,15 +187,15 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
                 size="sm"
                 asChild
                 onClick={(e) => e.stopPropagation()}
-                className="flex-1 group/btn bg-primary hover:bg-primary/90 shadow-lg hover:shadow-primary/50 transition-all"
+                className="flex-1 bg-primary hover:bg-primary/90 transition-all"
               >
                 <a
                   href={project.links.live}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <ExternalLink className="h-4 w-4 mr-2 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
-                  Live Demo
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Demo
                 </a>
               </Button>
             )}
