@@ -7,78 +7,77 @@ import {
   Trophy,
   Calendar,
   MapPin,
-  Code,
   Zap,
   Award,
   TrendingUp,
   ChevronDown,
   ChevronUp,
-  Target,
   BarChart3,
+  Terminal,
 } from "lucide-react";
 import { TimelineItem } from "@/types/experience";
 import timelineData from "@/data/timeline.json";
 import { format } from "date-fns";
 import { useState, useRef } from "react";
 import { TechIcon } from "@/components/ui/TechIcon";
+import { Card } from "@/components/ui/card";
 
 const iconMap = {
   work: Briefcase,
   education: GraduationCap,
   achievement: Trophy,
-}; // Stats calculation
+};
+
+// Stats calculation
 const timeline = timelineData as TimelineItem[];
+
+// Reverse chronological order: Education → Achievements → Work
+const sortedTimeline = [...timeline].sort((a, b) => {
+  return new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
+});
+
 const workExperiences = timeline.filter((item) => item.type === "work").length;
 const achievements = timeline.filter(
   (item) => item.type === "achievement"
 ).length;
-const totalTechnologies = Array.from(
-  new Set(timeline.flatMap((item) => item.tags))
-).length;
 
 const experienceStats = [
+  {
+    label: "Education",
+    value: "B.Tech",
+    icon: GraduationCap,
+    color: "from-purple-500 to-pink-500",
+    description: "Manipal University",
+  },
   {
     label: "Work Experience",
     value: `${workExperiences}`,
     icon: Briefcase,
-    color: "#3b82f6",
-    description: "Professional roles",
+    color: "from-blue-500 to-cyan-500",
+    description: "Professional role",
   },
   {
     label: "Achievements",
-    value: `${achievements}`,
+    value: `${achievements}+`,
     icon: Trophy,
-    color: "#f59e0b",
+    color: "from-amber-500 to-orange-500",
     description: "National recognitions",
-  },
-  {
-    label: "Technologies",
-    value: `${totalTechnologies}+`,
-    icon: Code,
-    color: "#8b5cf6",
-    description: "Tools & frameworks",
   },
   {
     label: "Impact",
     value: "8M+",
     icon: TrendingUp,
-    color: "#10b981",
+    color: "from-green-500 to-emerald-500",
     description: "Data points processed",
   },
 ];
 
 export function TimelineSection() {
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
-  const [activeFilter, setActiveFilter] = useState<
-    "all" | "work" | "education" | "achievement"
-  >("all");
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
   const toggleItem = (id: string) => {
-    // Only allow ONGC intern to expand (it has metrics)
-    if (id !== "ongc-2025") return;
-
     const newExpanded = new Set(expandedItems);
     if (newExpanded.has(id)) {
       newExpanded.delete(id);
@@ -88,95 +87,47 @@ export function TimelineSection() {
     setExpandedItems(newExpanded);
   };
 
-  const filteredTimeline =
-    activeFilter === "all"
-      ? timeline
-      : timeline.filter((item) => item.type === activeFilter);
-
-  const filterCategories = [
-    { id: "all", label: "All", icon: Target, count: timeline.length },
-    {
-      id: "work",
-      label: "Work",
-      icon: Briefcase,
-      count: timeline.filter((t) => t.type === "work").length,
-    },
-    {
-      id: "education",
-      label: "Education",
-      icon: GraduationCap,
-      count: timeline.filter((t) => t.type === "education").length,
-    },
-    {
-      id: "achievement",
-      label: "Achievements",
-      icon: Trophy,
-      count: timeline.filter((t) => t.type === "achievement").length,
-    },
-  ];
-
   return (
     <section
       id="experience"
       ref={sectionRef}
       className="relative min-h-screen overflow-hidden pt-16 pb-20"
     >
-      {/* Animated Background - Hero.tsx Style */}
+      {/* Animated Background - Matching Projects Page */}
       <div className="absolute inset-0 -z-10">
-        {/* Gradient Orbs */}
+        {/* Gradient Orbs - Same as Projects */}
         <motion.div
-          className="absolute top-20 -left-40 w-96 h-96 bg-primary/30 rounded-full blur-3xl"
           animate={{
             scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
+            opacity: [0.03, 0.05, 0.03],
           }}
           transition={{
             duration: 8,
             repeat: Infinity,
             ease: "easeInOut",
           }}
+          className="absolute top-1/4 -left-1/4 w-96 h-96 bg-primary rounded-full blur-3xl"
         />
         <motion.div
-          className="absolute top-1/3 -right-40 w-96 h-96 bg-purple-500/30 rounded-full blur-3xl"
           animate={{
             scale: [1.2, 1, 1.2],
-            opacity: [0.3, 0.5, 0.3],
+            opacity: [0.05, 0.03, 0.05],
           }}
           transition={{
-            duration: 10,
+            duration: 8,
             repeat: Infinity,
             ease: "easeInOut",
+            delay: 4,
           }}
-        />
-        <motion.div
-          className="absolute bottom-20 left-1/3 w-96 h-96 bg-accent/30 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.3, 1],
-            opacity: [0.2, 0.4, 0.2],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
+          className="absolute -bottom-1/4 -right-1/4 w-96 h-96 bg-primary/80 rounded-full blur-3xl"
         />
 
-        {/* Grid Pattern */}
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `linear-gradient(rgba(var(--primary-rgb, 99, 102, 241), 0.1) 1px, transparent 1px),
-                             linear-gradient(90deg, rgba(var(--primary-rgb, 99, 102, 241), 0.1) 1px, transparent 1px)`,
-            backgroundSize: "50px 50px",
-          }}
-        />
-
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-linear-to-b from-background via-background/95 to-background" />
+        {/* Grid Pattern - Same as Projects */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px]" />
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        {/* Hero Section - Centered Single Column (No Code Snippet) */}
+        {/* Hero Section - Centered Layout (Like Skills/Projects) */}
         <div className="max-w-4xl mx-auto text-center mb-20">
           {/* Terminal Prompt */}
           <motion.div
@@ -185,15 +136,15 @@ export function TimelineSection() {
             transition={{ duration: 0.5 }}
             className="flex items-center gap-2 mb-6 justify-center"
           >
-            <div className="flex gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-red-500" />
-              <div className="w-3 h-3 rounded-full bg-yellow-500" />
-              <div className="w-3 h-3 rounded-full bg-green-500" />
-            </div>
-            <span className="text-sm font-mono text-muted-foreground">
-              ~/experience
-            </span>
-            <span className="w-2 h-4 bg-primary animate-pulse ml-1" />
+            <Terminal className="h-4 w-4 text-primary" />
+            <span className="text-primary font-mono text-sm">~/experience</span>
+            <motion.span
+              animate={{ opacity: [1, 0, 1] }}
+              transition={{ duration: 1, repeat: Infinity }}
+              className="text-primary font-mono"
+            >
+              _
+            </motion.span>
           </motion.div>
 
           {/* Title */}
@@ -201,9 +152,9 @@ export function TimelineSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-bold mb-6"
+            className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6"
           >
-            <span className="bg-linear-to-r from-primary via-purple-500 to-accent bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent">
               Career Journey
             </span>
           </motion.h1>
@@ -213,124 +164,56 @@ export function TimelineSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-xl md:text-2xl text-muted-foreground font-mono mb-6"
+            className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed"
           >
-            Work • Education • Achievements
+            From{" "}
+            <span className="text-primary font-semibold">
+              Computer Science Education
+            </span>{" "}
+            to{" "}
+            <span className="text-primary font-semibold">
+              National Recognition
+            </span>{" "}
+            and{" "}
+            <span className="text-primary font-semibold">
+              Enterprise Impact at ONGC
+            </span>
+            . A chronological journey showcasing continuous growth, technical
+            excellence, and measurable real-world contributions.
           </motion.p>
 
-          {/* Description */}
-          <motion.p
+          {/* Stats Grid - Matching Projects Page Style */}
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-base md:text-lg text-muted-foreground mb-10 leading-relaxed max-w-3xl mx-auto"
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 max-w-3xl mx-auto"
           >
-            From processing{" "}
-            <span className="text-primary font-semibold">8M+ data points</span>{" "}
-            at ONGC to achieving{" "}
-            <span className="text-accent font-semibold">Top 50/2000+</span> in
-            national hackathons. A timeline of{" "}
-            <span className="text-purple-500 font-semibold">
-              continuous growth
-            </span>
-            , learning, and impact.
-          </motion.p>
-
-          {/* Stats Grid */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10"
-          >
-            {experienceStats.map((stat, index) => (
-              <motion.div
-                key={index}
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="group relative bg-card/50 backdrop-blur-sm border border-border rounded-xl p-4 hover:border-primary/50 transition-all cursor-pointer"
-              >
-                <div className="flex flex-col items-center gap-2">
-                  <div
-                    className="p-3 rounded-lg group-hover:scale-110 transition-transform"
-                    style={{ backgroundColor: `${stat.color}20` }}
-                  >
-                    <stat.icon
-                      className="h-6 w-6"
-                      style={{ color: stat.color }}
-                    />
-                  </div>
-                  <div
-                    className="text-3xl font-bold font-mono"
-                    style={{ color: stat.color }}
-                  >
-                    {stat.value}
-                  </div>
-                  <div className="text-sm font-semibold text-foreground/80">
-                    {stat.label}
-                  </div>
-                  <div className="text-xs text-muted-foreground text-center">
-                    {stat.description}
-                  </div>
-                </div>
-
-                {/* Hover Glow */}
-                <div
-                  className="absolute -inset-px rounded-xl opacity-0 group-hover:opacity-20 transition-opacity blur-sm"
-                  style={{ backgroundColor: stat.color }}
-                />
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* Category Filters */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className="flex flex-wrap gap-3 justify-center"
-          >
-            {filterCategories.map((category) => {
-              const Icon = category.icon;
-              const isActive = activeFilter === category.id;
+            {experienceStats.map((stat, index) => {
+              const Icon = stat.icon;
               return (
-                <motion.button
-                  key={category.id}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() =>
-                    setActiveFilter(
-                      category.id as
-                        | "all"
-                        | "work"
-                        | "education"
-                        | "achievement"
-                    )
-                  }
-                  className={`
-                    flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm
-                    transition-all duration-300 border backdrop-blur-sm
-                    ${
-                      isActive
-                        ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/30"
-                        : "bg-card/50 text-muted-foreground border-border hover:border-primary/50"
-                    }
-                  `}
+                <Card
+                  key={index}
+                  className="p-4 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all group"
                 >
-                  <Icon className="h-4 w-4" />
-                  <span>{category.label}</span>
-                  <span
-                    className={`
-                    px-2 py-0.5 rounded-full text-xs font-bold
-                    ${
-                      isActive
-                        ? "bg-primary-foreground/20 text-primary-foreground"
-                        : "bg-muted text-muted-foreground"
-                    }
-                  `}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                    transition={{ delay: 0.4 + index * 0.1 }}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    className="flex flex-col items-center gap-2"
                   >
-                    {category.count}
-                  </span>
-                </motion.button>
+                    <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                      <Icon className="h-5 w-5 text-primary" />
+                    </div>
+                    <div className="text-2xl md:text-3xl font-bold font-mono text-primary">
+                      {stat.value}
+                    </div>
+                    <div className="text-xs text-center text-muted-foreground font-medium">
+                      {stat.label}
+                    </div>
+                  </motion.div>
+                </Card>
               );
             })}
           </motion.div>
@@ -369,11 +252,12 @@ export function TimelineSection() {
             {/* Vertical Line */}
             <div className="absolute left-6 md:left-8 top-0 bottom-0 w-0.5 bg-linear-to-b from-primary via-purple-500 to-accent" />
 
-            {filteredTimeline.map((item, index) => {
+            {sortedTimeline.map((item, index) => {
               const Icon = iconMap[item.type];
               const isExpanded = expandedItems.has(item.id);
               const hasMetrics = item.metrics && item.metrics.length > 0;
-              const isExpandable = item.id === "ongc-2025"; // Only ONGC can expand
+              const isExpandable = hasMetrics; // Items with metrics can expand
+              const isAchievement = item.type === "achievement"; // Achievements show only start date
 
               return (
                 <motion.div
@@ -479,12 +363,13 @@ export function TimelineSection() {
                             <Calendar className="h-4 w-4 text-primary" />
                             <span className="font-mono">
                               {format(new Date(item.startDate), "MMM yyyy")}
-                              {item.endDate &&
+                              {!isAchievement &&
+                                item.endDate &&
                                 ` - ${format(
                                   new Date(item.endDate),
                                   "MMM yyyy"
                                 )}`}
-                              {!item.endDate && " - Present"}
+                              {!isAchievement && !item.endDate && " - Present"}
                             </span>
                           </div>
                           <div className="flex items-center gap-1.5">
