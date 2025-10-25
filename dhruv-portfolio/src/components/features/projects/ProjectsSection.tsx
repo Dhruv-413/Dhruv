@@ -28,11 +28,9 @@ export function ProjectsSection() {
 
   // Refs for scroll animations
   const heroRef = useRef(null);
-  const statsRef = useRef(null);
   const galleryRef = useRef(null);
 
   const isHeroInView = useInView(heroRef, { once: true, margin: "-100px" });
-  const isStatsInView = useInView(statsRef, { once: true, margin: "-100px" });
   const isGalleryInView = useInView(galleryRef, {
     once: true,
     margin: "-100px",
