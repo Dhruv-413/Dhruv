@@ -161,7 +161,7 @@ export function GitHubSection() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
                 >
-                  <Card className="p-4 hover:shadow-lg transition-all hover:translate-y-[-2px]">
+                  <Card className="p-4 hover:shadow-lg transition-all hover:-translate-y-0.5">
                     <div className="flex items-start justify-between mb-2">
                       <h4 className="font-semibold text-primary hover:underline">
                         {repo.name}
