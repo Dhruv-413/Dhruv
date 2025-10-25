@@ -6,10 +6,15 @@ import {
   Github,
   Database,
   Target,
-  Sparkles,
   Braces,
   Zap,
   Eye,
+  UtensilsCrossed,
+  Earth,
+  Briefcase,
+  TrendingUp,
+  Users,
+  Award,
 } from "lucide-react";
 import { Project } from "@/types/project";
 import { Button } from "@/components/ui/button";
@@ -93,16 +98,34 @@ export function ProjectCard({ project, onClick, index = 0 }: ProjectCardProps) {
             transition={{ duration: 0.6 }}
           >
             <div style={{ color: colors.color }}>
-              {project.category === "AI/ML" && <Zap className="h-7 w-7" />}
-              {project.category === "Full-Stack" && (
-                <Database className="h-7 w-7" />
+              {/* Project-specific icons */}
+              {project.id === "crave-connect" && (
+                <UtensilsCrossed className="h-7 w-7" />
               )}
-              {project.category === "Computer Vision" && (
-                <Eye className="h-7 w-7" />
+              {project.id === "ecohive" && <Earth className="h-7 w-7" />}
+              {project.id === "muj-placement-portal" && (
+                <Briefcase className="h-7 w-7" />
               )}
-              {project.category === "Enterprise" && (
-                <Target className="h-7 w-7" />
-              )}
+
+              {/* Category fallback icons */}
+              {project.id !== "crave-connect" &&
+                project.id !== "ecohive" &&
+                project.id !== "muj-placement-portal" && (
+                  <>
+                    {project.category === "AI/ML" && (
+                      <Zap className="h-7 w-7" />
+                    )}
+                    {project.category === "Full-Stack" && (
+                      <Database className="h-7 w-7" />
+                    )}
+                    {project.category === "Computer Vision" && (
+                      <Eye className="h-7 w-7" />
+                    )}
+                    {project.category === "Enterprise" && (
+                      <Target className="h-7 w-7" />
+                    )}
+                  </>
+                )}
             </div>
           </motion.div>
           <div className="flex-1">
@@ -122,6 +145,37 @@ export function ProjectCard({ project, onClick, index = 0 }: ProjectCardProps) {
         <p className="relative text-sm text-muted-foreground mb-4 leading-relaxed line-clamp-3">
           {project.description}
         </p>
+
+        {/* Key Metrics/Badges - Show project highlights */}
+        {project.badges && project.badges.length > 0 && (
+          <div className="relative flex flex-wrap gap-2 mb-4">
+            {project.badges.slice(0, 3).map((badge, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.1 + idx * 0.05 }}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-primary/10 border border-primary/20"
+              >
+                {badge.type === "performance" && (
+                  <TrendingUp className="h-3 w-3 text-primary" />
+                )}
+                {badge.type === "live" && (
+                  <Zap className="h-3 w-3 text-green-500" />
+                )}
+                {badge.type === "deployed" && (
+                  <Users className="h-3 w-3 text-blue-500" />
+                )}
+                {badge.type === "build" && (
+                  <Award className="h-3 w-3 text-purple-500" />
+                )}
+                <span className="text-xs font-mono font-semibold text-foreground">
+                  {badge.value}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        )}
 
         {/* Tech Stack Grid - Matching Skills Card Style */}
         <div className="relative flex flex-wrap gap-2 mb-4">
@@ -204,12 +258,6 @@ export function ProjectCard({ project, onClick, index = 0 }: ProjectCardProps) {
               <span className="text-primary">{"// "}</span>
               <span className="italic">Click for details</span>
             </div>
-            {project.featured && (
-              <div className="flex items-center gap-1 text-yellow-500">
-                <Sparkles className="h-3 w-3" />
-                <span className="text-xs font-semibold">Featured</span>
-              </div>
-            )}
           </div>
         </div>
       </div>

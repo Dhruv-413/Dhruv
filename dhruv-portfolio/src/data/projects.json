@@ -41,13 +41,13 @@
       "github": "https://github.com/arjunsaxaena/CraveConnect"
     },
     "images": ["/images/projects/crave-connect.jpg"],
-    "date": "2024-08-01"
+    "date": "2025-08-01"
   },
   {
     "id": "muj-placement-portal",
     "title": "MUJ Placement Portal",
-    "description": "Full-stack placement management system with JWT authentication serving 500+ active users",
-    "longDescription": "Developed a comprehensive placement portal featuring role-based access control, bulk processing capabilities, and real-time updates. Deployed on university intranet serving 500+ active users. Achieved 100% login success rate and reduced manual data entry by 80%.",
+    "description": "Full-stack placement management system with JWT authentication serving 100+ active users",
+    "longDescription": "Developed a comprehensive placement portal featuring role-based access control, bulk processing capabilities, and real-time updates. Deployed on university intranet serving 100+ active users. Achieved 100% login success rate and reduced manual data entry by 80%.",
     "category": "Full-Stack",
     "featured": true,
     "technologies": ["React.js", "PostgreSQL", "JWT", "REST API", "Node.js"],
@@ -66,13 +66,13 @@
       {
         "type": "deployed",
         "label": "Users",
-        "value": "500+ Active"
+        "value": "100+ Active"
       }
     ],
     "metrics": [
       {
         "label": "Active Users",
-        "value": "500+",
+        "value": "100+",
         "icon": "users"
       },
       {
@@ -92,7 +92,7 @@
       }
     ],
     "images": ["/images/projects/muj-portal.jpg"],
-    "date": "2024-06-01"
+    "date": "2025-06-01"
   },
   {
     "id": "stock-analysis",
@@ -136,7 +136,7 @@
       "github": "https://github.com/Dhruv-413/StockAnalysis"
     },
     "images": ["/images/projects/stock-analysis.jpg"],
-    "date": "2024-04-01"
+    "date": "2025-04-01"
   },
   {
     "id": "eye-gaze-tracking",
@@ -180,7 +180,7 @@
       "github": "https://github.com/Dhruv-413/Eye-Gaze-Tracking-"
     },
     "images": ["/images/projects/eye-gaze.jpg"],
-    "date": "2024-02-01"
+    "date": "2025-02-01"
   },
   {
     "id": "ecohive",
