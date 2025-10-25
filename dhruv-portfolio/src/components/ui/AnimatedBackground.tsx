@@ -2,16 +2,24 @@
 
 import { motion } from "framer-motion";
 
-// Generate particles outside component to avoid re-renders
-const generateParticles = () =>
-  [...Array(15)].map(() => ({
-    left: Math.random() * 100,
-    top: Math.random() * 100,
-    duration: 3 + Math.random() * 4,
-    delay: Math.random() * 5,
-  }));
-
-const particles = generateParticles();
+// Fixed seed for consistent particle positions
+const FIXED_PARTICLES = [
+  { left: 23.5, top: 45.2, duration: 5.2, delay: 1.3 },
+  { left: 67.8, top: 12.9, duration: 6.1, delay: 3.7 },
+  { left: 12.4, top: 78.6, duration: 4.5, delay: 0.8 },
+  { left: 89.3, top: 34.1, duration: 5.8, delay: 2.4 },
+  { left: 45.6, top: 91.3, duration: 4.2, delay: 4.1 },
+  { left: 78.2, top: 56.7, duration: 6.4, delay: 1.9 },
+  { left: 34.1, top: 23.4, duration: 5.1, delay: 3.2 },
+  { left: 56.9, top: 67.8, duration: 4.8, delay: 0.5 },
+  { left: 91.7, top: 89.2, duration: 5.5, delay: 2.7 },
+  { left: 8.3, top: 41.5, duration: 6.2, delay: 4.5 },
+  { left: 41.2, top: 15.8, duration: 4.7, delay: 1.6 },
+  { left: 72.5, top: 73.1, duration: 5.9, delay: 3.4 },
+  { left: 15.9, top: 52.3, duration: 4.4, delay: 2.1 },
+  { left: 63.4, top: 8.7, duration: 6.0, delay: 0.9 },
+  { left: 29.8, top: 95.4, duration: 5.3, delay: 3.8 },
+];
 
 export function AnimatedBackground() {
   return (
@@ -86,7 +94,7 @@ export function AnimatedBackground() {
         />
 
         {/* Floating particles - More subtle */}
-        {particles.map((particle, i) => (
+        {FIXED_PARTICLES.map((particle, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 bg-primary/10 rounded-full"
