@@ -22,63 +22,11 @@ import { format } from "date-fns";
 import { useState, useRef } from "react";
 import { TechIcon } from "@/components/ui/TechIcon";
 
-// Career Timeline Code Snippet
-const careerCodeSnippet = `interface Experience {
-  role: string;
-  company: string;
-  duration: string;
-  impact: Impact[];
-  technologies: string[];
-}
-
-class CareerTimeline {
-  private experiences: Experience[] = [];
-
-  constructor() {
-    this.experiences = [
-      {
-        role: "Summer Intern",
-        company: "ONGC",
-        duration: "Jun 2025 - Aug 2025",
-        impact: [
-          { metric: "dataProcessed", value: "8M+ points" },
-          { metric: "efficiency", value: "40% ↑" },
-          { metric: "departments", value: "5+" }
-        ],
-        technologies: [
-          "SAP ABAP", "HANA DB",
-          "Python", "FAISS", "PyTorch"
-        ]
-      }
-    ];
-  }
-
-  getTotalImpact(): Metrics {
-    return {
-      hackathonRank: "Top 50/2000+",
-      competitions: "3+ National",
-      cgpa: "8.06",
-      yearsOfLearning: "2+"
-    };
-  }
-
-  async getAchievements() {
-    return this.experiences.filter(
-      exp => exp.impact.length > 0
-    );
-  }
-}
-
-export const journey = new CareerTimeline();
-// Continuously evolving... 🚀`;
-
 const iconMap = {
   work: Briefcase,
   education: GraduationCap,
   achievement: Trophy,
-};
-
-// Stats calculation
+}; // Stats calculation
 const timeline = timelineData as TimelineItem[];
 const workExperiences = timeline.filter((item) => item.type === "work").length;
 const achievements = timeline.filter(
@@ -128,6 +76,9 @@ export function TimelineSection() {
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
   const toggleItem = (id: string) => {
+    // Only allow ONGC intern to expand (it has metrics)
+    if (id !== "ongc-2025") return;
+
     const newExpanded = new Set(expandedItems);
     if (newExpanded.has(id)) {
       newExpanded.delete(id);
@@ -225,218 +176,164 @@ export function TimelineSection() {
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        {/* Hero Section - Two Column Layout */}
-        <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto w-full mb-20">
-          {/* Left Column - Content */}
-          <div className="text-center lg:text-left order-2 lg:order-1">
-            {/* Terminal Prompt */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.5 }}
-              className="flex items-center gap-2 mb-6 justify-center lg:justify-start"
-            >
-              <div className="flex gap-1.5">
-                <div className="w-3 h-3 rounded-full bg-red-500" />
-                <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                <div className="w-3 h-3 rounded-full bg-green-500" />
-              </div>
-              <span className="text-sm font-mono text-muted-foreground">
-                ~/experience
-              </span>
-              <span className="w-2 h-4 bg-primary animate-pulse ml-1" />
-            </motion.div>
+        {/* Hero Section - Centered Single Column (No Code Snippet) */}
+        <div className="max-w-4xl mx-auto text-center mb-20">
+          {/* Terminal Prompt */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5 }}
+            className="flex items-center gap-2 mb-6 justify-center"
+          >
+            <div className="flex gap-1.5">
+              <div className="w-3 h-3 rounded-full bg-red-500" />
+              <div className="w-3 h-3 rounded-full bg-yellow-500" />
+              <div className="w-3 h-3 rounded-full bg-green-500" />
+            </div>
+            <span className="text-sm font-mono text-muted-foreground">
+              ~/experience
+            </span>
+            <span className="w-2 h-4 bg-primary animate-pulse ml-1" />
+          </motion.div>
 
-            {/* Title */}
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-5xl md:text-6xl font-bold mb-4"
-            >
-              <span className="bg-linear-to-r from-primary via-purple-500 to-accent bg-clip-text text-transparent">
-                Career Journey
-              </span>
-            </motion.h1>
+          {/* Title */}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-5xl md:text-7xl font-bold mb-6"
+          >
+            <span className="bg-linear-to-r from-primary via-purple-500 to-accent bg-clip-text text-transparent">
+              Career Journey
+            </span>
+          </motion.h1>
 
-            {/* Subtitle */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-xl md:text-2xl text-muted-foreground font-mono mb-6"
-            >
-              Work • Education • Achievements
-            </motion.p>
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-xl md:text-2xl text-muted-foreground font-mono mb-6"
+          >
+            Work • Education • Achievements
+          </motion.p>
 
-            {/* Description */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="text-base md:text-lg text-muted-foreground mb-8 leading-relaxed"
-            >
-              From processing{" "}
-              <span className="text-primary font-semibold">
-                8M+ data points
-              </span>{" "}
-              at ONGC to achieving{" "}
-              <span className="text-accent font-semibold">Top 50/2000+</span> in
-              national hackathons. A timeline of{" "}
-              <span className="text-purple-500 font-semibold">
-                continuous growth
-              </span>
-              , learning, and impact.
-            </motion.p>
+          {/* Description */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="text-base md:text-lg text-muted-foreground mb-10 leading-relaxed max-w-3xl mx-auto"
+          >
+            From processing{" "}
+            <span className="text-primary font-semibold">8M+ data points</span>{" "}
+            at ONGC to achieving{" "}
+            <span className="text-accent font-semibold">Top 50/2000+</span> in
+            national hackathons. A timeline of{" "}
+            <span className="text-purple-500 font-semibold">
+              continuous growth
+            </span>
+            , learning, and impact.
+          </motion.p>
 
-            {/* Stats Grid */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="grid grid-cols-2 gap-4 mb-8"
-            >
-              {experienceStats.map((stat, index) => (
-                <motion.div
-                  key={index}
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  className="group relative bg-card/50 backdrop-blur-sm border border-border rounded-xl p-4 hover:border-primary/50 transition-all cursor-pointer"
-                >
-                  <div className="flex items-center gap-3 mb-2">
-                    <div
-                      className="p-2 rounded-lg group-hover:scale-110 transition-transform"
-                      style={{ backgroundColor: `${stat.color}20` }}
-                    >
-                      <stat.icon
-                        className="h-5 w-5"
-                        style={{ color: stat.color }}
-                      />
-                    </div>
-                    <div
-                      className="text-2xl font-bold font-mono"
+          {/* Stats Grid */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10"
+          >
+            {experienceStats.map((stat, index) => (
+              <motion.div
+                key={index}
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="group relative bg-card/50 backdrop-blur-sm border border-border rounded-xl p-4 hover:border-primary/50 transition-all cursor-pointer"
+              >
+                <div className="flex flex-col items-center gap-2">
+                  <div
+                    className="p-3 rounded-lg group-hover:scale-110 transition-transform"
+                    style={{ backgroundColor: `${stat.color}20` }}
+                  >
+                    <stat.icon
+                      className="h-6 w-6"
                       style={{ color: stat.color }}
-                    >
-                      {stat.value}
-                    </div>
+                    />
                   </div>
-                  <div className="text-xs font-semibold text-foreground/80">
+                  <div
+                    className="text-3xl font-bold font-mono"
+                    style={{ color: stat.color }}
+                  >
+                    {stat.value}
+                  </div>
+                  <div className="text-sm font-semibold text-foreground/80">
                     {stat.label}
                   </div>
-                  <div className="text-xs text-muted-foreground">
+                  <div className="text-xs text-muted-foreground text-center">
                     {stat.description}
                   </div>
+                </div>
 
-                  {/* Hover Glow */}
-                  <div
-                    className="absolute -inset-px rounded-xl opacity-0 group-hover:opacity-20 transition-opacity blur-sm"
-                    style={{ backgroundColor: stat.color }}
-                  />
-                </motion.div>
-              ))}
-            </motion.div>
+                {/* Hover Glow */}
+                <div
+                  className="absolute -inset-px rounded-xl opacity-0 group-hover:opacity-20 transition-opacity blur-sm"
+                  style={{ backgroundColor: stat.color }}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
 
-            {/* Category Filters */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.5 }}
-              className="flex flex-wrap gap-3 justify-center lg:justify-start"
-            >
-              {filterCategories.map((category) => {
-                const Icon = category.icon;
-                const isActive = activeFilter === category.id;
-                return (
-                  <motion.button
-                    key={category.id}
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() =>
-                      setActiveFilter(
-                        category.id as
-                          | "all"
-                          | "work"
-                          | "education"
-                          | "achievement"
-                      )
+          {/* Category Filters */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className="flex flex-wrap gap-3 justify-center"
+          >
+            {filterCategories.map((category) => {
+              const Icon = category.icon;
+              const isActive = activeFilter === category.id;
+              return (
+                <motion.button
+                  key={category.id}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() =>
+                    setActiveFilter(
+                      category.id as
+                        | "all"
+                        | "work"
+                        | "education"
+                        | "achievement"
+                    )
+                  }
+                  className={`
+                    flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm
+                    transition-all duration-300 border backdrop-blur-sm
+                    ${
+                      isActive
+                        ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/30"
+                        : "bg-card/50 text-muted-foreground border-border hover:border-primary/50"
                     }
+                  `}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span>{category.label}</span>
+                  <span
                     className={`
-                      flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm
-                      transition-all duration-300 border backdrop-blur-sm
-                      ${
-                        isActive
-                          ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/30"
-                          : "bg-card/50 text-muted-foreground border-border hover:border-primary/50"
-                      }
-                    `}
+                    px-2 py-0.5 rounded-full text-xs font-bold
+                    ${
+                      isActive
+                        ? "bg-primary-foreground/20 text-primary-foreground"
+                        : "bg-muted text-muted-foreground"
+                    }
+                  `}
                   >
-                    <Icon className="h-4 w-4" />
-                    <span>{category.label}</span>
-                    <span
-                      className={`
-                      px-2 py-0.5 rounded-full text-xs font-bold
-                      ${
-                        isActive
-                          ? "bg-primary-foreground/20 text-primary-foreground"
-                          : "bg-muted text-muted-foreground"
-                      }
-                    `}
-                    >
-                      {category.count}
-                    </span>
-                  </motion.button>
-                );
-              })}
-            </motion.div>
-          </div>
-
-          {/* Right Column - Code Snippet */}
-          <div className="order-1 lg:order-2">
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="relative bg-card/50 backdrop-blur-xl border border-border/50 rounded-2xl overflow-hidden shadow-2xl"
-            >
-              {/* Terminal Header */}
-              <div className="flex items-center justify-between px-4 py-3 bg-muted/50 border-b border-border/50">
-                <div className="flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-green-500/80" />
-                </div>
-                <span className="text-xs font-mono text-muted-foreground">
-                  career-timeline.ts
-                </span>
-                <div className="w-12" />
-              </div>
-
-              {/* Code Content */}
-              <div className="relative h-[500px] overflow-y-auto custom-scrollbar">
-                <pre className="p-6 text-sm leading-relaxed">
-                  <code className="font-mono text-foreground/90">
-                    {careerCodeSnippet}
-                  </code>
-                </pre>
-
-                {/* Gradient Fade */}
-                <div className="absolute bottom-0 left-0 right-0 h-20 bg-linear-to-t from-card/80 to-transparent pointer-events-none" />
-              </div>
-
-              {/* Status Bar */}
-              <div className="flex items-center justify-between px-4 py-2 bg-muted/30 border-t border-border/50 text-xs font-mono">
-                <div className="flex items-center gap-4">
-                  <span className="text-primary">TypeScript</span>
-                  <span className="text-muted-foreground">UTF-8</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                  <span className="text-muted-foreground">
-                    Continuously Evolving
+                    {category.count}
                   </span>
-                </div>
-              </div>
-            </motion.div>
-          </div>
+                </motion.button>
+              );
+            })}
+          </motion.div>
         </div>
 
         {/* Interactive Timeline */}
@@ -463,8 +360,7 @@ export function TimelineSection() {
               Detailed Timeline
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Interactive cards with expandable metrics. Click to reveal impact
-              data and key achievements.
+              Explore my professional journey, education, and achievements.
             </p>
           </div>
 
@@ -476,6 +372,8 @@ export function TimelineSection() {
             {filteredTimeline.map((item, index) => {
               const Icon = iconMap[item.type];
               const isExpanded = expandedItems.has(item.id);
+              const hasMetrics = item.metrics && item.metrics.length > 0;
+              const isExpandable = item.id === "ongc-2025"; // Only ONGC can expand
 
               return (
                 <motion.div
@@ -515,10 +413,11 @@ export function TimelineSection() {
                   {/* Card */}
                   <motion.div
                     whileHover={{ scale: 1.02, y: -4 }}
-                    onClick={() => toggleItem(item.id)}
+                    onClick={() => isExpandable && toggleItem(item.id)}
                     className={`
-                      group relative bg-card border rounded-2xl p-6 cursor-pointer
+                      group relative bg-card border rounded-2xl p-6
                       transition-all duration-500 overflow-hidden
+                      ${isExpandable ? "cursor-pointer" : ""}
                       ${
                         isExpanded
                           ? "border-primary shadow-2xl shadow-primary/20"
@@ -526,8 +425,8 @@ export function TimelineSection() {
                       }
                     `}
                   >
-                    {/* Scan Line Effect */}
-                    {isExpanded && (
+                    {/* Scan Line Effect - Only for ONGC when expanded */}
+                    {isExpanded && isExpandable && (
                       <motion.div
                         className="absolute inset-x-0 h-px bg-primary/50"
                         initial={{ top: 0 }}
@@ -687,84 +586,29 @@ export function TimelineSection() {
                         })}
                       </div>
 
-                      {/* Expand Indicator */}
-                      <div className="text-center mt-4 pt-4 border-t border-border/50">
-                        <span className="text-xs font-mono text-muted-foreground">
-                          {isExpanded ? (
-                            <span className="flex items-center justify-center gap-2">
-                              <ChevronUp className="h-3 w-3" />
-                              Click to collapse
-                            </span>
-                          ) : (
-                            <span className="flex items-center justify-center gap-2">
-                              <ChevronDown className="h-3 w-3" />
-                              Click to expand{" "}
-                              {item.metrics?.length ? "metrics" : "details"}
-                            </span>
-                          )}
-                        </span>
-                      </div>
+                      {/* Expand Indicator - Only for ONGC */}
+                      {isExpandable && hasMetrics && (
+                        <div className="text-center mt-4 pt-4 border-t border-border/50">
+                          <span className="text-xs font-mono text-muted-foreground">
+                            {isExpanded ? (
+                              <span className="flex items-center justify-center gap-2">
+                                <ChevronUp className="h-3 w-3" />
+                                Click to collapse metrics
+                              </span>
+                            ) : (
+                              <span className="flex items-center justify-center gap-2">
+                                <ChevronDown className="h-3 w-3" />
+                                Click to view impact metrics
+                              </span>
+                            )}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 </motion.div>
               );
             })}
-          </div>
-        </motion.div>
-
-        {/* Performance Badge - Technical Credibility */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 1.5 }}
-          className="mt-16 max-w-3xl mx-auto"
-        >
-          <div className="bg-card/50 backdrop-blur-sm border border-border rounded-2xl p-8">
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <Award className="h-6 w-6 text-amber-500" />
-              <h3 className="text-2xl font-bold">Technical Credibility</h3>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[
-                {
-                  label: "Build Status",
-                  value: "Passing",
-                  icon: "✓",
-                  color: "green",
-                },
-                {
-                  label: "Code Quality",
-                  value: "A+",
-                  icon: "★",
-                  color: "purple",
-                },
-                {
-                  label: "Performance",
-                  value: "98/100",
-                  icon: "⚡",
-                  color: "amber",
-                },
-                {
-                  label: "Accessibility",
-                  value: "AAA",
-                  icon: "♿",
-                  color: "blue",
-                },
-              ].map((badge, idx) => (
-                <motion.div
-                  key={idx}
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  className="text-center p-4 bg-muted/50 rounded-xl border border-border hover:border-primary/50 transition-all"
-                >
-                  <div className="text-3xl mb-2">{badge.icon}</div>
-                  <div className="text-lg font-bold mb-1">{badge.value}</div>
-                  <div className="text-xs text-muted-foreground">
-                    {badge.label}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
           </div>
         </motion.div>
       </div>
