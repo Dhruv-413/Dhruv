@@ -1,11 +1,11 @@
 import { Hero } from "@/components/features/hero/Hero";
-import { StatsSection } from "@/components/features/stats/StatsSection";
+import { AboutSection } from "@/components/features/about/AboutSection";
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <StatsSection />
+      <AboutSection />
     </>
   );
 }
