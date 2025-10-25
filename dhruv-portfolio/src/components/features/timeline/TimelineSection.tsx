@@ -14,7 +14,6 @@ import {
   ChevronUp,
   Terminal,
   Shield,
-  Check,
   GitBranch,
   Activity,
   Target,
@@ -47,7 +46,6 @@ const achievements = timeline.filter(
 
 const technicalBadges = [
   { label: "Production Ready", icon: Shield, color: "text-green-500" },
-  { label: "95% Test Coverage", icon: Check, color: "text-blue-500" },
   { label: "CI/CD Automated", icon: GitBranch, color: "text-purple-500" },
   { label: "8M+ Data Points", icon: Activity, color: "text-orange-500" },
   { label: "40% Faster", icon: Target, color: "text-pink-500" },
