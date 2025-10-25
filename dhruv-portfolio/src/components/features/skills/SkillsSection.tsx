@@ -12,10 +12,10 @@ import {
   Cloud,
   Terminal,
   Braces,
-  GitBranch,
   Layers,
+  Zap,
+  Rocket,
 } from "lucide-react";
-import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 const categoryIcons: Record<
   string,
@@ -29,43 +29,305 @@ const categoryIcons: Record<
   DevOps: Cloud,
 };
 
+// Skills code snippet matching Hero.tsx style
+const skillsCodeSnippet = `// My Technical Skills
+const skills = {
+  frontend: {
+    frameworks: ["React.js", "Next.js"],
+    languages: ["TypeScript", "JavaScript"],
+    styling: ["Tailwind CSS"]
+  },
+
+  backend: {
+    languages: ["Python", "Go"],
+    frameworks: ["FastAPI"],
+    databases: ["PostgreSQL"],
+  },
+
+  aiml: {
+    frameworks: ["PyTorch", "TensorFlow"],
+    libraries: ["Scikit-learn", "OpenCV"],
+    focus: "Deep Learning & CV"
+  },
+
+  devops: {
+    tools: ["Docker", "Git"],
+    platforms: ["GitHub Actions"],
+    practices: "CI/CD Automation"
+  },
+
+  enterprise: ["SAP ABAP"],
+  dataScience: ["Pandas", "NumPy"],
+
+  continuousLearning: true,
+  passionDriven: true
+};`;
+
+// Calculate stats
+const totalTechnologies = skillsData
+  .flatMap((cat) => cat.skills)
+  .filter((skill, index, self) => self.indexOf(skill) === index).length;
+
+const skillStats = [
+  { label: "Technologies", value: `${totalTechnologies}+`, icon: Code },
+  { label: "Categories", value: skillsData.length.toString(), icon: Layers },
+  { label: "Projects Built", value: "10+", icon: Rocket },
+  { label: "Always Learning", value: "∞", icon: Sparkles },
+];
+
 export function SkillsSection() {
+  const sectionRef = useRef(null);
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   return (
-    <section id="skills" className="py-20 relative overflow-hidden">
-      {/* Animated Background Grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] bg-size-[14px_24px] opacity-20" />
+    <section
+      id="skills"
+      ref={sectionRef}
+      className="relative min-h-screen overflow-hidden pt-16 pb-20"
+    >
+      {/* Enhanced Animated Background - Matching Hero.tsx */}
+      <div className="absolute inset-0 -z-10">
+        {/* Gradient Orbs */}
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.05, 0.08, 0.05],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{
+            scale: [1.2, 1, 1.2],
+            opacity: [0.08, 0.05, 0.08],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 4,
+          }}
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent rounded-full blur-3xl"
+        />
 
-      {/* Gradient Orbs */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl opacity-20 animate-pulse" />
-      <div
-        className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl opacity-20 animate-pulse"
-        style={{ animationDelay: "1s" }}
-      />
+        {/* Grid Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px]" />
 
-      <div className="container mx-auto px-6 relative z-10" ref={containerRef}>
-        {/* Header with Terminal Effect */}
-        <ScrollReveal>
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-card border border-primary/20 rounded-full mb-6 backdrop-blur-sm">
-              <Terminal className="h-4 w-4 text-primary animate-pulse" />
-              <span className="text-sm font-mono text-primary">~/skills</span>
-              <span className="w-2 h-4 bg-primary animate-pulse" />
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-linear-to-t from-background via-background/50 to-transparent" />
+      </div>
+
+      {/* Skills Hero Content - Matching Hero.tsx Layout */}
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen flex items-center justify-center py-20">
+          <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto w-full">
+            {/* Left Column - Skills Content */}
+            <div className="text-center lg:text-left order-2 lg:order-1">
+              {/* Terminal Prompt */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+                className="flex items-center gap-2 mb-4 justify-center lg:justify-start"
+              >
+                <Terminal className="h-4 w-4 text-primary" />
+                <span className="text-primary font-mono text-sm">~/skills</span>
+                <motion.span
+                  animate={{ opacity: [1, 0, 1] }}
+                  transition={{ duration: 1, repeat: Infinity }}
+                  className="text-primary font-mono"
+                >
+                  _
+                </motion.span>
+              </motion.div>
+
+              {/* Title */}
+              <motion.h1
+                className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-4 bg-linear-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                Technical Arsenal
+              </motion.h1>
+
+              {/* Subtitle */}
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary mb-6"
+              >
+                Full-Stack • AI/ML • DevOps
+              </motion.h2>
+
+              {/* Description */}
+              <motion.p
+                className="text-base text-muted-foreground mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+              >
+                Comprehensive technical expertise across{" "}
+                <span className="text-primary font-semibold">
+                  {totalTechnologies}+ technologies
+                </span>
+                , spanning {skillsData.length} domains. From modern web
+                frameworks to AI/ML and enterprise software, building{" "}
+                <span className="text-primary font-semibold">
+                  production-ready
+                </span>{" "}
+                solutions with best practices.
+              </motion.p>
+
+              {/* Quick Stats */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="grid grid-cols-2 gap-3 mb-8"
+              >
+                {skillStats.map((stat, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center gap-2 px-4 py-3 bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg hover:border-primary/30 transition-all group"
+                  >
+                    <stat.icon className="h-5 w-5 text-primary group-hover:scale-110 transition-transform" />
+                    <div className="text-left">
+                      <div className="text-lg font-bold font-mono">
+                        {stat.value}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {stat.label}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </motion.div>
+
+              {/* Categories Overview */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.5 }}
+                className="mb-8"
+              >
+                <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
+                  {skillsData.map((category, idx) => {
+                    const Icon = categoryIcons[category.category] || Code;
+                    return (
+                      <motion.div
+                        key={idx}
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        className="px-4 py-2 bg-card/80 backdrop-blur-sm border border-border/50 rounded-lg hover:border-primary/50 transition-all cursor-pointer group"
+                        style={{
+                          borderColor:
+                            activeCategory === category.category
+                              ? category.color
+                              : undefined,
+                        }}
+                        onMouseEnter={() =>
+                          setActiveCategory(category.category)
+                        }
+                        onMouseLeave={() => setActiveCategory(null)}
+                      >
+                        <div className="flex items-center gap-2">
+                          <div style={{ color: category.color }}>
+                            <Icon className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                          </div>
+                          <span className="text-sm font-semibold">
+                            {category.category}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            ({category.skills.length})
+                          </span>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </motion.div>
             </div>
-            <h2 className="text-4xl sm:text-6xl font-bold mb-4 gradient-text">
-              Technical Arsenal
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-              Comprehensive technical expertise across modern development stacks
-            </p>
-          </div>
-        </ScrollReveal>
 
-        {/* Interactive Category Cards - No Proficiency Bars */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+            {/* Right Column - Code Snippet */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="order-1 lg:order-2"
+            >
+              <div className="relative bg-card/50 backdrop-blur-xl border border-border/50 rounded-2xl overflow-hidden shadow-2xl hover:shadow-primary/10 transition-all">
+                {/* Terminal Header */}
+                <div className="flex items-center gap-2 px-4 py-3 bg-muted/50 border-b border-border/50">
+                  <div className="flex gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                    <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+                    <div className="w-3 h-3 rounded-full bg-green-500/80" />
+                  </div>
+                  <span className="text-xs font-mono text-muted-foreground ml-2">
+                    skills.ts
+                  </span>
+                </div>
+
+                {/* Code Content */}
+                <div className="relative">
+                  <pre className="p-6 text-sm font-mono leading-relaxed overflow-x-auto max-h-[600px] custom-scrollbar">
+                    <code className="language-typescript">
+                      {skillsCodeSnippet}
+                    </code>
+                  </pre>
+
+                  {/* Gradient Fade at Bottom */}
+                  <div className="absolute bottom-0 left-0 right-0 h-20 bg-linear-to-t from-card/90 to-transparent pointer-events-none" />
+                </div>
+
+                {/* Status Bar */}
+                <div className="flex items-center justify-between px-4 py-2 bg-muted/30 border-t border-border/50 text-xs font-mono">
+                  <div className="flex items-center gap-3">
+                    <span className="text-green-500">● TypeScript</span>
+                    <span className="text-primary">UTF-8</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Zap className="h-3 w-3 text-yellow-500" />
+                    <span className="text-muted-foreground">
+                      Production Ready
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+
+      {/* Detailed Skills Section Below */}
+      <div
+        className="container mx-auto px-4 sm:px-6 lg:px-8 py-20"
+        ref={containerRef}
+      >
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl sm:text-5xl font-bold mb-4 gradient-text">
+            Skills Breakdown
+          </h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
+            Detailed overview of technologies and tools I work with
+          </p>
+        </motion.div>
+
+        {/* Skills Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
           {skillsData.map((skillCategory, index) => {
             const Icon = categoryIcons[skillCategory.category] || Code;
             const isActive = activeCategory === skillCategory.category;
@@ -80,8 +342,8 @@ export function SkillsSection() {
                   delay: index * 0.1,
                   ease: [0.25, 0.4, 0.25, 1],
                 }}
-                onHoverStart={() => setActiveCategory(skillCategory.category)}
-                onHoverEnd={() => setActiveCategory(null)}
+                onMouseEnter={() => setActiveCategory(skillCategory.category)}
+                onMouseLeave={() => setActiveCategory(null)}
                 className="group relative"
               >
                 {/* Card Container */}
@@ -197,237 +459,6 @@ export function SkillsSection() {
             );
           })}
         </div>
-
-        {/* Technology Grid - Interactive Showcase */}
-        <ScrollReveal delay={0.3}>
-          <div className="relative mb-16">
-            <div className="absolute inset-0 bg-linear-to-r from-primary/5 via-purple-500/5 to-accent/5 rounded-3xl blur-3xl" />
-
-            <div className="relative bg-card/80 backdrop-blur-xl rounded-3xl p-8 border border-border/50 shadow-2xl">
-              {/* Header */}
-              <div className="text-center mb-10">
-                <div className="flex items-center justify-center gap-2 mb-4">
-                  <Layers className="h-6 w-6 text-primary" />
-                  <h3 className="text-3xl font-bold gradient-text">
-                    Complete Tech Stack
-                  </h3>
-                </div>
-                <p className="text-muted-foreground font-mono text-sm">
-                  <span className="text-green-500">✓</span> Click to interact •
-                  Hover for details
-                </p>
-              </div>
-
-              {/* Filterable Tech Grid */}
-              <div className="flex flex-wrap justify-center gap-3">
-                {skillsData
-                  .flatMap((cat) => cat.skills)
-                  .filter((skill, index, self) => self.indexOf(skill) === index) // Remove duplicates
-                  .map((skill, idx) => {
-                    const icon = <TechIcon name={skill} className="h-6 w-6" />;
-                    const category = skillsData.find((cat) =>
-                      cat.skills.includes(skill)
-                    );
-
-                    return (
-                      <motion.div
-                        key={idx}
-                        initial={{ opacity: 0, scale: 0, rotate: -180 }}
-                        animate={
-                          isInView ? { opacity: 1, scale: 1, rotate: 0 } : {}
-                        }
-                        transition={{
-                          duration: 0.5,
-                          delay: idx * 0.02,
-                          type: "spring",
-                          stiffness: 150,
-                        }}
-                        whileHover={{
-                          scale: 1.2,
-                          y: -8,
-                          transition: { duration: 0.2 },
-                        }}
-                        whileTap={{ scale: 0.9 }}
-                        className="group/tech relative"
-                      >
-                        <div className="flex items-center gap-2 px-4 py-3 bg-card/90 backdrop-blur-sm border border-border rounded-xl hover:border-primary hover:shadow-xl hover:shadow-primary/20 transition-all duration-300 cursor-pointer">
-                          <div className="group-hover/tech:rotate-12 group-hover/tech:scale-110 transition-transform duration-300">
-                            {icon}
-                          </div>
-                          <span className="text-sm font-semibold group-hover/tech:text-primary transition-colors">
-                            {skill}
-                          </span>
-                        </div>
-
-                        {/* Enhanced Tooltip */}
-                        <div className="absolute -top-12 left-1/2 -translate-x-1/2 px-4 py-2 bg-primary text-primary-foreground text-xs font-mono rounded-lg opacity-0 group-hover/tech:opacity-100 transition-all duration-200 pointer-events-none whitespace-nowrap shadow-lg border border-primary/20">
-                          <div className="font-bold">{skill}</div>
-                          {category && (
-                            <div className="text-primary-foreground/80 text-[10px]">
-                              {category.category}
-                            </div>
-                          )}
-                          {/* Arrow */}
-                          <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-primary rotate-45" />
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-              </div>
-            </div>
-          </div>
-        </ScrollReveal>
-
-        {/* Stats Dashboard with Code Theme */}
-        <ScrollReveal delay={0.5}>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              {
-                label: "Technologies",
-                value: skillsData
-                  .flatMap((c) => c.skills)
-                  .filter((s, i, arr) => arr.indexOf(s) === i).length,
-                icon: Code,
-                color: "#3b82f6",
-                prefix: "const total =",
-              },
-              {
-                label: "Domains",
-                value: skillsData.length,
-                icon: Layers,
-                color: "#8b5cf6",
-                prefix: "let domains =",
-              },
-              {
-                label: "Projects",
-                value: "10+",
-                icon: GitBranch,
-                color: "#10b981",
-                prefix: "var projects =",
-              },
-              {
-                label: "Experience",
-                value: "1+ yrs",
-                icon: Sparkles,
-                color: "#f59e0b",
-                prefix: "const exp =",
-              },
-            ].map((stat, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: idx * 0.1 + 0.8 }}
-                whileHover={{
-                  scale: 1.05,
-                  boxShadow: `0 10px 30px ${stat.color}20`,
-                }}
-                className="relative group/stat"
-              >
-                <div className="text-center p-6 bg-card/90 backdrop-blur-sm rounded-2xl border border-border hover:border-primary/50 transition-all overflow-hidden">
-                  {/* Animated Background */}
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover/stat:opacity-5 transition-opacity"
-                    style={{ backgroundColor: stat.color }}
-                  />
-
-                  <stat.icon
-                    className="h-10 w-10 mx-auto mb-4 group-hover/stat:scale-125 transition-transform duration-300"
-                    style={{ color: stat.color }}
-                  />
-
-                  {/* Code-style prefix */}
-                  <div className="text-xs font-mono text-muted-foreground mb-2">
-                    {stat.prefix}
-                  </div>
-
-                  <div
-                    className="text-4xl font-bold mb-2 font-mono"
-                    style={{ color: stat.color }}
-                  >
-                    {stat.value}
-                  </div>
-
-                  <div className="text-sm text-muted-foreground font-medium">
-                    {stat.label}
-                  </div>
-
-                  {/* Semicolon decoration */}
-                  <div className="text-primary/50 font-mono text-lg mt-1">
-                    ;
-                  </div>
-                </div>
-
-                {/* Corner glow */}
-                <div
-                  className="absolute -bottom-2 -right-2 w-16 h-16 rounded-full blur-2xl opacity-0 group-hover/stat:opacity-50 transition-opacity"
-                  style={{ backgroundColor: stat.color }}
-                />
-              </motion.div>
-            ))}
-          </div>
-        </ScrollReveal>
-
-        {/* Code Snippet Preview - Easter Egg */}
-        <ScrollReveal delay={0.7}>
-          <motion.div
-            className="mt-16 relative group/code cursor-pointer"
-            whileHover={{ scale: 1.02 }}
-          >
-            <div className="bg-card/50 backdrop-blur-sm rounded-2xl p-8 border border-border/50 hover:border-primary/30 transition-all">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-green-500/80" />
-                </div>
-                <span className="text-xs font-mono text-muted-foreground ml-auto">
-                  skills.config.ts
-                </span>
-              </div>
-
-              <div className="font-mono text-sm space-y-1">
-                <div>
-                  <span className="text-purple-500">export</span>{" "}
-                  <span className="text-blue-500">const</span>{" "}
-                  <span className="text-yellow-500">skillCategories</span> ={" "}
-                  {"{"}
-                </div>
-                <div className="pl-4">
-                  <span className="text-green-500">frontend</span>: [
-                  <span className="text-orange-500">
-                    React, Next.js, TypeScript
-                  </span>
-                  ],
-                </div>
-                <div className="pl-4">
-                  <span className="text-green-500">backend</span>: [
-                  <span className="text-orange-500">Node.js, Python, Java</span>
-                  ],
-                </div>
-                <div className="pl-4">
-                  <span className="text-green-500">aiml</span>: [
-                  <span className="text-orange-500">
-                    TensorFlow, PyTorch, OpenCV
-                  </span>
-                  ],
-                </div>
-                <div className="pl-4">
-                  <span className="text-green-500">cloud</span>: [
-                  <span className="text-orange-500">
-                    AWS, Docker, Kubernetes
-                  </span>
-                  ],
-                </div>
-                <div className="pl-4">
-                  <span className="text-red-500">passion</span>:{" "}
-                  <span className="text-primary">Infinite</span> 💫
-                </div>
-                <div>{"};"}</div>
-              </div>
-            </div>
-          </motion.div>
-        </ScrollReveal>
       </div>
     </section>
   );

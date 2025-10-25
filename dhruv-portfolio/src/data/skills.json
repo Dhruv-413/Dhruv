@@ -9,7 +9,7 @@
     "category": "Backend",
     "proficiency": 90,
     "color": "#3b82f6",
-    "skills": ["Python", "FastAPI", "PostgreSQL", "Docker", "Go"]
+    "skills": ["Python", "FastAPI", "PostgreSQL", "Go"]
   },
   {
     "category": "Frontend",
