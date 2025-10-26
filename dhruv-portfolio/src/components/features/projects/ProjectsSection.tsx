@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import dynamic from "next/dynamic";
 import {
   Code2,
   Folder,
@@ -14,12 +15,19 @@ import {
   Rocket,
 } from "lucide-react";
 import { ProjectCard } from "./ProjectCard";
-import { ProjectModal } from "./ProjectModal";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Project } from "@/types/project";
 import projectsData from "@/data/projects.json";
 import Link from "next/link";
+
+// Lazy load ProjectModal - only loads when user opens a project
+const ProjectModal = dynamic(
+  () => import("./ProjectModal").then((mod) => ({ default: mod.ProjectModal })),
+  {
+    ssr: false,
+  }
+);
 
 export function ProjectsSection() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);

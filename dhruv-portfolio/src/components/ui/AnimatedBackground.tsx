@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { memo } from "react";
 
-// Fixed seed for consistent particle positions
+// Fixed seed for consistent particle positions - Performance optimized
 const FIXED_PARTICLES = [
   { left: 23.5, top: 45.2, duration: 5.2, delay: 1.3 },
   { left: 67.8, top: 12.9, duration: 6.1, delay: 3.7 },
@@ -21,7 +22,8 @@ const FIXED_PARTICLES = [
   { left: 29.8, top: 95.4, duration: 5.3, delay: 3.8 },
 ];
 
-export function AnimatedBackground() {
+// Memoized component for better performance
+export const AnimatedBackground = memo(function AnimatedBackground() {
   return (
     <>
       {/* Base background layer - Deepest layer */}
@@ -33,9 +35,10 @@ export function AnimatedBackground() {
       <div className="fixed inset-0 -z-15 overflow-hidden pointer-events-none">
         {/* Animated gradient orbs - Visible atmospheric effect that complements the background */}
         <motion.div
-          className="absolute top-0 -left-1/4 w-1/2 h-1/2 rounded-full blur-3xl opacity-[0.012]"
+          className="absolute top-0 -left-1/4 w-1/2 h-1/2 rounded-full blur-3xl opacity-[0.03]"
           style={{
-            background: "radial-gradient(circle, #ffffff 0%, transparent 70%)",
+            background: "radial-gradient(circle, #ffffff 0%, transparent 50%)",
+            willChange: "transform, opacity",
           }}
           animate={{
             x: [0, 100, 0],
@@ -54,6 +57,7 @@ export function AnimatedBackground() {
           className="absolute top-1/4 -right-1/4 w-1/2 h-1/2 rounded-full blur-3xl opacity-[0.014]"
           style={{
             background: "radial-gradient(circle, #ffffff 0%, transparent 70%)",
+            willChange: "transform, opacity",
           }}
           animate={{
             x: [0, -100, 0],
@@ -72,6 +76,7 @@ export function AnimatedBackground() {
           className="absolute bottom-0 left-1/3 w-1/2 h-1/2 rounded-full blur-3xl opacity-[0.013]"
           style={{
             background: "radial-gradient(circle, #ffffff 0%, transparent 70%)",
+            willChange: "transform, opacity",
           }}
           animate={{
             x: [0, -50, 0],
@@ -104,6 +109,7 @@ export function AnimatedBackground() {
             style={{
               left: `${particle.left}%`,
               top: `${particle.top}%`,
+              willChange: "transform, opacity",
             }}
             animate={{
               y: [0, -30, 0],
@@ -133,4 +139,4 @@ export function AnimatedBackground() {
       </div>
     </>
   );
-}
+});

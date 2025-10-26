@@ -1,5 +1,18 @@
-import { ContactSection } from "@/components/features/contact/ContactSection";
+import dynamic from "next/dynamic";
 import { AnimatedBackground } from "@/components/ui/AnimatedBackground";
+import { Suspense } from "react";
+import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
+
+const ContactSection = dynamic(
+  () =>
+    import("@/components/features/contact/ContactSection").then((mod) => ({
+      default: mod.ContactSection,
+    })),
+  {
+    loading: () => <LoadingSkeleton variant="contact" />,
+    ssr: true,
+  }
+);
 
 export const metadata = {
   title: "Contact - Dhruv Gupta",
@@ -10,8 +23,10 @@ export default function ContactPage() {
   return (
     <>
       <AnimatedBackground />
-      <div className="min-h-screen pt-20 relative">
-        <ContactSection />
+      <div className="min-h-screen pt-16 sm:pt-20 relative">
+        <Suspense fallback={<LoadingSkeleton variant="contact" />}>
+          <ContactSection />
+        </Suspense>
       </div>
     </>
   );
