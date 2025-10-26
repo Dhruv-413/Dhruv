@@ -1,0 +1,229 @@
+[
+  {
+    "id": "crave-connect",
+    "title": "Crave Connect",
+    "description": "REST API with semantic search using pgvector for intelligent food service discovery",
+    "longDescription": "Built a comprehensive REST API architecture featuring semantic search capabilities powered by pgvector embeddings. The system enables intelligent querying across 20+ data models with advanced PostgreSQL optimization.",
+    "category": "Full-Stack",
+    "featured": true,
+    "technologies": ["Python", "PostgreSQL", "FastAPI", "Docker", "pgvector"],
+    "codeSnippet": "@app.get(\"/search\")\nasync def semantic_search(\n    query: str,\n    db: Session = Depends(get_db)\n):\n    # Generate embedding for query\n    embedding = get_embedding(query)\n    \n    # Semantic search using pgvector\n    results = db.execute(\n        text(\"\"\"\n            SELECT * FROM restaurants\n            ORDER BY embedding <-> :embedding\n            LIMIT 10\n        \"\"\"),\n        {\"embedding\": embedding}\n    )\n    return results.fetchall()",
+    "badges": [
+      {
+        "type": "performance",
+        "label": "Response Time",
+        "value": "<100ms"
+      },
+      {
+        "type": "build",
+        "label": "Docker",
+        "value": "Production Ready"
+      }
+    ],
+    "metrics": [
+      {
+        "label": "Data Models",
+        "value": "20+",
+        "icon": "database"
+      },
+      {
+        "label": "Search Type",
+        "value": "Semantic",
+        "icon": "search"
+      },
+      {
+        "label": "Deployment",
+        "value": "Docker",
+        "icon": "container"
+      }
+    ],
+    "links": {
+      "github": "https://github.com/arjunsaxaena/CraveConnect"
+    },
+    "images": ["/images/projects/crave-connect.jpg"],
+    "date": "2025-08-01"
+  },
+  {
+    "id": "muj-placement-portal",
+    "title": "MUJ Placement Portal",
+    "description": "Full-stack placement management system with JWT authentication serving 100+ active users",
+    "longDescription": "Developed a comprehensive placement portal featuring role-based access control, bulk processing capabilities, and real-time updates. Deployed on university intranet serving 100+ active users. Achieved 100% login success rate and reduced manual data entry by 80%.",
+    "category": "Full-Stack",
+    "featured": true,
+    "technologies": ["React.js", "PostgreSQL", "JWT", "REST API", "Node.js"],
+    "codeSnippet": "// JWT Authentication Middleware\nconst authMiddleware = async (req, res, next) => {\n  try {\n    const token = req.headers.authorization?.split(' ')[1];\n    \n    if (!token) {\n      return res.status(401).json({ error: 'Unauthorized' });\n    }\n    \n    const decoded = jwt.verify(token, process.env.JWT_SECRET);\n    req.user = decoded;\n    \n    // Role-based access control\n    if (req.user.role !== 'admin' && req.path.includes('/admin')) {\n      return res.status(403).json({ error: 'Forbidden' });\n    }\n    \n    next();\n  } catch (error) {\n    res.status(401).json({ error: 'Invalid token' });\n  }\n};",
+    "badges": [
+      {
+        "type": "live",
+        "label": "Status",
+        "value": "Live on Intranet"
+      },
+      {
+        "type": "performance",
+        "label": "Uptime",
+        "value": "99.9%"
+      },
+      {
+        "type": "deployed",
+        "label": "Users",
+        "value": "100+ Active"
+      }
+    ],
+    "metrics": [
+      {
+        "label": "Active Users",
+        "value": "100+",
+        "icon": "users"
+      },
+      {
+        "label": "Login Success",
+        "value": "100%",
+        "icon": "shield-check"
+      },
+      {
+        "label": "Time Saved",
+        "value": "80%",
+        "icon": "clock"
+      },
+      {
+        "label": "Status",
+        "value": "Live",
+        "icon": "zap"
+      }
+    ],
+    "images": ["/images/projects/muj-portal.jpg"],
+    "date": "2025-06-01"
+  },
+  {
+    "id": "stock-analysis",
+    "title": "Stock Analysis System",
+    "description": "Multi-agent NLP system for stock market analysis with 87% query accuracy",
+    "longDescription": "Engineered a sophisticated multi-agent NLP system integrating 5 data providers (Yahoo Finance, Alpha Vantage, CNBC, MarketWatch, and The Motley Fool) to deliver comprehensive stock analysis with 60% faster query response times.",
+    "category": "AI/ML",
+    "featured": false,
+    "technologies": ["Python", "Google ADK", "FastAPI", "NLP", "BeautifulSoup"],
+    "codeSnippet": "# Multi-Agent Stock Analysis\nclass StockAnalysisAgent:\n    def __init__(self):\n        self.agents = [\n            YahooFinanceAgent(),\n            AlphaVantageAgent(),\n            NewsScraperAgent()\n        ]\n    \n    async def analyze(self, ticker: str):\n        # Parallel data collection\n        tasks = [\n            agent.fetch_data(ticker) \n            for agent in self.agents\n        ]\n        results = await asyncio.gather(*tasks)\n        \n        # Aggregate and analyze\n        return self.synthesize_analysis(results)",
+    "badges": [
+      {
+        "type": "performance",
+        "label": "Accuracy",
+        "value": "87%"
+      },
+      {
+        "type": "performance",
+        "label": "Speed",
+        "value": "60% Faster"
+      }
+    ],
+    "metrics": [
+      {
+        "label": "Query Accuracy",
+        "value": "87%",
+        "icon": "target"
+      },
+      {
+        "label": "Speed Improvement",
+        "value": "60%",
+        "icon": "zap"
+      },
+      {
+        "label": "Data Sources",
+        "value": "5",
+        "icon": "database"
+      }
+    ],
+    "links": {
+      "github": "https://github.com/Dhruv-413/StockAnalysis"
+    },
+    "images": ["/images/projects/stock-analysis.jpg"],
+    "date": "2025-04-01"
+  },
+  {
+    "id": "eye-gaze-tracking",
+    "title": "Eye Gaze Tracking",
+    "description": "Real-time computer vision system for eye gaze estimation with 80%+ accuracy",
+    "longDescription": "Developed a real-time eye gaze tracking system using MediaPipe and ResNet50, achieving 80%+ accuracy at 30 FPS with 5.3° mean error. Implements advanced computer vision techniques for facial landmark detection and gaze estimation.",
+    "category": "Computer Vision",
+    "featured": false,
+    "technologies": ["Python", "MediaPipe", "OpenCV", "ResNet50", "TensorFlow"],
+    "codeSnippet": "import mediapipe as mp\nimport cv2\n\nclass GazeTracker:\n    def __init__(self):\n        self.face_mesh = mp.solutions.face_mesh.FaceMesh(\n            max_num_faces=1,\n            refine_landmarks=True,\n            min_detection_confidence=0.5\n        )\n    \n    def estimate_gaze(self, frame):\n        results = self.face_mesh.process(frame)\n        \n        if results.multi_face_landmarks:\n            landmarks = results.multi_face_landmarks[0]\n            # Extract eye landmarks and estimate gaze\n            gaze_vector = self.calculate_gaze(landmarks)\n            return gaze_vector",
+    "badges": [
+      {
+        "type": "performance",
+        "label": "Accuracy",
+        "value": "80%+"
+      },
+      {
+        "type": "performance",
+        "label": "Real-time",
+        "value": "30 FPS"
+      }
+    ],
+    "metrics": [
+      {
+        "label": "Accuracy",
+        "value": "80%+",
+        "icon": "eye"
+      },
+      {
+        "label": "Frame Rate",
+        "value": "30 FPS",
+        "icon": "video"
+      },
+      {
+        "label": "Mean Error",
+        "value": "5.3°",
+        "icon": "crosshair"
+      }
+    ],
+    "links": {
+      "github": "https://github.com/Dhruv-413/Eye-Gaze-Tracking-"
+    },
+    "images": ["/images/projects/eye-gaze.jpg"],
+    "date": "2025-02-01"
+  },
+  {
+    "id": "ecohive",
+    "title": "EcoHive",
+    "description": "Sustainable credit trading platform - SAP India Hackfest Top 50 from 2000+ entries",
+    "longDescription": "Created an innovative sustainable credit trading platform that secured Top 50 position at SAP India's National Hackfest from over 2000 nationwide entries. Built with React.js and Tailwind CSS featuring real-time trading and analytics.",
+    "category": "Full-Stack",
+    "featured": true,
+    "technologies": ["React.js", "Tailwind CSS", "JavaScript", "REST API"],
+    "codeSnippet": "// Real-time Trading Component\nconst TradingDashboard = () => {\n  const [credits, setCredits] = useState([]);\n  const [trades, setTrades] = useState([]);\n  \n  useEffect(() => {\n    const ws = new WebSocket('ws://api.ecohive.com/trades');\n    \n    ws.onmessage = (event) => {\n      const trade = JSON.parse(event.data);\n      setTrades(prev => [trade, ...prev].slice(0, 50));\n    };\n    \n    return () => ws.close();\n  }, []);\n  \n  return (\n    <div className=\"grid grid-cols-2 gap-4\">\n      <CreditsList credits={credits} />\n      <TradeHistory trades={trades} />\n    </div>\n  );\n};",
+    "badges": [
+      {
+        "type": "performance",
+        "label": "Achievement",
+        "value": "Top 50/2000+"
+      },
+      {
+        "type": "deployed",
+        "label": "Event",
+        "value": "SAP Hackfest"
+      }
+    ],
+    "metrics": [
+      {
+        "label": "Competition Rank",
+        "value": "Top 50",
+        "icon": "trophy"
+      },
+      {
+        "label": "Total Entries",
+        "value": "2000+",
+        "icon": "users"
+      },
+      {
+        "label": "Event",
+        "value": "SAP Hackfest",
+        "icon": "award"
+      }
+    ],
+    "links": {
+      "github": "https://github.com/Dhruv-413/EcoHive"
+    },
+    "images": ["/images/projects/ecohive.jpg"],
+    "date": "2024-07-01"
+  }
+]

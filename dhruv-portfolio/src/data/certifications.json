@@ -1,0 +1,30 @@
+[
+  {
+    "name": "IBM: Generative AI Fundamentals Specialization",
+    "issuer": "IBM",
+    "date": "2025-04-01",
+    "credentialId": "IBM-GenAI-2025",
+    "skills": ["Generative AI", "Large Language Models", "AI Ethics"]
+  },
+  {
+    "name": "IBM: Supervised Machine Learning",
+    "issuer": "IBM",
+    "date": "2024-12-01",
+    "credentialId": "IBM-ML-2024",
+    "skills": ["Machine Learning", "Supervised Learning", "Model Training"]
+  },
+  {
+    "name": "Google: Foundations of Data Science",
+    "issuer": "Google",
+    "date": "2024-11-01",
+    "credentialId": "Google-DS-2024",
+    "skills": ["Data Science", "Data Analysis", "Statistics"]
+  },
+  {
+    "name": "IBM: SQL Practical Introduction",
+    "issuer": "IBM",
+    "date": "2024-04-01",
+    "credentialId": "IBM-SQL-2024",
+    "skills": ["SQL", "Database Management", "Data Querying"]
+  }
+]
