@@ -87,42 +87,6 @@ export function SkillsSection() {
       ref={sectionRef}
       className="relative min-h-screen overflow-hidden pt-16 pb-20"
     >
-      {/* Enhanced Animated Background - Matching Hero.tsx */}
-      <div className="absolute inset-0 -z-10">
-        {/* Gradient Orbs */}
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.05, 0.08, 0.05],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{
-            scale: [1.2, 1, 1.2],
-            opacity: [0.08, 0.05, 0.08],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 4,
-          }}
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent rounded-full blur-3xl"
-        />
-
-        {/* Grid Pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px]" />
-
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-linear-to-t from-background via-background/50 to-transparent" />
-      </div>
-
       {/* Skills Hero Content - Matching Hero.tsx Layout */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="min-h-screen flex items-center justify-center py-20">

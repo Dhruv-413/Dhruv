@@ -29,11 +29,11 @@ export function AnimatedBackground() {
         <div className="absolute inset-0 bg-linear-to-br from-background via-background to-background" />
       </div>
 
-      {/* Animated gradient layer - Above background, below content */}
-      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        {/* Animated gradient orbs - White and barely visible */}
+      {/* Gradient orbs layer - Between base and grid, barely visible with animation */}
+      <div className="fixed inset-0 -z-15 overflow-hidden pointer-events-none">
+        {/* Animated gradient orbs - Subtle atmospheric effect with breathing animation */}
         <motion.div
-          className="absolute top-0 -left-1/4 w-1/2 h-1/2 rounded-full blur-3xl opacity-[0.02]"
+          className="absolute top-0 -left-1/4 w-1/2 h-1/2 rounded-full blur-3xl opacity-[0.015]"
           style={{
             background: "radial-gradient(circle, #ffffff 0%, transparent 70%)",
           }}
@@ -41,6 +41,7 @@ export function AnimatedBackground() {
             x: [0, 100, 0],
             y: [0, 50, 0],
             scale: [1, 1.2, 1],
+            opacity: [0.01, 0.02, 0.01],
           }}
           transition={{
             duration: 20,
@@ -50,7 +51,7 @@ export function AnimatedBackground() {
         />
 
         <motion.div
-          className="absolute top-1/4 -right-1/4 w-1/2 h-1/2 rounded-full blur-3xl opacity-[0.03]"
+          className="absolute top-1/4 -right-1/4 w-1/2 h-1/2 rounded-full blur-3xl opacity-[0.018]"
           style={{
             background: "radial-gradient(circle, #ffffff 0%, transparent 70%)",
           }}
@@ -58,6 +59,7 @@ export function AnimatedBackground() {
             x: [0, -100, 0],
             y: [0, 100, 0],
             scale: [1, 1.3, 1],
+            opacity: [0.012, 0.024, 0.012],
           }}
           transition={{
             duration: 25,
@@ -67,7 +69,7 @@ export function AnimatedBackground() {
         />
 
         <motion.div
-          className="absolute bottom-0 left-1/3 w-1/2 h-1/2 rounded-full blur-3xl opacity-[0.025]"
+          className="absolute bottom-0 left-1/3 w-1/2 h-1/2 rounded-full blur-3xl opacity-[0.016]"
           style={{
             background: "radial-gradient(circle, #ffffff 0%, transparent 70%)",
           }}
@@ -75,6 +77,7 @@ export function AnimatedBackground() {
             x: [0, -50, 0],
             y: [0, -100, 0],
             scale: [1, 1.1, 1],
+            opacity: [0.011, 0.021, 0.011],
           }}
           transition={{
             duration: 22,
@@ -82,16 +85,16 @@ export function AnimatedBackground() {
             ease: "easeInOut",
           }}
         />
+      </div>
 
-        {/* Grid pattern overlay */}
-        <div
-          className="absolute inset-0 opacity-[0.015]"
-          style={{
-            backgroundImage: `linear-gradient(to right, hsl(var(--primary)) 1px, transparent 1px),
-                           linear-gradient(to bottom, hsl(var(--primary)) 1px, transparent 1px)`,
-            backgroundSize: "60px 60px",
-          }}
-        />
+      {/* Grid and effects layer - Above gradient orbs, below content */}
+      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+        {/* Grid pattern overlay with visible fade effect - starts from top and fades to bottom */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808018_1px,transparent_1px),linear-gradient(to_bottom,#80808018_1px,transparent_1px)] bg-size-[24px_24px]" />
+          {/* Gradient fade overlay - visible fade from top to bottom */}
+          <div className="absolute inset-0 bg-linear-to-b from-transparent via-background/50 to-background" />
+        </div>
 
         {/* Floating particles - More subtle */}
         {FIXED_PARTICLES.map((particle, i) => (

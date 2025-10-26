@@ -97,36 +97,6 @@ export function ContactSection() {
       className="min-h-screen relative overflow-hidden flex items-center py-20"
       aria-labelledby="contact-heading"
     >
-      {/* Animated Background - Tech-forward aesthetic */}
-      <div className="absolute inset-0 -z-10" aria-hidden="true">
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.03, 0.05, 0.03],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute top-1/4 -left-1/4 w-96 h-96 bg-primary rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{
-            scale: [1.2, 1, 1.2],
-            opacity: [0.05, 0.03, 0.05],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 4,
-          }}
-          className="absolute -bottom-1/4 -right-1/4 w-96 h-96 bg-primary/80 rounded-full blur-3xl"
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px]" />
-      </div>
-
       <div className="container mx-auto px-4">
         {/* Hero Section with Terminal Effect */}
         <motion.div

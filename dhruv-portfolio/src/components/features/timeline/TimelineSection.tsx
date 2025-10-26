@@ -104,39 +104,6 @@ export function TimelineSection() {
       ref={sectionRef}
       className="relative min-h-screen overflow-hidden pt-16 pb-20"
     >
-      {/* Animated Background - Matching Projects Page */}
-      <div className="absolute inset-0 -z-10">
-        {/* Gradient Orbs - Same as Projects */}
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.03, 0.05, 0.03],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute top-1/4 -left-1/4 w-96 h-96 bg-primary rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{
-            scale: [1.2, 1, 1.2],
-            opacity: [0.05, 0.03, 0.05],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 4,
-          }}
-          className="absolute -bottom-1/4 -right-1/4 w-96 h-96 bg-primary/80 rounded-full blur-3xl"
-        />
-
-        {/* Grid Pattern - Same as Projects */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px]" />
-      </div>
-
       <div className="container mx-auto px-4 relative z-10">
         {/* Hero Section - Centered Layout (Like Skills/Projects) */}
         <div className="max-w-4xl mx-auto text-center mb-20">
