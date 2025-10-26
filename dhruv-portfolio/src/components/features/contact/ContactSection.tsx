@@ -29,6 +29,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import toast from "react-hot-toast";
+import emailjs from "@emailjs/browser";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -44,7 +45,6 @@ export function ContactSection() {
   const [emailCopied, setEmailCopied] = useState(false);
   const [formSuccess, setFormSuccess] = useState(false);
 
-  // Refs for scroll animations
   const heroRef = useRef(null);
   const formRef = useRef(null);
   const infoRef = useRef(null);
@@ -64,20 +64,56 @@ export function ContactSection() {
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
+
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
 
-      console.log("Form data:", data);
-      setFormSuccess(true);
-      toast.success("Message sent successfully! I'll get back to you soon.");
-      reset();
+      if (!publicKey || !serviceId || !templateId) {
+        console.error("Missing EmailJS configuration:", {
+          publicKey: !!publicKey,
+          serviceId: !!serviceId,
+          templateId: !!templateId,
+        });
+        throw new Error(
+          "EmailJS configuration is missing. Please check your environment variables."
+        );
+      }
+      const templateParams = {
+        name: data.name,
+        email: data.email,
+        subject: data.subject,
+        message: data.message,
+      };
 
-      // Reset success state after 5 seconds
-      setTimeout(() => setFormSuccess(false), 5000);
-    } catch {
+      const response = await emailjs.send(
+        serviceId,
+        templateId,
+        templateParams,
+        publicKey
+      );
+
+      if (response.status === 200) {
+        setFormSuccess(true);
+        toast.success("Message sent successfully! I'll get back to you soon.", {
+          duration: 5000,
+          icon: "✉️",
+        });
+        reset();
+
+        setTimeout(() => setFormSuccess(false), 5000);
+      } else {
+        throw new Error("Failed to send email");
+      }
+    } catch (error) {
+      console.error("EmailJS Error:", error);
       toast.error(
-        "Failed to send message. Please try again or email directly."
+        "Failed to send message. Please try again or email me directly at " +
+          SITE_CONFIG.contact.email,
+        {
+          duration: 7000,
+        }
       );
     } finally {
       setIsSubmitting(false);
