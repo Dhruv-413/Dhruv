@@ -126,7 +126,7 @@ const values = [
 
 const aboutStats = [
   { label: "Intern Experience", value: "6 Months", icon: Briefcase },
-  { label: "Projects Completed", value: "7", icon: Rocket },
+  { label: "Projects Completed", value: "7+", icon: Rocket },
   { label: "Technologies Learned", value: "15+", icon: Code2 },
   { label: "Certifications", value: "5+", icon: Book },
 ];
@@ -260,7 +260,7 @@ export function Hero() {
                 <div className="flex items-center gap-2 px-4 py-2 bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg hover:border-primary/30 transition-all group">
                   <Code2 className="h-4 w-4 text-primary group-hover:scale-110 transition-transform" />
                   <span className="text-sm font-mono">
-                    {stats?.totalRepos || "10"} + Projects
+                    {stats?.totalRepos || "10"}+ Projects
                   </span>
                 </div>
                 <div className="flex items-center gap-2 px-4 py-2 bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg hover:border-primary/30 transition-all group">
