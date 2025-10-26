@@ -15,11 +15,11 @@ const TimelineSection = dynamic(
 );
 
 export const metadata = {
-  title: "Experience - Dhruv Gupta",
-  description: "My professional experience and education journey",
+  title: "Career - Dhruv Gupta",
+  description: "My professional career and education journey",
 };
 
-export default function ExperiencePage() {
+export default function CareerPage() {
   return (
     <>
       <AnimatedBackground />
