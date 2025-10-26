@@ -4,12 +4,12 @@ import { motion, useInView } from "framer-motion";
 import {
   Github,
   Linkedin,
+  Code,
   Mail,
   Download,
   ArrowDown,
   Terminal,
   Code2,
-  Sparkles,
   ExternalLink,
   Play,
   Star as StarIcon,
@@ -71,8 +71,7 @@ const highlights = [
   {
     icon: Briefcase,
     title: "Professional Experience",
-    description:
-      "Interned at ONGC, working on enterprise solutions and SAP implementations",
+    description: "Interned at ONGC on enterprise SAP solutions",
     color: "from-blue-500 to-cyan-500",
   },
   {
@@ -84,13 +83,19 @@ const highlights = [
   {
     icon: Award,
     title: "Achievements",
-    description: "SAP India Hackfest Top 50 from 2000+ entries",
+    description: "Top 50 at SAP India Hackfest (2000+ participants)",
     color: "from-orange-500 to-yellow-500",
   },
   {
+    icon: Code,
+    title: "Technical Skills",
+    description: "Full-stack development with modern web technologies",
+    color: "from-indigo-500 to-blue-500",
+  },
+  {
     icon: Zap,
-    title: "Innovation",
-    description: "Passionate about AI/ML and cutting-edge web technologies",
+    title: "Interests",
+    description: "AI/ML and innovative tech solutions",
     color: "from-green-500 to-emerald-500",
   },
 ];
@@ -120,7 +125,7 @@ const values = [
 ];
 
 const aboutStats = [
-  { label: "Years of Experience", value: "1", icon: Briefcase },
+  { label: "Intern Experience", value: "6 Months", icon: Briefcase },
   { label: "Projects Completed", value: "7", icon: Rocket },
   { label: "Technologies Learned", value: "15+", icon: Code2 },
   { label: "Certifications", value: "5+", icon: Book },
@@ -255,18 +260,14 @@ export function Hero() {
                 <div className="flex items-center gap-2 px-4 py-2 bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg hover:border-primary/30 transition-all group">
                   <Code2 className="h-4 w-4 text-primary group-hover:scale-110 transition-transform" />
                   <span className="text-sm font-mono">
-                    {stats?.totalRepos || "7"} Projects
+                    {stats?.totalRepos || "10"} + Projects
                   </span>
                 </div>
                 <div className="flex items-center gap-2 px-4 py-2 bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg hover:border-primary/30 transition-all group">
                   <StarIcon className="h-4 w-4 text-primary group-hover:scale-110 transition-transform" />
                   <span className="text-sm font-mono">
-                    {stats?.totalStars || "20+"} Stars
+                    {stats?.totalStars || "20+"} Git Star
                   </span>
-                </div>
-                <div className="flex items-center gap-2 px-4 py-2 bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg hover:border-primary/30 transition-all group">
-                  <Sparkles className="h-4 w-4 text-primary group-hover:scale-110 transition-transform" />
-                  <span className="text-sm font-mono">1 Years Exp</span>
                 </div>
                 <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-lg hover:bg-primary/15 transition-all">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />

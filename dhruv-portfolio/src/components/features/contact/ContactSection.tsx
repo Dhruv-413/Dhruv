@@ -179,13 +179,9 @@ export function ContactSection() {
             <span className="text-primary font-semibold">
               full-stack application
             </span>
-            ,{" "}
+            , or{" "}
             <span className="text-primary font-semibold">API development</span>,
-            or{" "}
-            <span className="text-primary font-semibold">
-              technical consultation
-            </span>
-            , let&apos;s create something amazing.
+            let&apos;s create something amazing.
           </p>
 
           {/* Quick Stats */}
