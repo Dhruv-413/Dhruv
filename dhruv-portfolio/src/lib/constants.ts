@@ -1,6 +1,6 @@
 export const SITE_CONFIG = {
   name: "Dhruv Gupta",
-  title: "Dhruv Gupta - Full Stack Developer & AI/ML Engineer",
+  title: "Dhruv Gupta",
   description:
     "Computer Science student at Manipal University with expertise in Full-Stack Development, AI/ML, and Enterprise Software. Ex-ONGC Intern specializing in Python, React, Next.js, and SAP.",
   url: "https://dhruvgupta.dev",

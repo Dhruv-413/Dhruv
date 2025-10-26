@@ -309,7 +309,7 @@ export function Hero() {
                     asChild
                     className="group hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all font-semibold"
                   >
-                    <a href="/resume.pdf" download>
+                    <a href="/Dhruv_resume.pdf" download>
                       <Download className="mr-2 h-5 w-5 group-hover:translate-y-1 transition-transform" />
                       Download Resume
                     </a>
