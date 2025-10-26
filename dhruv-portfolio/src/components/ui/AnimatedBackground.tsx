@@ -29,11 +29,11 @@ export function AnimatedBackground() {
         <div className="absolute inset-0 bg-linear-to-br from-background via-background to-background" />
       </div>
 
-      {/* Gradient orbs layer - Between base and grid, barely visible with animation */}
+      {/* Gradient orbs layer - Between base and grid, visible complement to background */}
       <div className="fixed inset-0 -z-15 overflow-hidden pointer-events-none">
-        {/* Animated gradient orbs - Subtle atmospheric effect with breathing animation */}
+        {/* Animated gradient orbs - Visible atmospheric effect that complements the background */}
         <motion.div
-          className="absolute top-0 -left-1/4 w-1/2 h-1/2 rounded-full blur-3xl opacity-[0.015]"
+          className="absolute top-0 -left-1/4 w-1/2 h-1/2 rounded-full blur-3xl opacity-[0.012]"
           style={{
             background: "radial-gradient(circle, #ffffff 0%, transparent 70%)",
           }}
@@ -41,7 +41,7 @@ export function AnimatedBackground() {
             x: [0, 100, 0],
             y: [0, 50, 0],
             scale: [1, 1.2, 1],
-            opacity: [0.01, 0.02, 0.01],
+            opacity: [0.008, 0.016, 0.008],
           }}
           transition={{
             duration: 20,
@@ -51,7 +51,7 @@ export function AnimatedBackground() {
         />
 
         <motion.div
-          className="absolute top-1/4 -right-1/4 w-1/2 h-1/2 rounded-full blur-3xl opacity-[0.018]"
+          className="absolute top-1/4 -right-1/4 w-1/2 h-1/2 rounded-full blur-3xl opacity-[0.014]"
           style={{
             background: "radial-gradient(circle, #ffffff 0%, transparent 70%)",
           }}
@@ -59,7 +59,7 @@ export function AnimatedBackground() {
             x: [0, -100, 0],
             y: [0, 100, 0],
             scale: [1, 1.3, 1],
-            opacity: [0.012, 0.024, 0.012],
+            opacity: [0.01, 0.018, 0.01],
           }}
           transition={{
             duration: 25,
@@ -69,7 +69,7 @@ export function AnimatedBackground() {
         />
 
         <motion.div
-          className="absolute bottom-0 left-1/3 w-1/2 h-1/2 rounded-full blur-3xl opacity-[0.016]"
+          className="absolute bottom-0 left-1/3 w-1/2 h-1/2 rounded-full blur-3xl opacity-[0.013]"
           style={{
             background: "radial-gradient(circle, #ffffff 0%, transparent 70%)",
           }}
@@ -77,7 +77,7 @@ export function AnimatedBackground() {
             x: [0, -50, 0],
             y: [0, -100, 0],
             scale: [1, 1.1, 1],
-            opacity: [0.011, 0.021, 0.011],
+            opacity: [0.009, 0.017, 0.009],
           }}
           transition={{
             duration: 22,
