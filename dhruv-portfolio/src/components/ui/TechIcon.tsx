@@ -161,8 +161,12 @@ interface TechIconProps {
 /**
  * TechIcon component that displays technology logos using react-icons
  * Falls back to null if icon is not found (allowing text-only display)
+ * Responsive sizing for better mobile/tablet/desktop experience
  */
-export function TechIcon({ name, className = "h-5 w-5" }: TechIconProps) {
+export function TechIcon({
+  name,
+  className = "h-4 w-4 sm:h-5 sm:w-5",
+}: TechIconProps) {
   // Normalize the name to lowercase and handle common variations
   const normalizedName = name.toLowerCase().trim();
 

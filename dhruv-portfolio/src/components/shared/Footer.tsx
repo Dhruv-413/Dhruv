@@ -35,11 +35,11 @@ export function Footer() {
         aria-hidden="true"
       />
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
-        {/* Single Row Footer - Same height as header */}
-        <div className="flex items-center justify-between h-16 lg:h-20">
+      <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 relative">
+        {/* Single Row Footer - Responsive height and layout */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 py-3 sm:py-0 sm:h-16 lg:h-20">
           {/* Brand - Left Side */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <motion.div
               animate={{
                 rotate: [0, 5, -5, 0],
@@ -50,25 +50,28 @@ export function Footer() {
                 ease: "easeInOut",
               }}
             >
-              <Terminal className="h-4 w-4 text-primary" aria-hidden="true" />
+              <Terminal
+                className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary"
+                aria-hidden="true"
+              />
             </motion.div>
-            <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground font-mono">
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1 sm:gap-2 text-xs sm:text-sm text-muted-foreground font-mono">
               <span>© {currentYear}</span>
-              <span className="text-primary hidden sm:inline">•</span>
-              <span className="bg-linear-to-r from-primary to-purple-400 bg-clip-text text-transparent font-semibold hidden sm:inline">
+              <span className="text-primary">•</span>
+              <span className="bg-linear-to-r from-primary to-purple-400 bg-clip-text text-transparent font-semibold">
                 {SITE_CONFIG.name}
               </span>
             </div>
           </div>
 
           {/* Right Side - Social + Tech Badge */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             {/* Social Links */}
             <div className="hidden md:flex items-center gap-1">
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110"
+                className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110 active:scale-95"
                 asChild
               >
                 <a
@@ -83,7 +86,7 @@ export function Footer() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110"
+                className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110 active:scale-95"
                 asChild
               >
                 <a
@@ -98,7 +101,7 @@ export function Footer() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110"
+                className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110 active:scale-95"
                 asChild
               >
                 <a href={SITE_CONFIG.links.email} aria-label="Send Email">
@@ -108,9 +111,9 @@ export function Footer() {
             </div>
 
             {/* Tech Badge */}
-            <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-primary/5 border border-primary/20 rounded-md">
+            <div className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 sm:py-1.5 bg-primary/5 border border-primary/20 rounded-md">
               <Code2 className="h-3 w-3 text-primary" aria-hidden="true" />
-              <span className="text-xs font-mono text-muted-foreground hidden sm:inline">
+              <span className="text-[10px] sm:text-xs font-mono text-muted-foreground">
                 Next.js
               </span>
             </div>
@@ -127,7 +130,7 @@ export function Footer() {
                   variant="outline"
                   size="icon"
                   onClick={scrollToTop}
-                  className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all hover:scale-110 group"
+                  className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all hover:scale-110 active:scale-95 group"
                   aria-label="Scroll to top"
                 >
                   <ArrowUp
@@ -141,22 +144,22 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Floating Scroll to Top - Mobile */}
+      {/* Floating Scroll to Top - Mobile & Tablet */}
       {showScrollTop && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
-          className="fixed bottom-6 right-6 md:hidden z-40"
+          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 md:hidden z-40"
         >
           <Button
             variant="default"
             size="icon"
             onClick={scrollToTop}
-            className="h-12 w-12 rounded-full shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all hover:scale-110"
+            className="h-11 w-11 sm:h-12 sm:w-12 rounded-full shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all hover:scale-110 active:scale-95"
             aria-label="Scroll to top"
           >
-            <ArrowUp className="h-5 w-5" aria-hidden="true" />
+            <ArrowUp className="h-4.5 w-4.5 sm:h-5 sm:w-5" aria-hidden="true" />
           </Button>
         </motion.div>
       )}

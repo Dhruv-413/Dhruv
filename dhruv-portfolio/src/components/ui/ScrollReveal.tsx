@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 
 interface ScrollRevealProps {
   children: React.ReactNode;
@@ -17,14 +17,20 @@ export function ScrollReveal({
   direction = "up",
 }: ScrollRevealProps) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
 
-  const directions = {
-    up: { y: 40 },
-    down: { y: -40 },
-    left: { x: 40 },
-    right: { x: -40 },
-  };
+  // Responsive animation values - smaller movements on mobile
+  const directions = useMemo(() => {
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    const offset = isMobile ? 20 : 40; // Reduced offset for mobile
+
+    return {
+      up: { y: offset },
+      down: { y: -offset },
+      left: { x: offset },
+      right: { x: -offset },
+    };
+  }, []);
 
   return (
     <motion.div
@@ -44,7 +50,7 @@ export function ScrollReveal({
           : {}
       }
       transition={{
-        duration: 0.6,
+        duration: 0.5,
         delay,
         ease: [0.25, 0.4, 0.25, 1],
       }}

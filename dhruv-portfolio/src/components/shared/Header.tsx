@@ -55,22 +55,22 @@ export function Header() {
       />
 
       <nav
-        className="container mx-auto px-4 sm:px-6 lg:px-8"
+        className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8"
         role="navigation"
         aria-label="Main navigation"
       >
-        <div className="flex items-center justify-between h-16 lg:h-20">
+        <div className="flex items-center justify-between h-14 sm:h-16 lg:h-20">
           {/* Logo*/}
           <Link
             href="/"
-            className="flex items-center gap-2 group"
+            className="flex items-center gap-1.5 sm:gap-2 group touch-manipulation"
             aria-label="Home - Dhruv Gupta Portfolio"
           >
             <div className="flex flex-col">
-              <span className="text-lg lg:text-xl font-bold font-mono bg-linear-to-r from-primary via-purple-400 to-accent bg-clip-text text-transparent group-hover:opacity-80 transition-opacity pl-4">
+              <span className="text-base sm:text-lg lg:text-xl font-bold font-mono bg-linear-to-r from-primary via-purple-400 to-accent bg-clip-text text-transparent group-hover:opacity-80 transition-opacity pl-3 sm:pl-4">
                 {"<DG />"}
               </span>
-              <span className="text-[10px] text-muted-foreground font-mono hidden sm:block pl-4">
+              <span className="text-[9px] sm:text-[10px] text-muted-foreground font-mono hidden xs:block sm:block pl-3 sm:pl-4">
                 {"> Learner"}
               </span>
             </div>
@@ -89,7 +89,7 @@ export function Header() {
                 >
                   <Link
                     href={item.href}
-                    className={`relative px-4 py-2 text-sm font-medium font-mono transition-all duration-300 rounded-md group ${
+                    className={`relative px-3 lg:px-4 py-2 text-sm font-medium font-mono transition-all duration-300 rounded-md group touch-manipulation ${
                       active
                         ? "text-primary"
                         : "text-muted-foreground hover:text-foreground"
@@ -99,7 +99,7 @@ export function Header() {
                     {/* Terminal prompt indicator for active */}
                     {active && (
                       <motion.span
-                        className="absolute left-1 top-1/2 -translate-y-1/2 text-primary font-mono text-xs"
+                        className="absolute left-0.5 lg:left-1 top-1/2 -translate-y-1/2 text-primary font-mono text-xs"
                         layoutId="terminalPrompt"
                         transition={{
                           type: "spring",
@@ -140,13 +140,13 @@ export function Header() {
           </div>
 
           {/* Social Links & Mobile Menu */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             {/* Social Links - Desktop Only */}
             <div className="hidden lg:flex items-center gap-1 mr-2">
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-9 w-9 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110"
+                className="h-9 w-9 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110 active:scale-95 touch-manipulation"
                 asChild
               >
                 <a
@@ -161,7 +161,7 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-9 w-9 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110"
+                className="h-9 w-9 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110 active:scale-95 touch-manipulation"
                 asChild
               >
                 <a
@@ -176,7 +176,7 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-9 w-9 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110"
+                className="h-9 w-9 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110 active:scale-95 touch-manipulation"
                 asChild
               >
                 <a href={SITE_CONFIG.links.email} aria-label="Send Email">
@@ -189,7 +189,7 @@ export function Header() {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden h-10 w-10 rounded-md hover:bg-primary/10 hover:text-primary transition-all"
+              className="md:hidden h-9 w-9 sm:h-10 sm:w-10 rounded-md hover:bg-primary/10 hover:text-primary transition-all active:scale-95 touch-manipulation"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={isMobileMenuOpen}
@@ -203,7 +203,7 @@ export function Header() {
                     exit={{ rotate: 90, opacity: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <X className="h-6 w-6" aria-hidden="true" />
+                    <X className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
                   </motion.div>
                 ) : (
                   <motion.div
@@ -213,7 +213,10 @@ export function Header() {
                     exit={{ rotate: -90, opacity: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <Menu className="h-6 w-6" aria-hidden="true" />
+                    <Menu
+                      className="h-5 w-5 sm:h-6 sm:w-6"
+                      aria-hidden="true"
+                    />
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -231,7 +234,7 @@ export function Header() {
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              <div className="px-2 pt-2 pb-4 space-y-2 border-t border-border/50 mt-2">
+              <div className="px-2 pt-2 pb-3 sm:pb-4 space-y-1.5 sm:space-y-2 border-t border-border/50 mt-2">
                 {/* Navigation Links */}
                 {NAV_ITEMS.map((item, index) => {
                   const active = isActive(item.href);
@@ -245,7 +248,7 @@ export function Header() {
                       <Link
                         href={item.href}
                         onClick={handleNavClick}
-                        className={`flex items-center gap-2 w-full px-4 py-3 rounded-md text-base font-medium font-mono transition-all ${
+                        className={`flex items-center gap-2 w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-md text-sm sm:text-base font-medium font-mono transition-all touch-manipulation active:scale-[0.98] ${
                           active
                             ? "bg-primary/10 text-primary border border-primary/20"
                             : "text-muted-foreground hover:bg-accent hover:text-foreground"
@@ -253,7 +256,10 @@ export function Header() {
                         aria-current={active ? "page" : undefined}
                       >
                         {active && (
-                          <Braces className="h-4 w-4" aria-hidden="true" />
+                          <Braces
+                            className="h-3.5 w-3.5 sm:h-4 sm:w-4"
+                            aria-hidden="true"
+                          />
                         )}
                         <span>
                           {active ? "> " : ""}
@@ -266,19 +272,19 @@ export function Header() {
 
                 {/* Mobile Social Links */}
                 <motion.div
-                  className="pt-4 border-t border-border/50 mt-4"
+                  className="pt-3 sm:pt-4 border-t border-border/50 mt-3 sm:mt-4"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.6 }}
                 >
-                  <p className="text-xs text-muted-foreground font-mono mb-3 px-4">
+                  <p className="text-[10px] sm:text-xs text-muted-foreground font-mono mb-2 sm:mb-3 px-3 sm:px-4">
                     {"// Connect"}
                   </p>
-                  <div className="flex gap-2 px-4">
+                  <div className="flex gap-2 px-3 sm:px-4">
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex-1 font-mono hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all"
+                      className="flex-1 font-mono hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all touch-manipulation active:scale-95 text-xs sm:text-sm"
                       asChild
                     >
                       <a
@@ -287,14 +293,17 @@ export function Header() {
                         rel="noopener noreferrer"
                         aria-label="GitHub Profile"
                       >
-                        <Github className="h-4 w-4 mr-2" aria-hidden="true" />
+                        <Github
+                          className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2"
+                          aria-hidden="true"
+                        />
                         GitHub
                       </a>
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex-1 font-mono hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all"
+                      className="flex-1 font-mono hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all touch-manipulation active:scale-95 text-xs sm:text-sm"
                       asChild
                     >
                       <a
@@ -303,7 +312,10 @@ export function Header() {
                         rel="noopener noreferrer"
                         aria-label="LinkedIn Profile"
                       >
-                        <Linkedin className="h-4 w-4 mr-2" aria-hidden="true" />
+                        <Linkedin
+                          className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2"
+                          aria-hidden="true"
+                        />
                         LinkedIn
                       </a>
                     </Button>
