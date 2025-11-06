@@ -159,8 +159,8 @@ export function Hero() {
     >
       {/* Hero Content */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="min-h-screen flex items-center justify-center py-20">
-          <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto w-full">
+        <div className="min-h-screen flex items-center justify-center py-12 sm:py-16 md:py-20">
+          <div className="grid lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center max-w-7xl mx-auto w-full">
             {/* Left Column - Main Content */}
             <div className="text-center lg:text-left order-2 lg:order-1">
               {/* Terminal Prompt */}
@@ -168,16 +168,16 @@ export function Hero() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5 }}
-                className="flex items-center gap-2 mb-4 justify-center lg:justify-start"
+                className="flex items-center gap-2 mb-3 sm:mb-4 justify-center lg:justify-start"
               >
-                <Terminal className="h-4 w-4 text-primary" />
-                <span className="text-primary font-mono text-sm">
+                <Terminal className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
+                <span className="text-primary font-mono text-xs sm:text-sm">
                   ~/portfolio
                 </span>
                 <motion.span
                   animate={{ opacity: [1, 0, 1] }}
                   transition={{ duration: 1, repeat: Infinity }}
-                  className="text-primary font-mono"
+                  className="text-primary font-mono text-xs sm:text-sm"
                 >
                   _
                 </motion.span>
@@ -188,14 +188,14 @@ export function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="text-muted-foreground text-lg mb-3"
+                className="text-muted-foreground text-base sm:text-lg mb-2 sm:mb-3"
               >
                 Hi, I&apos;m
               </motion.p>
 
               {/* Name */}
               <motion.h1
-                className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-4 bg-linear-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent"
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-3 sm:mb-4 bg-linear-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
@@ -224,7 +224,7 @@ export function Hero() {
 
               {/* Description */}
               <motion.p
-                className="text-lg text-muted-foreground mb-3"
+                className="text-sm sm:text-base md:text-lg text-muted-foreground mb-3"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
@@ -233,7 +233,7 @@ export function Hero() {
               </motion.p>
 
               <motion.p
-                className="text-base text-muted-foreground mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed"
+                className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.5 }}
@@ -254,23 +254,23 @@ export function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.6 }}
-                className="flex flex-wrap gap-4 mb-8 justify-center lg:justify-start"
+                className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 mb-8 justify-center lg:justify-start"
               >
-                <div className="flex items-center gap-2 px-4 py-2 bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg hover:border-primary/30 transition-all group">
-                  <Code2 className="h-4 w-4 text-primary group-hover:scale-110 transition-transform" />
-                  <span className="text-sm font-mono">
+                <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg hover:border-primary/30 transition-all group">
+                  <Code2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary group-hover:scale-110 transition-transform" />
+                  <span className="text-xs sm:text-sm font-mono">
                     {stats?.totalRepos || "10"}+ Projects
                   </span>
                 </div>
-                <div className="flex items-center gap-2 px-4 py-2 bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg hover:border-primary/30 transition-all group">
-                  <StarIcon className="h-4 w-4 text-primary group-hover:scale-110 transition-transform" />
-                  <span className="text-sm font-mono">
+                <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg hover:border-primary/30 transition-all group">
+                  <StarIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary group-hover:scale-110 transition-transform" />
+                  <span className="text-xs sm:text-sm font-mono">
                     {stats?.totalStars || "20+"} Git Star
                   </span>
                 </div>
-                <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-lg hover:bg-primary/15 transition-all">
+                <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-primary/10 border border-primary/20 rounded-lg hover:bg-primary/15 transition-all">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                  <span className="text-sm font-mono text-primary font-semibold">
+                  <span className="text-xs sm:text-sm font-mono text-primary font-semibold">
                     Available
                   </span>
                 </div>
@@ -278,7 +278,7 @@ export function Hero() {
 
               {/* Enhanced CTA Buttons */}
               <motion.div
-                className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8"
+                className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start mb-6 sm:mb-8"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.7 }}
@@ -286,14 +286,15 @@ export function Hero() {
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  className="w-full sm:w-auto"
                 >
                   <Button
                     size="lg"
                     asChild
-                    className="group shadow-xl hover:shadow-2xl hover:shadow-primary/30 transition-all font-semibold"
+                    className="group shadow-xl hover:shadow-2xl hover:shadow-primary/30 transition-all font-semibold w-full sm:w-auto"
                   >
                     <Link href="/projects">
-                      <Play className="mr-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                      <Play className="mr-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
                       View My Work
                     </Link>
                   </Button>
@@ -302,15 +303,16 @@ export function Hero() {
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  className="w-full sm:w-auto"
                 >
                   <Button
                     size="lg"
                     variant="outline"
                     asChild
-                    className="group hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all font-semibold"
+                    className="group hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all font-semibold w-full sm:w-auto"
                   >
                     <a href="/Dhruv_resume.pdf" download>
-                      <Download className="mr-2 h-5 w-5 group-hover:translate-y-1 transition-transform" />
+                      <Download className="mr-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-y-1 transition-transform" />
                       Download Resume
                     </a>
                   </Button>
@@ -319,15 +321,16 @@ export function Hero() {
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  className="w-full sm:w-auto"
                 >
                   <Button
                     size="lg"
                     variant="outline"
                     asChild
-                    className="group transition-all font-semibold"
+                    className="group transition-all font-semibold w-full sm:w-auto"
                   >
                     <Link href="/contact">
-                      <Mail className="mr-2 h-5 w-5" />
+                      <Mail className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                       Get in Touch
                     </Link>
                   </Button>
@@ -336,7 +339,7 @@ export function Hero() {
 
               {/* Social Links */}
               <motion.div
-                className="flex justify-center lg:justify-start gap-4"
+                className="flex justify-center lg:justify-start gap-3 sm:gap-4"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.8 }}
@@ -349,10 +352,10 @@ export function Hero() {
                     href={SITE_CONFIG.links.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group p-3 rounded-lg bg-card/50 backdrop-blur-sm border border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all inline-flex items-center gap-2"
+                    className="group p-2.5 sm:p-3 rounded-lg bg-card/50 backdrop-blur-sm border border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all inline-flex items-center gap-2"
                   >
-                    <Github className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                    <span className="text-sm font-mono text-muted-foreground group-hover:text-primary transition-colors">
+                    <Github className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                    <span className="text-xs sm:text-sm font-mono text-muted-foreground group-hover:text-primary transition-colors">
                       GitHub
                     </span>
                     <ExternalLink className="h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -367,10 +370,10 @@ export function Hero() {
                     href={SITE_CONFIG.links.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group p-3 rounded-lg bg-card/50 backdrop-blur-sm border border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all inline-flex items-center gap-2"
+                    className="group p-2.5 sm:p-3 rounded-lg bg-card/50 backdrop-blur-sm border border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all inline-flex items-center gap-2"
                   >
-                    <Linkedin className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                    <span className="text-sm font-mono text-muted-foreground group-hover:text-primary transition-colors">
+                    <Linkedin className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                    <span className="text-xs sm:text-sm font-mono text-muted-foreground group-hover:text-primary transition-colors">
                       LinkedIn
                     </span>
                     <ExternalLink className="h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -487,9 +490,9 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Scroll Indicator */}
+        {/* Scroll Indicator - Hidden on mobile to save space */}
         <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, y: [0, 10, 0] }}
           transition={{
@@ -507,7 +510,7 @@ export function Hero() {
       </div>
 
       {/* About Content Section */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
         {/* Stats Dashboard */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -544,14 +547,15 @@ export function Hero() {
         </motion.div>
 
         {/* Highlights & Detailed Code Snippet Grid */}
-        <div className="grid lg:grid-cols-2 gap-8 mb-16">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 mb-12 sm:mb-16">
           {/* Detailed Code Snippet - Left Side */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.5 }}
+            className="px-2 sm:px-0"
           >
-            <div className="mb-3 sm:mb-4">
+            <div className="mb-4 sm:mb-5">
               <div className="flex items-center gap-2 mb-2 sm:mb-3">
                 <Code2 className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                 <h3 className="text-base sm:text-lg md:text-xl font-bold font-mono">
@@ -562,7 +566,7 @@ export function Hero() {
 
             <div className="relative bg-card/50 backdrop-blur-xl border border-border/50 rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl hover:shadow-primary/10 transition-all">
               {/* Terminal Header */}
-              <div className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 bg-muted/50 border-b border-border/50">
+              <div className="flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 bg-muted/50 border-b border-border/50">
                 <div className="flex gap-1.5 sm:gap-2">
                   <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-500/80" />
                   <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-yellow-500/80" />
@@ -575,7 +579,7 @@ export function Hero() {
 
               {/* Code Content */}
               <div className="relative">
-                <pre className="p-4 sm:p-6 text-xs sm:text-sm font-mono leading-relaxed overflow-x-auto max-h-[400px] sm:max-h-[500px] custom-scrollbar">
+                <pre className="px-5 py-5 sm:px-6 sm:py-6 text-xs sm:text-sm font-mono leading-relaxed overflow-x-auto max-h-[400px] sm:max-h-[500px] custom-scrollbar">
                   <code className="text-muted-foreground">
                     {detailedCodeSnippet}
                   </code>
@@ -586,14 +590,16 @@ export function Hero() {
               </div>
 
               {/* Status Bar */}
-              <div className="flex items-center justify-between px-3 sm:px-4 py-1.5 sm:py-2 bg-muted/30 border-t border-border/50 text-[10px] sm:text-xs font-mono">
+              <div className="flex items-center justify-between px-4 sm:px-5 py-2 sm:py-2.5 bg-muted/30 border-t border-border/50 text-[10px] sm:text-xs font-mono">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                   <span className="text-muted-foreground">Ready</span>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <span className="text-muted-foreground">TypeScript</span>
-                  <span className="text-muted-foreground">UTF-8</span>
+                  <span className="hidden sm:inline text-muted-foreground">
+                    UTF-8
+                  </span>
                 </div>
               </div>
             </div>
@@ -604,9 +610,9 @@ export function Hero() {
             initial={{ opacity: 0, x: 20 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.6 }}
-            className="space-y-3 sm:space-y-4"
+            className="space-y-3 sm:space-y-4 px-2 sm:px-0"
           >
-            <div className="mb-3 sm:mb-4">
+            <div className="mb-4 sm:mb-5">
               <h3 className="text-lg sm:text-xl font-bold flex items-center gap-2">
                 <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                 Highlights
@@ -623,15 +629,15 @@ export function Hero() {
                   transition={{ delay: 0.7 + index * 0.1 }}
                   whileHover={{ x: 5 }}
                 >
-                  <div className="p-3 sm:p-4 md:p-5 hover:border-primary/30 transition-all group bg-card/50 backdrop-blur-sm rounded-lg border border-border">
+                  <div className="p-4 sm:p-5 md:p-6 hover:border-primary/30 transition-all group bg-card/50 backdrop-blur-sm rounded-lg border border-border">
                     <div className="flex items-start gap-3 sm:gap-4">
                       <div
-                        className={`p-2 sm:p-2.5 md:p-3 rounded-lg bg-linear-to-br ${highlight.color} bg-opacity-10 shrink-0`}
+                        className={`p-2.5 sm:p-3 md:p-3.5 rounded-lg bg-linear-to-br ${highlight.color} bg-opacity-10 shrink-0`}
                       >
-                        <Icon className="h-5 w-5 sm:h-5 sm:w-5 md:h-6 md:w-6 text-primary" />
+                        <Icon className="h-5 w-5 sm:h-6 sm:w-6 md:h-6 md:w-6 text-primary" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-sm sm:text-base mb-1 group-hover:text-primary transition-colors">
+                        <h4 className="font-semibold text-sm sm:text-base mb-1.5 sm:mb-2 group-hover:text-primary transition-colors">
                           {highlight.title}
                         </h4>
                         <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
