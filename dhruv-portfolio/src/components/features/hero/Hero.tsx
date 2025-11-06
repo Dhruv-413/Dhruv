@@ -27,7 +27,6 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { SITE_CONFIG } from "@/lib/constants";
 import { useState, useEffect, useRef } from "react";
 import { useGitHubUser, useGitHubStats } from "@/hooks/useGitHub";
@@ -446,26 +445,43 @@ export function Hero() {
                 transition={{ duration: 0.5, delay: 0.9 }}
                 className="w-full max-w-md"
               >
-                <Card className="p-0 overflow-hidden border-border/50 hover:border-primary/30 transition-all bg-card/50 backdrop-blur-sm">
+                <div className="relative bg-card/50 backdrop-blur-xl border border-border/50 rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl hover:shadow-primary/10 transition-all">
                   {/* Terminal Header */}
-                  <div className="bg-muted/50 border-b border-border/50 px-4 py-2 flex items-center justify-between">
-                    <div className="flex gap-2">
-                      <div className="w-3 h-3 rounded-full bg-red-500/70" />
-                      <div className="w-3 h-3 rounded-full bg-yellow-500/70" />
-                      <div className="w-3 h-3 rounded-full bg-green-500/70" />
+                  <div className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 bg-muted/50 border-b border-border/50">
+                    <div className="flex gap-1.5 sm:gap-2">
+                      <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-500/80" />
+                      <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-yellow-500/80" />
+                      <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-500/80" />
                     </div>
-                    <span className="text-xs font-mono text-muted-foreground">
+                    <span className="text-[10px] sm:text-xs font-mono text-muted-foreground ml-2">
                       developer.ts
                     </span>
                   </div>
 
                   {/* Code Content */}
-                  <pre className="p-4 text-xs sm:text-sm overflow-x-auto">
-                    <code className="text-muted-foreground font-mono leading-relaxed">
-                      {codeSnippet}
-                    </code>
-                  </pre>
-                </Card>
+                  <div className="relative">
+                    <pre className="p-4 sm:p-6 text-xs sm:text-sm font-mono leading-relaxed overflow-x-auto max-h-[300px] sm:max-h-[350px] custom-scrollbar">
+                      <code className="text-muted-foreground">
+                        {codeSnippet}
+                      </code>
+                    </pre>
+
+                    {/* Fade effect at bottom */}
+                    <div className="absolute bottom-0 left-0 right-0 h-12 sm:h-16 bg-linear-to-t from-card/90 to-transparent pointer-events-none" />
+                  </div>
+
+                  {/* Status Bar */}
+                  <div className="flex items-center justify-between px-3 sm:px-4 py-1.5 sm:py-2 bg-muted/30 border-t border-border/50 text-[10px] sm:text-xs font-mono">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                      <span className="text-muted-foreground">Ready</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-muted-foreground">TypeScript</span>
+                      <span className="text-muted-foreground">UTF-8</span>
+                    </div>
+                  </div>
+                </div>
               </motion.div>
             </div>
           </div>
@@ -497,7 +513,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16"
+          className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-16"
         >
           {aboutStats.map((stat, index) => {
             const Icon = stat.icon;
@@ -509,19 +525,19 @@ export function Hero() {
                 transition={{ delay: 0.4 + index * 0.1 }}
                 whileHover={{ scale: 1.05, y: -5 }}
               >
-                <Card className="p-6 text-center hover:border-primary/30 transition-all group bg-card/50 backdrop-blur-sm">
-                  <div className="flex justify-center mb-3">
-                    <div className="p-3 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                      <Icon className="h-6 w-6 text-primary" />
+                <div className="p-3 sm:p-4 md:p-6 text-center hover:border-primary/30 transition-all group bg-card/50 backdrop-blur-sm rounded-lg border border-border">
+                  <div className="flex justify-center mb-2 sm:mb-3">
+                    <div className="p-2 sm:p-3 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                      <Icon className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-primary" />
                     </div>
                   </div>
-                  <div className="text-3xl font-bold font-mono text-primary mb-2">
+                  <div className="text-xl sm:text-2xl md:text-3xl font-bold font-mono text-primary mb-1 sm:mb-2">
                     {stat.value}
                   </div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wider">
+                  <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider leading-tight">
                     {stat.label}
                   </div>
-                </Card>
+                </div>
               </motion.div>
             );
           })}
@@ -535,47 +551,52 @@ export function Hero() {
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.5 }}
           >
-            <div className="mb-4">
-              <div className="flex items-center gap-2 mb-3">
-                <Code2 className="h-5 w-5 text-primary" />
-                <h3 className="text-xl font-bold font-mono">
+            <div className="mb-3 sm:mb-4">
+              <div className="flex items-center gap-2 mb-2 sm:mb-3">
+                <Code2 className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                <h3 className="text-base sm:text-lg md:text-xl font-bold font-mono">
                   <span className="text-primary">{"// "}</span>Developer Profile
                 </h3>
               </div>
             </div>
 
-            <motion.div
-              whileHover={{ scale: 1.01 }}
-              className="code-snippet relative rounded-xl overflow-hidden border border-border/50 bg-muted/30 hover:border-primary/30 transition-all duration-300 shadow-lg"
-            >
+            <div className="relative bg-card/50 backdrop-blur-xl border border-border/50 rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl hover:shadow-primary/10 transition-all">
               {/* Terminal Header */}
-              <div className="bg-muted/50 border-b border-border/50 px-4 py-2 flex items-center justify-between">
-                <div className="flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500/70" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/70" />
-                  <div className="w-3 h-3 rounded-full bg-green-500/70" />
+              <div className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 bg-muted/50 border-b border-border/50">
+                <div className="flex gap-1.5 sm:gap-2">
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-500/80" />
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-yellow-500/80" />
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-500/80" />
                 </div>
-                <span className="text-xs font-mono text-muted-foreground">
+                <span className="text-[10px] sm:text-xs font-mono text-muted-foreground ml-2">
                   developer.ts
                 </span>
               </div>
 
-              {/* Code Content with Line Numbers */}
+              {/* Code Content */}
               <div className="relative">
-                <div className="absolute left-0 top-0 bottom-0 w-12 bg-muted/20 border-r border-border/30 flex flex-col items-end pr-3 pt-4 text-xs font-mono text-muted-foreground/50">
-                  {detailedCodeSnippet.split("\n").map((_, i) => (
-                    <div key={i} className="leading-6">
-                      {i + 1}
-                    </div>
-                  ))}
-                </div>
-                <pre className="text-sm overflow-x-auto pl-16 pr-4 py-4">
-                  <code className="text-muted-foreground font-mono leading-6">
+                <pre className="p-4 sm:p-6 text-xs sm:text-sm font-mono leading-relaxed overflow-x-auto max-h-[400px] sm:max-h-[500px] custom-scrollbar">
+                  <code className="text-muted-foreground">
                     {detailedCodeSnippet}
                   </code>
                 </pre>
+
+                {/* Fade effect at bottom */}
+                <div className="absolute bottom-0 left-0 right-0 h-16 sm:h-20 bg-linear-to-t from-card/90 to-transparent pointer-events-none" />
               </div>
-            </motion.div>
+
+              {/* Status Bar */}
+              <div className="flex items-center justify-between px-3 sm:px-4 py-1.5 sm:py-2 bg-muted/30 border-t border-border/50 text-[10px] sm:text-xs font-mono">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  <span className="text-muted-foreground">Ready</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-muted-foreground">TypeScript</span>
+                  <span className="text-muted-foreground">UTF-8</span>
+                </div>
+              </div>
+            </div>
           </motion.div>
 
           {/* Highlights - Right Side */}
@@ -583,11 +604,11 @@ export function Hero() {
             initial={{ opacity: 0, x: 20 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.6 }}
-            className="space-y-4"
+            className="space-y-3 sm:space-y-4"
           >
-            <div className="mb-4">
-              <h3 className="text-xl font-bold flex items-center gap-2">
-                <Zap className="h-5 w-5 text-primary" />
+            <div className="mb-3 sm:mb-4">
+              <h3 className="text-lg sm:text-xl font-bold flex items-center gap-2">
+                <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                 Highlights
               </h3>
             </div>
@@ -602,23 +623,23 @@ export function Hero() {
                   transition={{ delay: 0.7 + index * 0.1 }}
                   whileHover={{ x: 5 }}
                 >
-                  <Card className="p-5 hover:border-primary/30 transition-all group bg-card/50 backdrop-blur-sm">
-                    <div className="flex items-start gap-4">
+                  <div className="p-3 sm:p-4 md:p-5 hover:border-primary/30 transition-all group bg-card/50 backdrop-blur-sm rounded-lg border border-border">
+                    <div className="flex items-start gap-3 sm:gap-4">
                       <div
-                        className={`p-3 rounded-lg bg-linear-to-br ${highlight.color} bg-opacity-10 shrink-0`}
+                        className={`p-2 sm:p-2.5 md:p-3 rounded-lg bg-linear-to-br ${highlight.color} bg-opacity-10 shrink-0`}
                       >
-                        <Icon className="h-6 w-6 text-primary" />
+                        <Icon className="h-5 w-5 sm:h-5 sm:w-5 md:h-6 md:w-6 text-primary" />
                       </div>
-                      <div>
-                        <h4 className="font-semibold mb-1 group-hover:text-primary transition-colors">
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-sm sm:text-base mb-1 group-hover:text-primary transition-colors">
                           {highlight.title}
                         </h4>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
+                        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                           {highlight.description}
                         </p>
                       </div>
                     </div>
-                  </Card>
+                  </div>
                 </motion.div>
               );
             })}
@@ -642,7 +663,7 @@ export function Hero() {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
             {values.map((value, index) => {
               const Icon = value.icon;
               return (
@@ -657,19 +678,19 @@ export function Hero() {
                   }}
                   whileHover={{ y: -10, scale: 1.02 }}
                 >
-                  <Card className="p-6 text-center h-full hover:border-primary/30 hover:shadow-lg hover:shadow-primary/10 transition-all group bg-card/50 backdrop-blur-sm">
-                    <div className="flex justify-center mb-4">
-                      <div className="p-4 rounded-full bg-primary/10 group-hover:bg-primary/20 group-hover:scale-110 transition-all">
-                        <Icon className="h-8 w-8 text-primary" />
+                  <div className="p-4 sm:p-5 md:p-6 text-center h-full hover:border-primary/30 hover:shadow-lg hover:shadow-primary/10 transition-all group bg-card/50 backdrop-blur-sm rounded-lg border border-border">
+                    <div className="flex justify-center mb-3 sm:mb-4">
+                      <div className="p-3 sm:p-3.5 md:p-4 rounded-full bg-primary/10 group-hover:bg-primary/20 group-hover:scale-110 transition-all">
+                        <Icon className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-primary" />
                       </div>
                     </div>
-                    <h4 className="font-bold mb-2 text-lg group-hover:text-primary transition-colors">
+                    <h4 className="font-bold mb-2 text-base sm:text-lg group-hover:text-primary transition-colors">
                       {value.title}
                     </h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                       {value.description}
                     </p>
-                  </Card>
+                  </div>
                 </motion.div>
               );
             })}
