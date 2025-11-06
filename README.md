@@ -117,8 +117,8 @@ MIT License - see [LICENSE](LICENSE) for details.
 **Dhruv Gupta**
 
 - GitHub: [@Dhruv-413](https://github.com/Dhruv-413)
-- Portfolio: [Your Portfolio URL]
-- Email: [your-email@example.com]
+- Portfolio: [Contact](https://dhruvgupta-nu.vercel.app/)
+- Email: [dhruvgupta6580@example.com]
 
 ---
 

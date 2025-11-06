@@ -923,7 +923,7 @@ export function GitHubSection() {
                     aria-hidden="true"
                   />
                   <h2 id="languages-heading" className="text-2xl font-bold">
-                    Top 5 Languages
+                    Top 4 Languages
                   </h2>
                 </div>
                 <p className="text-sm text-muted-foreground">
