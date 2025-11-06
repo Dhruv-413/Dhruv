@@ -708,7 +708,7 @@ export function GitHubSection() {
               className="flex flex-col"
             >
               <div className="mb-6">
-                <div className="flex items-center gap-2 mb-2">
+                <div className="flex items-center gap-2 mb-2 ml-8">
                   <Calendar
                     className="h-5 w-5 text-primary"
                     aria-hidden="true"

@@ -130,29 +130,34 @@ export function ContactSection() {
   return (
     <section
       id="contact"
-      className="min-h-screen relative overflow-hidden flex items-center py-20"
+      className="min-h-screen relative overflow-hidden flex items-center py-12 sm:py-16 md:py-20"
       aria-labelledby="contact-heading"
     >
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 sm:px-6">
         {/* Hero Section with Terminal Effect */}
         <motion.div
           ref={heroRef}
           initial={{ opacity: 0, y: 50 }}
           animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16 max-w-4xl mx-auto"
+          className="text-center mb-10 sm:mb-12 md:mb-16 max-w-4xl mx-auto"
         >
           {/* Terminal Prompt */}
           <div
-            className="flex items-center justify-center gap-2 mb-6"
+            className="flex items-center justify-center gap-2 mb-4 sm:mb-6"
             aria-label="Terminal prompt"
           >
-            <Terminal className="h-4 w-4 text-primary" aria-hidden="true" />
-            <span className="text-primary font-mono text-sm">~/contact</span>
+            <Terminal
+              className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary"
+              aria-hidden="true"
+            />
+            <span className="text-primary font-mono text-xs sm:text-sm">
+              ~/contact
+            </span>
             <motion.span
               animate={{ opacity: [1, 0, 1] }}
               transition={{ duration: 1, repeat: Infinity }}
-              className="text-primary font-mono"
+              className="text-primary font-mono text-xs sm:text-sm"
               aria-hidden="true"
             >
               _
@@ -162,7 +167,7 @@ export function ContactSection() {
           {/* Title */}
           <h1
             id="contact-heading"
-            className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6"
           >
             <span className="bg-linear-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent">
               Let&apos;s Build Together
@@ -170,7 +175,7 @@ export function ContactSection() {
           </h1>
 
           {/* Description */}
-          <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground mb-6 sm:mb-8 leading-relaxed px-2">
             Have a project in mind or want to discuss opportunities?{" "}
             <span className="text-primary font-semibold">
               I&apos;m all ears.
@@ -186,28 +191,34 @@ export function ContactSection() {
 
           {/* Quick Stats */}
           <div
-            className="grid grid-cols-3 gap-4 max-w-2xl mx-auto"
+            className="grid grid-cols-3 gap-3 sm:gap-4 max-w-2xl mx-auto"
             role="list"
             aria-label="Response metrics"
           ></div>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 max-w-6xl mx-auto">
           {/* Contact Form - Enhanced with scroll animations */}
           <motion.div
             ref={formRef}
             initial={{ opacity: 0, x: -30 }}
             animate={isFormInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
+            className="px-2 sm:px-0"
           >
-            <Card className="p-8 bg-card/50 backdrop-blur-sm border-2 border-border/50 hover:border-primary/30 transition-all duration-300 relative overflow-hidden">
+            <Card className="p-5 sm:p-6 md:p-8 bg-card/50 backdrop-blur-sm border-2 border-border/50 hover:border-primary/30 transition-all duration-300 relative overflow-hidden">
               {/* Form Header */}
-              <div className="mb-6">
+              <div className="mb-5 sm:mb-6">
                 <div className="flex items-center gap-2 mb-2">
-                  <Code2 className="h-5 w-5 text-primary" aria-hidden="true" />
-                  <h2 className="text-2xl font-bold">Send a Message</h2>
+                  <Code2
+                    className="h-4 w-4 sm:h-5 sm:w-5 text-primary"
+                    aria-hidden="true"
+                  />
+                  <h2 className="text-xl sm:text-2xl font-bold">
+                    Send a Message
+                  </h2>
                 </div>
-                <p className="text-sm text-muted-foreground font-mono">
+                <p className="text-xs sm:text-sm text-muted-foreground font-mono">
                   {"// Fill out the form below"}
                 </p>
               </div>
@@ -216,30 +227,36 @@ export function ContactSection() {
                 <motion.div
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded-lg flex items-center gap-3"
+                  className="mb-5 sm:mb-6 p-3 sm:p-4 bg-green-500/10 border border-green-500/30 rounded-lg flex items-center gap-2 sm:gap-3"
                 >
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
+                  <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-green-500 shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-green-500">
+                    <p className="text-xs sm:text-sm font-semibold text-green-500">
                       Message Sent!
                     </p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-[10px] sm:text-xs text-muted-foreground">
                       I&apos;ll get back to you soon.
                     </p>
                   </div>
                 </motion.div>
               )}
 
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="space-y-4 sm:space-y-6"
+              >
                 {/* Name */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={isFormInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.4, delay: 0.3 }}
-                  className="space-y-2"
+                  className="space-y-1.5 sm:space-y-2"
                 >
-                  <Label htmlFor="name" className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-primary" />
+                  <Label
+                    htmlFor="name"
+                    className="flex items-center gap-1.5 sm:gap-2 text-sm"
+                  >
+                    <User className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
                     Name
                   </Label>
                   <Input
@@ -259,7 +276,7 @@ export function ContactSection() {
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       id="name-error"
-                      className="text-sm text-destructive flex items-center gap-1"
+                      className="text-xs sm:text-sm text-destructive flex items-center gap-1"
                     >
                       <span>⚠</span> {errors.name.message}
                     </motion.p>
@@ -271,10 +288,13 @@ export function ContactSection() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={isFormInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.4, delay: 0.4 }}
-                  className="space-y-2"
+                  className="space-y-1.5 sm:space-y-2"
                 >
-                  <Label htmlFor="email" className="flex items-center gap-2">
-                    <AtSign className="h-4 w-4 text-primary" />
+                  <Label
+                    htmlFor="email"
+                    className="flex items-center gap-1.5 sm:gap-2 text-sm"
+                  >
+                    <AtSign className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
                     Email
                   </Label>
                   <Input
@@ -295,7 +315,7 @@ export function ContactSection() {
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       id="email-error"
-                      className="text-sm text-destructive flex items-center gap-1"
+                      className="text-xs sm:text-sm text-destructive flex items-center gap-1"
                     >
                       <span>⚠</span> {errors.email.message}
                     </motion.p>
@@ -307,10 +327,13 @@ export function ContactSection() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={isFormInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.4, delay: 0.5 }}
-                  className="space-y-2"
+                  className="space-y-1.5 sm:space-y-2"
                 >
-                  <Label htmlFor="subject" className="flex items-center gap-2">
-                    <FileText className="h-4 w-4 text-primary" />
+                  <Label
+                    htmlFor="subject"
+                    className="flex items-center gap-1.5 sm:gap-2 text-sm"
+                  >
+                    <FileText className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
                     Subject
                   </Label>
                   <Input
@@ -332,7 +355,7 @@ export function ContactSection() {
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       id="subject-error"
-                      className="text-sm text-destructive flex items-center gap-1"
+                      className="text-xs sm:text-sm text-destructive flex items-center gap-1"
                     >
                       <span>⚠</span> {errors.subject.message}
                     </motion.p>
@@ -344,10 +367,13 @@ export function ContactSection() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={isFormInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.4, delay: 0.6 }}
-                  className="space-y-2"
+                  className="space-y-1.5 sm:space-y-2"
                 >
-                  <Label htmlFor="message" className="flex items-center gap-2">
-                    <MessageSquare className="h-4 w-4 text-primary" />
+                  <Label
+                    htmlFor="message"
+                    className="flex items-center gap-1.5 sm:gap-2 text-sm"
+                  >
+                    <MessageSquare className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
                     Message
                   </Label>
                   <Textarea
@@ -370,7 +396,7 @@ export function ContactSection() {
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       id="message-error"
-                      className="text-sm text-destructive flex items-center gap-1"
+                      className="text-xs sm:text-sm text-destructive flex items-center gap-1"
                     >
                       <span>⚠</span> {errors.message.message}
                     </motion.p>
@@ -382,12 +408,12 @@ export function ContactSection() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={isFormInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.4, delay: 0.7 }}
+                  className="pt-2"
                 >
                   <Button
                     type="submit"
-                    className="w-full group bg-linear-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                    className="w-full group bg-linear-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 h-11 sm:h-12"
                     disabled={isSubmitting}
-                    size="lg"
                   >
                     {isSubmitting ? (
                       <>
@@ -400,14 +426,18 @@ export function ContactSection() {
                           }}
                           className="mr-2"
                         >
-                          <Terminal className="h-4 w-4" />
+                          <Terminal className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         </motion.div>
-                        <span className="font-mono">Processing...</span>
+                        <span className="font-mono text-sm sm:text-base">
+                          Processing...
+                        </span>
                       </>
                     ) : (
                       <>
-                        <Send className="h-4 w-4 mr-2 group-hover:translate-x-1 transition-transform" />
-                        <span className="font-semibold">Send Message</span>
+                        <Send className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2 group-hover:translate-x-1 transition-transform" />
+                        <span className="font-semibold text-sm sm:text-base">
+                          Send Message
+                        </span>
                       </>
                     )}
                   </Button>
@@ -422,42 +452,47 @@ export function ContactSection() {
             initial={{ opacity: 0, x: 30 }}
             animate={isInfoInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="space-y-6"
+            className="space-y-6 px-2 sm:px-0"
           >
             {/* Info Card */}
-            <Card className="p-8 bg-card/50 backdrop-blur-sm border-2 border-border/50 hover:border-primary/30 transition-all duration-300">
-              <div className="mb-6">
+            <Card className="p-5 sm:p-6 md:p-8 bg-card/50 backdrop-blur-sm border-2 border-border/50 hover:border-primary/30 transition-all duration-300">
+              <div className="mb-5 sm:mb-6">
                 <div className="flex items-center gap-2 mb-2">
                   <Terminal
-                    className="h-5 w-5 text-primary"
+                    className="h-4 w-4 sm:h-5 sm:w-5 text-primary"
                     aria-hidden="true"
                   />
-                  <h2 className="text-2xl font-bold">Contact Info</h2>
+                  <h2 className="text-xl sm:text-2xl font-bold">
+                    Contact Info
+                  </h2>
                 </div>
-                <p className="text-sm text-muted-foreground font-mono">
+                <p className="text-xs sm:text-sm text-muted-foreground font-mono">
                   {"// Reach me directly"}
                 </p>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-5 sm:space-y-6">
                 {/* Email */}
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={isInfoInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ duration: 0.4, delay: 0.4 }}
-                  className="flex items-start gap-4 group"
+                  className="flex items-start gap-3 sm:gap-4 group"
                 >
-                  <div className="p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors shrink-0">
-                    <Mail className="h-6 w-6 text-primary" aria-hidden="true" />
+                  <div className="p-2.5 sm:p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors shrink-0">
+                    <Mail
+                      className="h-5 w-5 sm:h-6 sm:w-6 text-primary"
+                      aria-hidden="true"
+                    />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm text-muted-foreground mb-1 font-mono">
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-1 font-mono">
                       {"// Email"}
                     </p>
                     <div className="flex items-center gap-2">
                       <a
                         href={SITE_CONFIG.links.email}
-                        className="font-medium hover:text-primary transition-colors truncate font-mono text-sm"
+                        className="font-medium hover:text-primary transition-colors truncate font-mono text-xs sm:text-sm"
                         aria-label="Send email"
                       >
                         {SITE_CONFIG.contact.email}
@@ -466,15 +501,15 @@ export function ContactSection() {
                         variant="ghost"
                         size="icon"
                         onClick={copyEmail}
-                        className="h-8 w-8 shrink-0"
+                        className="h-7 w-7 sm:h-8 sm:w-8 shrink-0"
                         aria-label={
                           emailCopied ? "Email copied" : "Copy email address"
                         }
                       >
                         {emailCopied ? (
-                          <Check className="h-4 w-4 text-green-500" />
+                          <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-green-500" />
                         ) : (
-                          <Copy className="h-4 w-4" />
+                          <Copy className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         )}
                       </Button>
                     </div>
@@ -486,21 +521,21 @@ export function ContactSection() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={isInfoInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ duration: 0.4, delay: 0.5 }}
-                  className="flex items-start gap-4 group"
+                  className="flex items-start gap-3 sm:gap-4 group"
                 >
-                  <div className="p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                  <div className="p-2.5 sm:p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors shrink-0">
                     <Phone
-                      className="h-6 w-6 text-primary"
+                      className="h-5 w-5 sm:h-6 sm:w-6 text-primary"
                       aria-hidden="true"
                     />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground mb-1 font-mono">
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-1 font-mono">
                       {"// Phone"}
                     </p>
                     <a
                       href={`tel:${SITE_CONFIG.contact.phone}`}
-                      className="font-medium hover:text-primary transition-colors font-mono text-sm"
+                      className="font-medium hover:text-primary transition-colors font-mono text-xs sm:text-sm"
                       aria-label="Call phone number"
                     >
                       {SITE_CONFIG.contact.phone}
@@ -513,19 +548,19 @@ export function ContactSection() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={isInfoInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ duration: 0.4, delay: 0.6 }}
-                  className="flex items-start gap-4 group"
+                  className="flex items-start gap-3 sm:gap-4 group"
                 >
-                  <div className="p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                  <div className="p-2.5 sm:p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors shrink-0">
                     <MapPin
-                      className="h-6 w-6 text-primary"
+                      className="h-5 w-5 sm:h-6 sm:w-6 text-primary"
                       aria-hidden="true"
                     />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground mb-1 font-mono">
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-1 font-mono">
                       {"// Location"}
                     </p>
-                    <p className="font-medium font-mono text-sm">
+                    <p className="font-medium font-mono text-xs sm:text-sm">
                       {SITE_CONFIG.contact.location}
                     </p>
                   </div>
@@ -537,17 +572,17 @@ export function ContactSection() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInfoInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.4, delay: 0.8 }}
-                className="mt-8"
+                className="mt-6 sm:mt-8 pt-6 border-t border-border/50"
               >
-                <p className="text-sm text-muted-foreground mb-4 font-mono">
+                <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 font-mono">
                   {"// Social Links"}
                 </p>
-                <div className="flex gap-3">
+                <div className="flex gap-2 sm:gap-3">
                   <Button
                     variant="outline"
                     size="icon"
                     asChild
-                    className="hover:border-primary hover:text-primary transition-all hover:scale-110"
+                    className="hover:border-primary hover:text-primary transition-all hover:scale-110 h-10 w-10 sm:h-11 sm:w-11"
                   >
                     <a
                       href={SITE_CONFIG.links.github}
@@ -555,14 +590,14 @@ export function ContactSection() {
                       rel="noopener noreferrer"
                       aria-label="GitHub profile"
                     >
-                      <Github className="h-5 w-5" />
+                      <Github className="h-4 w-4 sm:h-5 sm:w-5" />
                     </a>
                   </Button>
                   <Button
                     variant="outline"
                     size="icon"
                     asChild
-                    className="hover:border-primary hover:text-primary transition-all hover:scale-110"
+                    className="hover:border-primary hover:text-primary transition-all hover:scale-110 h-10 w-10 sm:h-11 sm:w-11"
                   >
                     <a
                       href={SITE_CONFIG.links.linkedin}
@@ -570,17 +605,17 @@ export function ContactSection() {
                       rel="noopener noreferrer"
                       aria-label="LinkedIn profile"
                     >
-                      <Linkedin className="h-5 w-5" />
+                      <Linkedin className="h-4 w-4 sm:h-5 sm:w-5" />
                     </a>
                   </Button>
                   <Button
                     variant="outline"
                     size="icon"
                     asChild
-                    className="hover:border-primary hover:text-primary transition-all hover:scale-110"
+                    className="hover:border-primary hover:text-primary transition-all hover:scale-110 h-10 w-10 sm:h-11 sm:w-11"
                   >
                     <a href={SITE_CONFIG.links.email} aria-label="Send email">
-                      <Mail className="h-5 w-5" />
+                      <Mail className="h-4 w-4 sm:h-5 sm:w-5" />
                     </a>
                   </Button>
                 </div>
