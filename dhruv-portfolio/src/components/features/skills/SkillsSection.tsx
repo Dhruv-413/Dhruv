@@ -90,7 +90,7 @@ export function SkillsSection() {
       {/* Skills Hero Content - Matching Hero.tsx Layout */}
       <div className="relative z-10 container mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
         <div className="min-h-screen flex items-center justify-center py-12 sm:py-16 lg:py-20">
-          <div className="grid lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center max-w-7xl mx-auto w-full">
+          <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-10 xl:gap-12 items-center max-w-7xl mx-auto w-full">
             {/* Left Column - Skills Content */}
             <div className="text-center lg:text-left order-1 lg:order-1">
               {/* Terminal Prompt */}
@@ -107,7 +107,7 @@ export function SkillsSection() {
                 <motion.span
                   animate={{ opacity: [1, 0, 1] }}
                   transition={{ duration: 1, repeat: Infinity }}
-                  className="text-primary font-mono"
+                  className="text-primary font-mono text-xs sm:text-sm"
                 >
                   _
                 </motion.span>
@@ -128,14 +128,14 @@ export function SkillsSection() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-primary mb-4 sm:mb-6"
+                className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold text-primary mb-4 sm:mb-6"
               >
                 Full-Stack • AI/ML • DevOps
               </motion.h2>
 
               {/* Description */}
               <motion.p
-                className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed"
+                className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed px-2 lg:px-0"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 }}

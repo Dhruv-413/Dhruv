@@ -116,25 +116,27 @@ function AnimatedCounter({
 
 export function StatsSection() {
   return (
-    <section className="py-20 bg-card/30">
-      <div className="container mx-auto px-4">
+    <section className="py-12 sm:py-16 md:py-20 bg-card/30">
+      <div className="container mx-auto px-4 sm:px-6">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-16"
+          className="text-center mb-12 sm:mb-16"
         >
-          <h2 className="text-4xl font-bold mb-4">Impact by Numbers</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-3 sm:mb-4">
+            Impact by Numbers
+          </h2>
+          <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto px-2">
             Quantifiable achievements and metrics that demonstrate the scale and
             impact of my work across various projects and domains.
           </p>
         </motion.div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-6xl mx-auto">
           {stats.map((stat, index) => {
             const Icon = stat.icon;
             return (
@@ -147,17 +149,17 @@ export function StatsSection() {
                 whileHover={{ scale: 1.05 }}
                 className="relative overflow-hidden"
               >
-                <div className="bg-card border border-border rounded-xl p-6 text-center h-full flex flex-col items-center justify-center relative group hover:border-primary/50 transition-all">
+                <div className="bg-card border border-border rounded-xl p-5 sm:p-6 text-center h-full flex flex-col items-center justify-center relative group hover:border-primary/50 transition-all">
                   {/* Background gradient */}
                   <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
                   {/* Icon */}
-                  <div className={`mb-4 ${stat.color}`}>
-                    <Icon className="h-12 w-12 mx-auto" />
+                  <div className={`mb-3 sm:mb-4 ${stat.color}`}>
+                    <Icon className="h-10 w-10 sm:h-12 sm:w-12 mx-auto" />
                   </div>
 
                   {/* Value */}
-                  <div className="text-4xl font-bold mb-2 bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                  <div className="text-3xl sm:text-4xl font-bold mb-2 bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent">
                     <AnimatedCounter
                       value={stat.value}
                       format={stat.format}
