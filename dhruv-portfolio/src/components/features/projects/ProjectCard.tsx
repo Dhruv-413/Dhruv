@@ -226,9 +226,9 @@ export function ProjectCard({ project, onClick, index = 0 }: ProjectCardProps) {
               size="sm"
               variant="outline"
               className="flex-1 group/btn hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all"
-              onClick={(e) => {
-                e.stopPropagation();
-                window.open(project.links.live, "_blank");
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+              e.stopPropagation();
+              window.open(project.links.live, "_blank");
               }}
             >
               <ExternalLink className="h-3.5 w-3.5 mr-1.5 group-hover/btn:scale-110 transition-transform" />
@@ -240,7 +240,7 @@ export function ProjectCard({ project, onClick, index = 0 }: ProjectCardProps) {
               size="sm"
               variant="outline"
               className="flex-1 group/btn hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all"
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                 e.stopPropagation();
                 window.open(project.links.github, "_blank");
               }}
