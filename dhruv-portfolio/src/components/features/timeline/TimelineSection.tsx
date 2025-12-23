@@ -23,7 +23,6 @@ import timelineData from "@/data/timeline.json";
 import { format } from "date-fns";
 import { useState, useRef } from "react";
 import { TechIcon } from "@/components/ui/TechIcon";
-import { Card } from "@/components/ui/card";
 
 const iconMap = {
   work: Briefcase,
@@ -83,8 +82,17 @@ const experienceStats = [
   },
 ];
 
+// Type-based colors for timeline card gradients
+const typeGradients: Record<string, string> = {
+  work: "#3b82f6", // Blue
+  education: "#a855f7", // Purple
+  achievement: "#f59e0b", // Amber
+};
+
 export function TimelineSection() {
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+  const [activeItem, setActiveItem] = useState<string | null>(null);
+  const [activeStatIndex, setActiveStatIndex] = useState<number | null>(null);
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
@@ -104,7 +112,7 @@ export function TimelineSection() {
       ref={sectionRef}
       className="relative min-h-screen overflow-hidden pt-16 pb-12 sm:pb-16 md:pb-20"
     >
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+      <div className="container mx-auto px-3 sm:px-4 md:px-6 relative z-10">
         {/* Hero Section - Centered Layout (Like Skills/Projects) */}
         <div className="max-w-4xl mx-auto text-center mb-12 sm:mb-16 md:mb-20">
           {/* Terminal Prompt */}
@@ -162,7 +170,7 @@ export function TimelineSection() {
             excellence, and measurable real-world contributions.
           </motion.p>
 
-          {/* Stats Grid - Matching Projects Page Style */}
+          {/* Stats Grid - Unified Elegant Design */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -171,29 +179,85 @@ export function TimelineSection() {
           >
             {experienceStats.map((stat, index) => {
               const Icon = stat.icon;
+              const isActive = activeStatIndex === index;
+              const statColors = ["#a855f7", "#3b82f6", "#f59e0b", "#10b981"];
+              const statColor = statColors[index] || "#3b82f6";
               return (
-                <Card
+                <motion.div
                   key={index}
-                  className="p-3 sm:p-4 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all group"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ delay: 0.4 + index * 0.1 }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  onMouseEnter={() => setActiveStatIndex(index)}
+                  onMouseLeave={() => setActiveStatIndex(null)}
+                  className="group relative"
                 >
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ delay: 0.4 + index * 0.1 }}
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    className="flex flex-col items-center gap-1.5 sm:gap-2"
+                  <div
+                    className={`relative p-3 sm:p-4 bg-card/50 backdrop-blur-sm rounded-xl border overflow-hidden transition-all duration-300 ${
+                      isActive
+                        ? "border-primary shadow-2xl shadow-white/15"
+                        : "border-border/50 hover:border-primary/30"
+                    }`}
                   >
-                    <div className="p-1.5 sm:p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                      <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                    {/* Animated Gradient Background */}
+                    <div
+                      className={`absolute inset-0 rounded-xl transition-opacity duration-500 ${
+                        isActive
+                          ? "opacity-15"
+                          : "opacity-0 group-hover:opacity-10"
+                      }`}
+                      style={{
+                        background: `linear-gradient(135deg, ${statColor}40 0%, transparent 60%)`,
+                      }}
+                    />
+
+                    {/* Scan Line Effect */}
+                    {isActive && (
+                      <motion.div
+                        className="absolute inset-x-0 h-px"
+                        style={{ backgroundColor: `${statColor}60` }}
+                        initial={{ top: 0 }}
+                        animate={{ top: "100%" }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
+                      />
+                    )}
+
+                    <div className="relative flex flex-col items-center gap-1.5 sm:gap-2">
+                      <motion.div
+                        className="p-2 sm:p-2.5 rounded-lg transition-colors"
+                        style={{ backgroundColor: `${statColor}20` }}
+                        whileHover={{ rotate: 360 }}
+                        transition={{ duration: 0.6 }}
+                      >
+                        <Icon
+                          className="h-5 w-5 sm:h-6 sm:w-6"
+                          style={{ color: statColor }}
+                        />
+                      </motion.div>
+                      <div className="text-xl sm:text-2xl md:text-3xl font-bold font-mono">
+                        {stat.value}
+                      </div>
+                      <div className="text-[10px] sm:text-xs text-center text-muted-foreground font-medium">
+                        {stat.label}
+                      </div>
                     </div>
-                    <div className="text-xl sm:text-2xl md:text-3xl font-bold font-mono text-primary">
-                      {stat.value}
-                    </div>
-                    <div className="text-[10px] sm:text-xs text-center text-muted-foreground font-medium">
-                      {stat.label}
-                    </div>
-                  </motion.div>
-                </Card>
+                  </div>
+
+                  {/* Top-Right Corner Accent */}
+                  <div
+                    className={`absolute -top-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 rounded-full blur-xl transition-opacity duration-300 ${
+                      isActive
+                        ? "opacity-60"
+                        : "opacity-0 group-hover:opacity-40"
+                    }`}
+                    style={{ backgroundColor: statColor }}
+                  />
+                </motion.div>
               );
             })}
           </motion.div>
@@ -225,9 +289,8 @@ export function TimelineSection() {
             <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto px-2">
               Follow my journey through code, achievements, and innovation.{" "}
               <span className="text-primary">
-                Click to explore code snippets
-              </span>{" "}
-              and technical details.
+                Click to explore detailed impact metrics
+              </span>
             </p>
 
             {/* Technical Credibility Badges */}
@@ -257,8 +320,13 @@ export function TimelineSection() {
 
           {/* Timeline Grid */}
           <div className="relative space-y-4 sm:space-y-6">
-            {/* Vertical Line */}
-            <div className="absolute left-4 sm:left-6 md:left-8 top-0 bottom-0 w-0.5 bg-linear-to-b from-primary via-purple-500 to-accent" />
+            {/* Elegant Vertical Line */}
+            <div className="absolute left-[7px] sm:left-[9px] top-0 bottom-0 flex flex-col items-center">
+              {/* Main subtle line */}
+              <div className="absolute inset-0 w-px bg-linear-to-b from-primary/40 via-primary/20 to-primary/40" />
+              {/* Subtle glow effect */}
+              <div className="absolute inset-0 w-px bg-linear-to-b from-primary/10 via-primary/5 to-primary/10 blur-[2px]" />
+            </div>
 
             {sortedTimeline.map((item, index) => {
               const Icon = iconMap[item.type];
@@ -266,6 +334,7 @@ export function TimelineSection() {
               const hasMetrics = item.metrics && item.metrics.length > 0;
               const isExpandable = hasMetrics; // Items with metrics can expand
               const isAchievement = item.type === "achievement"; // Achievements show only start date
+              const isActive = activeItem === item.id;
 
               return (
                 <motion.div
@@ -277,29 +346,28 @@ export function TimelineSection() {
                     delay: 0.8 + index * 0.1,
                     ease: [0.25, 0.4, 0.25, 1],
                   }}
-                  className="relative pl-20 md:pl-24"
+                  className="relative pl-6 sm:pl-8"
+                  onMouseEnter={() => setActiveItem(item.id)}
+                  onMouseLeave={() => setActiveItem(null)}
                 >
-                  {/* Icon Marker */}
+                  {/* Elegant Timeline Dot */}
                   <motion.div
-                    className="absolute left-0 md:left-2 top-0"
-                    whileHover={{ scale: 1.2, rotate: 360 }}
-                    transition={{ duration: 0.6 }}
+                    className="absolute left-0 top-6 sm:top-7"
+                    initial={{ scale: 0 }}
+                    animate={isInView ? { scale: 1 } : {}}
+                    transition={{
+                      delay: 0.8 + index * 0.1,
+                      type: "spring",
+                      stiffness: 200,
+                    }}
                   >
                     <div
-                      className={`
-                      w-12 h-12 rounded-full flex items-center justify-center
-                      border-4 border-background shadow-lg
-                      ${
-                        item.type === "work"
-                          ? "bg-blue-500"
-                          : item.type === "education"
-                          ? "bg-purple-500"
-                          : "bg-amber-500"
-                      }
-                    `}
-                    >
-                      <Icon className="h-6 w-6 text-white" />
-                    </div>
+                      className={`w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border-2 border-background shadow-sm transition-all duration-300 ${
+                        isActive
+                          ? "bg-primary shadow-primary/50 scale-125"
+                          : "bg-primary/60"
+                      }`}
+                    />
                   </motion.div>
 
                   {/* Card */}
@@ -307,18 +375,36 @@ export function TimelineSection() {
                     whileHover={{ scale: 1.02, y: -4 }}
                     onClick={() => isExpandable && toggleItem(item.id)}
                     className={`
-                      group relative bg-card border rounded-2xl p-6
-                      transition-all duration-500 overflow-hidden
+                      group relative bg-card border rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6
+                      transition-all duration-500 overflow-hidden touch-manipulation
                       ${isExpandable ? "cursor-pointer" : ""}
                       ${
-                        isExpanded
-                          ? "border-primary shadow-2xl shadow-primary/20"
+                        isExpanded || isActive
+                          ? "border-primary shadow-2xl shadow-white/20"
                           : "border-border hover:border-primary/50 hover:shadow-xl"
                       }
                     `}
                   >
-                    {/* Scan Line Effect - Only for ONGC when expanded */}
-                    {isExpanded && isExpandable && (
+                    {/* Animated Gradient Background */}
+                    <div
+                      className={`absolute inset-0 rounded-xl sm:rounded-2xl transition-opacity duration-500 ${
+                        isActive ? "opacity-10" : "opacity-0"
+                      }`}
+                      style={{
+                        background: `linear-gradient(135deg, ${
+                          typeGradients[item.type]
+                        }40, transparent)`,
+                      }}
+                    />
+
+                    {/* Top-Right Corner Accent */}
+                    <div
+                      className="absolute -top-1 -right-1 w-8 h-8 sm:w-10 sm:h-10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"
+                      style={{ backgroundColor: typeGradients[item.type] }}
+                    />
+
+                    {/* Scan Line Effect - Always on hover/active */}
+                    {isActive && (
                       <motion.div
                         className="absolute inset-x-0 h-px bg-primary/50"
                         initial={{ top: 0 }}
@@ -331,44 +417,44 @@ export function TimelineSection() {
                       />
                     )}
 
-                    {/* Background Gradient */}
-                    <div
-                      className={`
-                      absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity
-                      ${
-                        item.type === "work"
-                          ? "bg-linear-to-br from-blue-500 to-cyan-500"
-                          : item.type === "education"
-                          ? "bg-linear-to-br from-purple-500 to-pink-500"
-                          : "bg-linear-to-br from-amber-500 to-orange-500"
-                      }
-                    `}
-                    />
-
                     {/* Content */}
                     <div className="relative">
-                      {/* Header */}
-                      <div className="mb-4">
-                        <div className="flex items-start justify-between gap-4 mb-2">
-                          <h3 className="text-xl md:text-2xl font-bold group-hover:text-primary transition-colors">
+                      {/* Header with Type Badge */}
+                      <div className="mb-3 sm:mb-4">
+                        {/* Type Badge */}
+                        <div className="flex items-center gap-2 mb-2 sm:mb-3">
+                          <motion.div
+                            className="p-1.5 sm:p-2 rounded-lg bg-primary/10"
+                            whileHover={{ rotate: 360 }}
+                            transition={{ duration: 0.6 }}
+                          >
+                            <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                          </motion.div>
+                          <span className="text-[10px] sm:text-xs font-mono uppercase tracking-wider text-muted-foreground">
+                            {item.type}
+                          </span>
+                        </div>
+
+                        <div className="flex items-start justify-between gap-2 sm:gap-4 mb-2">
+                          <h3 className="text-lg sm:text-xl md:text-2xl font-bold transition-colors group-hover:text-primary">
                             {item.title}
                           </h3>
                           <motion.div
                             animate={{ rotate: isExpanded ? 180 : 0 }}
                             transition={{ duration: 0.3 }}
                           >
-                            <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                            <ChevronDown className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground shrink-0" />
                           </motion.div>
                         </div>
 
-                        <p className="text-primary font-semibold text-lg mb-3 flex items-center gap-2">
-                          <Award className="h-4 w-4" />
+                        <p className="font-semibold text-base sm:text-lg mb-2 sm:mb-3 flex items-center gap-2 text-muted-foreground">
+                          <Award className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-primary" />
                           {item.organization}
                         </p>
 
-                        <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1.5">
-                            <Calendar className="h-4 w-4 text-primary" />
+                        <div className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
+                          <div className="flex items-center gap-1 sm:gap-1.5">
+                            <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary shrink-0" />
                             <span className="font-mono">
                               {format(new Date(item.startDate), "MMM yyyy")}
                               {!isAchievement &&
@@ -380,15 +466,15 @@ export function TimelineSection() {
                               {!isAchievement && !item.endDate && " - Present"}
                             </span>
                           </div>
-                          <div className="flex items-center gap-1.5">
-                            <MapPin className="h-4 w-4 text-accent" />
+                          <div className="flex items-center gap-1 sm:gap-1.5">
+                            <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent shrink-0" />
                             <span>{item.location}</span>
                           </div>
                         </div>
                       </div>
 
                       {/* Description */}
-                      <ul className="space-y-2 mb-4">
+                      <ul className="space-y-1.5 sm:space-y-2 mb-3 sm:mb-4">
                         {item.description.map((desc, idx) => (
                           <motion.li
                             key={idx}
@@ -397,9 +483,9 @@ export function TimelineSection() {
                             transition={{
                               delay: 0.9 + index * 0.1 + idx * 0.05,
                             }}
-                            className="text-sm md:text-base text-foreground/90 flex items-start gap-3"
+                            className="text-xs sm:text-sm md:text-base text-foreground/90 flex items-start gap-2 sm:gap-3"
                           >
-                            <Zap className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                            <Zap className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary mt-0.5 shrink-0" />
                             <span>{desc}</span>
                           </motion.li>
                         ))}
@@ -416,7 +502,7 @@ export function TimelineSection() {
                         className="overflow-hidden"
                       >
                         {item.metrics && item.metrics.length > 0 && (
-                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4 pt-2">
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-3 sm:mb-4 pt-2">
                             {item.metrics.map((metric, idx) => (
                               <motion.div
                                 key={idx}
@@ -428,12 +514,12 @@ export function TimelineSection() {
                                 }
                                 transition={{ delay: idx * 0.1 }}
                                 whileHover={{ scale: 1.05 }}
-                                className="relative group/metric bg-muted/50 backdrop-blur-sm rounded-xl p-4 text-center border border-border hover:border-primary/50 transition-all"
+                                className="relative group/metric bg-muted/50 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-border hover:border-primary/50 transition-all touch-manipulation"
                               >
-                                <div className="text-2xl md:text-3xl font-bold text-primary mb-1 font-mono">
+                                <div className="text-xl sm:text-2xl md:text-3xl font-bold text-primary mb-1 font-mono">
                                   {metric.value}
                                 </div>
-                                <div className="text-xs md:text-sm text-muted-foreground font-medium">
+                                <div className="text-[10px] sm:text-xs md:text-sm text-muted-foreground font-medium">
                                   {metric.label}
                                 </div>
 
@@ -448,10 +534,13 @@ export function TimelineSection() {
                       </motion.div>
 
                       {/* Technology Tags */}
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-1.5 sm:gap-2">
                         {item.tags.map((tag, idx) => {
                           const icon = (
-                            <TechIcon name={tag} className="h-3 w-3" />
+                            <TechIcon
+                              name={tag}
+                              className="h-2.5 w-2.5 sm:h-3 sm:w-3"
+                            />
                           );
                           return (
                             <motion.div
@@ -464,9 +553,9 @@ export function TimelineSection() {
                                 stiffness: 200,
                               }}
                               whileHover={{ scale: 1.1, y: -2 }}
-                              className="group/tag"
+                              className="group/tag touch-manipulation"
                             >
-                              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/80 backdrop-blur-sm rounded-lg text-xs md:text-sm font-medium border border-border hover:border-primary/50 transition-all">
+                              <div className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 bg-muted/80 backdrop-blur-sm rounded-md sm:rounded-lg text-[10px] sm:text-xs md:text-sm font-medium border border-border hover:border-primary/50 transition-all">
                                 <div className="group-hover/tag:scale-110 transition-transform">
                                   {icon}
                                 </div>
@@ -481,22 +570,34 @@ export function TimelineSection() {
 
                       {/* Expand Indicator - Only for ONGC */}
                       {isExpandable && hasMetrics && (
-                        <div className="text-center mt-4 pt-4 border-t border-border/50">
-                          <span className="text-xs font-mono text-muted-foreground">
+                        <div className="text-center mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-border/50">
+                          <span className="text-[10px] sm:text-xs font-mono text-muted-foreground">
                             {isExpanded ? (
-                              <span className="flex items-center justify-center gap-2">
-                                <ChevronUp className="h-3 w-3" />
+                              <span className="flex items-center justify-center gap-1.5 sm:gap-2">
+                                <ChevronUp className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                                 Click to collapse metrics
                               </span>
                             ) : (
-                              <span className="flex items-center justify-center gap-2">
-                                <ChevronDown className="h-3 w-3" />
+                              <span className="flex items-center justify-center gap-1.5 sm:gap-2">
+                                <ChevronDown className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                                 Click to view impact metrics
                               </span>
                             )}
                           </span>
                         </div>
                       )}
+
+                      {/* Code-style Footer - Like Skills cards */}
+                      <div className="relative pt-3 sm:pt-4 mt-3 sm:mt-4 border-t border-border/50 font-mono text-[10px] sm:text-xs text-muted-foreground">
+                        <span className="text-primary">{"// "}</span>
+                        <span className="italic">
+                          {item.type === "work"
+                            ? "Professional experience"
+                            : item.type === "education"
+                            ? "Academic foundation"
+                            : "Key achievement"}
+                        </span>
+                      </div>
                     </div>
                   </motion.div>
                 </motion.div>

@@ -418,3 +418,111 @@ body {
     padding-right: max(0px, env(safe-area-inset-right));
   }
 }
+
+/* ========================================
+   FOLDABLE & ULTRA-NARROW DEVICE SUPPORT
+   ======================================== */
+
+/* Foldable device utilities (Galaxy Fold folded: ~280px) */
+@layer utilities {
+  /* Foldable-safe text sizing */
+  .text-foldable-hero {
+    font-size: clamp(1.5rem, 8vw, 4.5rem);
+    line-height: 1.1;
+  }
+
+  .text-foldable-title {
+    font-size: clamp(1.25rem, 6vw, 2.5rem);
+    line-height: 1.2;
+  }
+
+  .text-foldable-subtitle {
+    font-size: clamp(0.875rem, 4vw, 1.25rem);
+    line-height: 1.4;
+  }
+
+  /* Prevent text overflow on narrow screens */
+  .text-balance-narrow {
+    text-wrap: balance;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  /* Foldable-safe padding */
+  .px-foldable {
+    padding-left: clamp(0.5rem, 3vw, 2rem);
+    padding-right: clamp(0.5rem, 3vw, 2rem);
+  }
+
+  /* Horizontal scroll container for filter buttons */
+  .scroll-foldable {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .scroll-foldable::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Ultra-narrow screen adjustments (Galaxy Fold folded) */
+@media (max-width: 320px) {
+  /* Ensure minimum touch targets */
+  button,
+  a,
+  [role="button"] {
+    min-height: 40px;
+  }
+
+  /* Prevent horizontal overflow */
+  .container {
+    min-width: 280px;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+
+  /* Single column grids on foldables */
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Reduce card padding */
+  .card,
+  [class*="bg-card"] {
+    padding: 0.75rem !important;
+  }
+}
+
+/* Small phone adjustments (360px - Galaxy S8+, similar) */
+@media (min-width: 321px) and (max-width: 374px) {
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
+/* iPad Portrait mode optimizations */
+@media (min-width: 768px) and (max-width: 1023px) and (orientation: portrait) {
+  /* Better two-column layouts for iPad portrait */
+  .grid-cols-1.sm\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* iPad Landscape and iPad Pro optimizations */
+@media (min-width: 1024px) and (max-width: 1366px) {
+  /* Optimize spacing for iPad landscape */
+  .container {
+    max-width: 90vw;
+  }
+}
+
+/* Foldable unfolded mode (tablet-like ~717px) */
+@media (min-width: 600px) and (max-width: 767px) {
+  /* Better handling for foldable unfolded state */
+  .grid-cols-1.sm\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

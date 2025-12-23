@@ -50,7 +50,7 @@ const detailedCodeSnippet = `// About Me
 const developer = {
   name: "Dhruv Gupta",
   role: "Full-Stack Developer & AI/ML Engineer",
-  location: "Jaipur, India 🇮🇳",
+  location: "Jaipur, India",
   education: "B.Tech CSE @ Manipal University",
   experience: ["Ex-ONGC Intern"],
 
@@ -124,14 +124,16 @@ const values = [
 ];
 
 const aboutStats = [
-  { label: "Intern Experience", value: "6 Months", icon: Briefcase },
+  { label: "Intern Experience", value: "3 Months", icon: Briefcase },
   { label: "Projects Completed", value: "7+", icon: Rocket },
-  { label: "Technologies Learned", value: "15+", icon: Code2 },
+  { label: "Technologies Learned", value: "10+", icon: Code2 },
   { label: "Certifications", value: "5+", icon: Book },
 ];
 
 export function Hero() {
   const [currentRole, setCurrentRole] = useState(0);
+  const [activeStatIndex, setActiveStatIndex] = useState<number | null>(null);
+  const [activeValueIndex, setActiveValueIndex] = useState<number | null>(null);
   const { data: user } = useGitHubUser();
   const { data: stats } = useGitHubStats();
   const sectionRef = useRef(null);
@@ -492,7 +494,7 @@ export function Hero() {
 
         {/* Scroll Indicator - Hidden on mobile to save space */}
         <motion.div
-          className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2"
+          className="hidden sm:flex absolute bottom-3 left-1/2 -translate-x-1/2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, y: [0, 10, 0] }}
           transition={{
@@ -500,7 +502,7 @@ export function Hero() {
             y: { duration: 1.5, repeat: Infinity },
           }}
         >
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center mt-8 pt-8">
             <span className="text-xs font-mono text-muted-foreground">
               Scroll to explore
             </span>
@@ -511,15 +513,18 @@ export function Hero() {
 
       {/* About Content Section */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
-        {/* Stats Dashboard */}
+        {/* Stats Dashboard - Unified Elegant Design */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-16"
+          className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-16 max-w-4xl mx-auto"
         >
           {aboutStats.map((stat, index) => {
             const Icon = stat.icon;
+            const isActive = activeStatIndex === index;
+            const statColors = ["#3b82f6", "#8b5cf6", "#f59e0b", "#10b981"];
+            const statColor = statColors[index] || "#3b82f6";
             return (
               <motion.div
                 key={index}
@@ -527,20 +532,56 @@ export function Hero() {
                 animate={isInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ delay: 0.4 + index * 0.1 }}
                 whileHover={{ scale: 1.05, y: -5 }}
+                onMouseEnter={() => setActiveStatIndex(index)}
+                onMouseLeave={() => setActiveStatIndex(null)}
+                className="group relative"
               >
-                <div className="p-3 sm:p-4 md:p-6 text-center hover:border-primary/30 transition-all group bg-card/50 backdrop-blur-sm rounded-lg border border-border">
-                  <div className="flex justify-center mb-2 sm:mb-3">
-                    <div className="p-2 sm:p-3 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                      <Icon className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-primary" />
+                <div className={`relative p-3 sm:p-4 md:p-5 text-center bg-card/50 backdrop-blur-sm rounded-xl border overflow-hidden transition-all duration-300 h-full ${
+                  isActive
+                    ? "border-primary shadow-2xl shadow-white/15"
+                    : "border-border/50 hover:border-primary/30"
+                }`}>
+                  {/* Animated Gradient Background */}
+                  <div className={`absolute inset-0 rounded-xl transition-opacity duration-500 ${
+                    isActive ? "opacity-15" : "opacity-0 group-hover:opacity-10"
+                  }`} style={{ background: `linear-gradient(135deg, ${statColor}40 0%, transparent 60%)` }} />
+
+                  {/* Scan Line Effect */}
+                  {isActive && (
+                    <motion.div
+                      className="absolute inset-x-0 h-px"
+                      style={{ backgroundColor: `${statColor}60` }}
+                      initial={{ top: 0 }}
+                      animate={{ top: "100%" }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    />
+                  )}
+
+                  <div className="relative flex flex-col items-center gap-2">
+                    <motion.div
+                      className="p-2 sm:p-2.5 rounded-lg transition-colors"
+                      style={{ backgroundColor: `${statColor}20` }}
+                      whileHover={{ rotate: 360 }}
+                      transition={{ duration: 0.6 }}
+                    >
+                      <Icon className="h-5 w-5 sm:h-6 sm:w-6" style={{ color: statColor }} />
+                    </motion.div>
+                    <div className="text-xl sm:text-2xl md:text-3xl font-bold font-mono">
+                      {stat.value}
+                    </div>
+                    <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider leading-tight">
+                      {stat.label}
                     </div>
                   </div>
-                  <div className="text-xl sm:text-2xl md:text-3xl font-bold font-mono text-primary mb-1 sm:mb-2">
-                    {stat.value}
-                  </div>
-                  <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider leading-tight">
-                    {stat.label}
-                  </div>
                 </div>
+
+                {/* Top-Right Corner Accent */}
+                <div
+                  className={`absolute -top-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 rounded-full blur-xl transition-opacity duration-300 ${
+                    isActive ? "opacity-60" : "opacity-0 group-hover:opacity-40"
+                  }`}
+                  style={{ backgroundColor: statColor }}
+                />
               </motion.div>
             );
           })}
@@ -613,8 +654,8 @@ export function Hero() {
             className="space-y-3 sm:space-y-4 px-2 sm:px-0"
           >
             <div className="mb-4 sm:mb-5">
-              <h3 className="text-lg sm:text-xl font-bold flex items-center gap-2">
-                <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+              <h3 className="text-lg sm:text-xl font-bold flex items-center gap-2 font-mono">
+                <span className="text-primary">{"// "}</span>
                 Highlights
               </h3>
             </div>
@@ -627,17 +668,38 @@ export function Hero() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={isInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ delay: 0.7 + index * 0.1 }}
-                  whileHover={{ x: 5 }}
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  className="group relative"
                 >
-                  <div className="p-4 sm:p-5 md:p-6 hover:border-primary/30 transition-all group bg-card/50 backdrop-blur-sm rounded-lg border border-border">
-                    <div className="flex items-start gap-3 sm:gap-4">
-                      <div
-                        className={`p-2.5 sm:p-3 md:p-3.5 rounded-lg bg-linear-to-br ${highlight.color} bg-opacity-10 shrink-0`}
+                  <div className="relative p-4 sm:p-5 bg-card/50 backdrop-blur-sm rounded-lg sm:rounded-xl border border-border hover:border-primary/50 hover:shadow-xl hover:shadow-white/10 transition-all duration-300 overflow-hidden">
+                    {/* Animated Gradient Background */}
+                    <div
+                      className="absolute inset-0 rounded-lg sm:rounded-xl transition-opacity duration-500 opacity-0 group-hover:opacity-10"
+                      style={{ background: `linear-gradient(135deg, ${highlight.color.includes('blue') ? '#3b82f6' : highlight.color.includes('purple') ? '#a855f7' : highlight.color.includes('orange') ? '#f97316' : highlight.color.includes('indigo') ? '#6366f1' : '#10b981'}40, transparent)` }}
+                    />
+
+                    {/* Subtle scan line on hover */}
+                    <motion.div
+                      className="absolute inset-x-0 h-px bg-primary/30 opacity-0 group-hover:opacity-100"
+                      initial={{ top: 0 }}
+                      animate={{ top: "100%" }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
+                    />
+
+                    <div className="relative flex items-start gap-3 sm:gap-4">
+                      <motion.div
+                        className="p-2 sm:p-2.5 rounded-lg bg-primary/10 shrink-0"
+                        whileHover={{ rotate: 360 }}
+                        transition={{ duration: 0.6 }}
                       >
-                        <Icon className="h-5 w-5 sm:h-6 sm:w-6 md:h-6 md:w-6 text-primary" />
-                      </div>
+                        <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                      </motion.div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-sm sm:text-base mb-1.5 sm:mb-2 group-hover:text-primary transition-colors">
+                        <h4 className="font-semibold text-sm sm:text-base mb-1 group-hover:text-primary transition-colors">
                           {highlight.title}
                         </h4>
                         <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
@@ -646,13 +708,19 @@ export function Hero() {
                       </div>
                     </div>
                   </div>
+
+                  {/* Top-Right Corner Accent */}
+                  <div
+                    className="absolute -top-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{ backgroundColor: highlight.color.includes('blue') ? '#3b82f6' : highlight.color.includes('purple') ? '#a855f7' : highlight.color.includes('orange') ? '#f97316' : highlight.color.includes('indigo') ? '#6366f1' : '#10b981' }}
+                  />
                 </motion.div>
               );
             })}
           </motion.div>
         </div>
 
-        {/* Core Values Section */}
+        {/* Core Values Section - Unified Elegant Design */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -669,9 +737,13 @@ export function Hero() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 max-w-5xl mx-auto">
             {values.map((value, index) => {
               const Icon = value.icon;
+              const isActive = activeValueIndex === index;
+              const valueColors = ["#3b82f6", "#8b5cf6", "#f59e0b", "#10b981"];
+              const valueColor = valueColors[index] || "#3b82f6";
+              const footerTexts = ["results_driven", "innovative_thinker", "always_learning", "collaborative_spirit"];
               return (
                 <motion.div
                   key={index}
@@ -682,21 +754,65 @@ export function Hero() {
                     type: "spring",
                     stiffness: 100,
                   }}
-                  whileHover={{ y: -10, scale: 1.02 }}
+                  whileHover={{ y: -8, scale: 1.02 }}
+                  onMouseEnter={() => setActiveValueIndex(index)}
+                  onMouseLeave={() => setActiveValueIndex(null)}
+                  className="group relative"
                 >
-                  <div className="p-4 sm:p-5 md:p-6 text-center h-full hover:border-primary/30 hover:shadow-lg hover:shadow-primary/10 transition-all group bg-card/50 backdrop-blur-sm rounded-lg border border-border">
-                    <div className="flex justify-center mb-3 sm:mb-4">
-                      <div className="p-3 sm:p-3.5 md:p-4 rounded-full bg-primary/10 group-hover:bg-primary/20 group-hover:scale-110 transition-all">
-                        <Icon className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-primary" />
+                  <div className={`relative p-4 sm:p-5 md:p-6 text-center h-full bg-card/50 backdrop-blur-sm rounded-xl border overflow-hidden transition-all duration-300 flex flex-col ${
+                    isActive
+                      ? "border-primary shadow-2xl shadow-white/15"
+                      : "border-border/50 hover:border-primary/30"
+                  }`}>
+                    {/* Animated Gradient Background */}
+                    <div className={`absolute inset-0 rounded-xl transition-opacity duration-500 ${
+                      isActive ? "opacity-15" : "opacity-0 group-hover:opacity-10"
+                    }`} style={{ background: `linear-gradient(135deg, ${valueColor}40 0%, transparent 60%)` }} />
+
+                    {/* Scan Line Effect */}
+                    {isActive && (
+                      <motion.div
+                        className="absolute inset-x-0 h-px"
+                        style={{ backgroundColor: `${valueColor}60` }}
+                        initial={{ top: 0 }}
+                        animate={{ top: "100%" }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                      />
+                    )}
+
+                    <div className="relative flex-1">
+                      <div className="flex justify-center mb-3 sm:mb-4">
+                        <motion.div
+                          className="p-3 sm:p-3.5 rounded-lg transition-colors"
+                          style={{ backgroundColor: `${valueColor}20` }}
+                          whileHover={{ rotate: 360 }}
+                          transition={{ duration: 0.6 }}
+                        >
+                          <Icon className="h-6 w-6 sm:h-7 sm:w-7" style={{ color: valueColor }} />
+                        </motion.div>
                       </div>
+                      <h4 className="font-bold mb-2 text-base sm:text-lg transition-colors">
+                        {value.title}
+                      </h4>
+                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                        {value.description}
+                      </p>
                     </div>
-                    <h4 className="font-bold mb-2 text-base sm:text-lg group-hover:text-primary transition-colors">
-                      {value.title}
-                    </h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                      {value.description}
-                    </p>
+
+                    {/* Code-style Footer */}
+                    <div className="relative pt-3 mt-3 border-t border-border/50 font-mono text-[10px] text-muted-foreground">
+                      <span style={{ color: valueColor }}>{"// "}</span>
+                      <span className="italic">{footerTexts[index]}</span>
+                    </div>
                   </div>
+
+                  {/* Top-Right Corner Accent */}
+                  <div
+                    className={`absolute -top-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 rounded-full blur-xl transition-opacity duration-300 ${
+                      isActive ? "opacity-60" : "opacity-0 group-hover:opacity-40"
+                    }`}
+                    style={{ backgroundColor: valueColor }}
+                  />
                 </motion.div>
               );
             })}

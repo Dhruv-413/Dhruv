@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 
 export function Footer() {
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const currentYear = new Date().getFullYear();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,8 +22,6 @@ export function Footer() {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-
-  const currentYear = new Date().getFullYear();
 
   return (
     <footer
