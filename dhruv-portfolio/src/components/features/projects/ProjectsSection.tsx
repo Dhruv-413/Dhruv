@@ -15,7 +15,6 @@ import {
   Rocket,
 } from "lucide-react";
 import { ProjectCard } from "./ProjectCard";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Project } from "@/types/project";
 import projectsData from "@/data/projects.json";
@@ -33,6 +32,7 @@ export function ProjectsSection() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>("All");
+  const [activeStatIndex, setActiveStatIndex] = useState<number | null>(null);
 
   // Refs for scroll animations
   const heroRef = useRef(null);
@@ -168,81 +168,108 @@ export function ProjectsSection() {
 
             {/* Quick Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8 max-w-3xl mx-auto">
-              <Card className="p-3 sm:p-4 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all group">
-                <motion.div
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  className="flex flex-col items-center gap-1.5 sm:gap-2"
-                >
-                  <div className="p-1.5 sm:p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                    <Folder className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-                  </div>
-                  <div className="text-center">
-                    <div className="text-xl sm:text-2xl font-bold font-mono">
-                      {totalProjects}
-                    </div>
-                    <div className="text-[10px] sm:text-xs text-muted-foreground">
-                      Projects
-                    </div>
-                  </div>
-                </motion.div>
-              </Card>
+              {[
+                {
+                  icon: Folder,
+                  value: totalProjects,
+                  label: "Projects",
+                  color: "#3b82f6",
+                },
+                {
+                  icon: Code2,
+                  value: `${uniqueTechnologies}+`,
+                  label: "Technologies",
+                  color: "#8b5cf6",
+                },
+                {
+                  icon: Star,
+                  value: featuredProjects.length,
+                  label: "Featured",
+                  color: "#f59e0b",
+                  fill: true,
+                },
+                {
+                  icon: Sparkles,
+                  value: "100%",
+                  label: "Production",
+                  color: "#10b981",
+                },
+              ].map((stat, index) => {
+                const Icon = stat.icon;
+                const isActive = activeStatIndex === index;
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
+                    transition={{ delay: 0.3 + index * 0.1 }}
+                    whileHover={{ scale: 1.05, y: -5 }}
+                    onMouseEnter={() => setActiveStatIndex(index)}
+                    onMouseLeave={() => setActiveStatIndex(null)}
+                    className="group relative"
+                  >
+                    <div
+                      className={`relative p-3 sm:p-4 bg-card/50 backdrop-blur-sm rounded-lg sm:rounded-xl border overflow-hidden transition-all duration-300 ${
+                        isActive
+                          ? "border-primary shadow-2xl shadow-white/15"
+                          : "border-border/50 hover:border-primary/30"
+                      }`}
+                    >
+                      {/* Animated Gradient Background */}
+                      <div
+                        className={`absolute inset-0 rounded-lg sm:rounded-xl transition-opacity duration-500 ${
+                          isActive ? "opacity-10" : "opacity-0"
+                        }`}
+                        style={{
+                          background: `linear-gradient(135deg, ${stat.color}40, transparent)`,
+                        }}
+                      />
 
-              <Card className="p-3 sm:p-4 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all group">
-                <motion.div
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  className="flex flex-col items-center gap-1.5 sm:gap-2"
-                >
-                  <div className="p-1.5 sm:p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                    <Code2 className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-                  </div>
-                  <div className="text-center">
-                    <div className="text-xl sm:text-2xl font-bold font-mono">
-                      {uniqueTechnologies}+
-                    </div>
-                    <div className="text-[10px] sm:text-xs text-muted-foreground">
-                      Technologies
-                    </div>
-                  </div>
-                </motion.div>
-              </Card>
+                      {/* Scan Line Effect */}
+                      {isActive && (
+                        <motion.div
+                          className="absolute inset-x-0 h-px bg-primary/40"
+                          initial={{ top: 0 }}
+                          animate={{ top: "100%" }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "linear",
+                          }}
+                        />
+                      )}
 
-              <Card className="p-3 sm:p-4 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all group">
-                <motion.div
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  className="flex flex-col items-center gap-1.5 sm:gap-2"
-                >
-                  <div className="p-1.5 sm:p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                    <Star className="h-4 w-4 sm:h-5 sm:w-5 text-primary fill-primary" />
-                  </div>
-                  <div className="text-center">
-                    <div className="text-xl sm:text-2xl font-bold font-mono">
-                      {featuredProjects.length}
-                    </div>
-                    <div className="text-[10px] sm:text-xs text-muted-foreground">
-                      Featured
-                    </div>
-                  </div>
-                </motion.div>
-              </Card>
+                      {/* Top-Right Corner Accent */}
+                      <div
+                        className="absolute -top-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"
+                        style={{ backgroundColor: stat.color }}
+                      />
 
-              <Card className="p-3 sm:p-4 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all group">
-                <motion.div
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  className="flex flex-col items-center gap-1.5 sm:gap-2"
-                >
-                  <div className="p-1.5 sm:p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                    <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-                  </div>
-                  <div className="text-center">
-                    <div className="text-xl sm:text-2xl font-bold font-mono">
-                      100%
+                      <div className="relative flex flex-col items-center gap-1.5 sm:gap-2">
+                        <motion.div
+                          className="p-1.5 sm:p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors"
+                          whileHover={{ rotate: 360 }}
+                          transition={{ duration: 0.6 }}
+                        >
+                          <Icon
+                            className={`h-4 w-4 sm:h-5 sm:w-5 text-primary ${
+                              stat.fill ? "fill-primary" : ""
+                            }`}
+                          />
+                        </motion.div>
+                        <div className="text-center">
+                          <div className="text-xl sm:text-2xl font-bold font-mono text-primary">
+                            {stat.value}
+                          </div>
+                          <div className="text-[10px] sm:text-xs text-muted-foreground">
+                            {stat.label}
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-[10px] sm:text-xs text-muted-foreground">
-                      Production
-                    </div>
-                  </div>
-                </motion.div>
-              </Card>
+                  </motion.div>
+                );
+              })}
             </div>
 
             {/* CTAs */}

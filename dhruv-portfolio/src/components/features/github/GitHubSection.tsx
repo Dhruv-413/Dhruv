@@ -36,16 +36,16 @@ import { formatDistanceToNow } from "date-fns";
 import { useState, useRef } from "react";
 import { TechIcon } from "@/components/ui/TechIcon";
 
-// Card color palette matching skill/project cards for consistent visual design
+// Card color palette matching skill cards for consistent visual design
 const cardColors = [
-  { color: "#a855f7", bg: "#a855f720" }, // Purple
-  { color: "#3b82f6", bg: "#3b82f620" }, // Blue
-  { color: "#10b981", bg: "#10b98120" }, // Green
-  { color: "#f59e0b", bg: "#f59e0b20" }, // Amber
-  { color: "#ec4899", bg: "#ec489920" }, // Pink
-  { color: "#06b6d4", bg: "#06b6d420" }, // Cyan
-  { color: "#8b5cf6", bg: "#8b5cf620" }, // Violet
-  { color: "#f97316", bg: "#f9731620" }, // Orange
+  "#8b5cf6", // Violet
+  "#3b82f6", // Blue
+  "#10b981", // Emerald
+  "#f59e0b", // Amber
+  "#ef4444", // Red
+  "#06b6d4", // Cyan
+  "#ec4899", // Pink
+  "#f97316", // Orange
 ];
 
 // Get consistent color based on repo name using hash
@@ -69,6 +69,9 @@ export function GitHubSection() {
     useState<string>("All");
   const [expandedProject, setExpandedProject] = useState<string | null>(null);
   const [activeRepo, setActiveRepo] = useState<string | null>(null);
+  const [activeContributedRepo, setActiveContributedRepo] = useState<
+    string | null
+  >(null);
   const [hoveredDay, setHoveredDay] = useState<{
     date: string;
     count: number;
@@ -405,7 +408,7 @@ export function GitHubSection() {
               initial={{ opacity: 0, y: -20 }}
               animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="flex flex-col items-center gap-2"
+              className="flex flex-col items-center gap-2 mt-8 pt-8"
             >
               <span className="text-sm text-muted-foreground font-mono">
                 Explore Repositories
@@ -414,7 +417,7 @@ export function GitHubSection() {
                 animate={{ y: [0, 8, 0] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
               >
-                <Sparkles className="h-5 w-5 text-primary" />
+                <Sparkles className="mt-5 h-5 w-5 text-primary" />
               </motion.div>
             </motion.div>
           </motion.div>
@@ -423,7 +426,7 @@ export function GitHubSection() {
 
       {/* Repository Gallery Section */}
       <section
-        className="py-12 sm:py-16 lg:py-20 relative"
+        className="pb-12 sm:pb-16 lg:pb-20 relative"
         ref={galleryRef}
         aria-labelledby="contribution-heading"
       >
@@ -1051,8 +1054,8 @@ export function GitHubSection() {
             aria-label="Repository cards"
           >
             {filteredRepos?.slice(0, 12).map((repo, index) => {
-              const repoColor = getRepoColor(repo.name);
               const isActive = activeRepo === repo.name;
+              const repoColor = getRepoColor(repo.name);
 
               return (
                 <motion.article
@@ -1062,28 +1065,34 @@ export function GitHubSection() {
                   transition={{ duration: 0.3, delay: index * 0.05 }}
                   whileHover={{ scale: 1.02, y: -4 }}
                   role="listitem"
-                  className="group"
+                  className="group relative"
                   onMouseEnter={() => setActiveRepo(repo.name)}
                   onMouseLeave={() => setActiveRepo(null)}
                 >
                   <Card
                     className={`p-5 h-full bg-card border transition-all duration-500 flex flex-col relative overflow-hidden ${
                       isActive
-                        ? "shadow-2xl"
-                        : "border-border/50 hover:shadow-xl"
+                        ? "border-primary shadow-2xl shadow-white/15"
+                        : "border-border/50 hover:shadow-xl hover:shadow-white/10"
                     }`}
-                    style={{
-                      borderColor: isActive ? repoColor.color : undefined,
-                      boxShadow: isActive
-                        ? `0 25px 50px -12px ${repoColor.color}30`
-                        : undefined,
-                    }}
                   >
+                    {/* Animated Background Gradient */}
+                    <div
+                      className={`absolute inset-0 rounded-xl transition-opacity duration-500 ${
+                        isActive
+                          ? "opacity-15"
+                          : "opacity-0 group-hover:opacity-10"
+                      }`}
+                      style={{
+                        background: `linear-gradient(135deg, ${repoColor}40 0%, transparent 60%)`,
+                      }}
+                    />
+
                     {/* Scan Line Effect */}
                     {isActive && (
                       <motion.div
                         className="absolute inset-x-0 h-px"
-                        style={{ backgroundColor: `${repoColor.color}80` }}
+                        style={{ backgroundColor: `${repoColor}80` }}
                         initial={{ top: 0 }}
                         animate={{ top: "100%" }}
                         transition={{
@@ -1094,24 +1103,6 @@ export function GitHubSection() {
                       />
                     )}
 
-                    {/* Animated Background Gradient */}
-                    <div
-                      className={`absolute inset-0 transition-opacity duration-500 ${
-                        isActive ? "opacity-100" : "opacity-0"
-                      }`}
-                      style={{
-                        background: `linear-gradient(135deg, ${repoColor.color}15, transparent 50%, ${repoColor.color}08)`,
-                      }}
-                    />
-
-                    {/* Corner Accent Blur */}
-                    <div
-                      className={`absolute -top-2 -right-2 w-12 h-12 rounded-full blur-xl transition-opacity duration-500 ${
-                        isActive ? "opacity-60" : "opacity-0"
-                      }`}
-                      style={{ backgroundColor: repoColor.color }}
-                    />
-
                     {/* Deployment Badge */}
                     {(repo.topics?.includes("deployed") ||
                       repo.topics?.includes("live")) && (
@@ -1121,29 +1112,24 @@ export function GitHubSection() {
                       </div>
                     )}
 
-                    {/* Owner & Repo Name with Colored Icon */}
+                    {/* Owner & Repo Name */}
                     <div className="relative flex items-start gap-3 mb-3">
                       <motion.div
                         className="p-2 rounded-lg transition-colors shrink-0"
-                        style={{ backgroundColor: repoColor.bg }}
+                        style={{ backgroundColor: `${repoColor}20` }}
                         whileHover={{ rotate: 360 }}
                         transition={{ duration: 0.6 }}
                       >
                         <Github
                           className="h-4 w-4"
-                          style={{ color: repoColor.color }}
+                          style={{ color: repoColor }}
                         />
                       </motion.div>
                       <div className="flex-1 min-w-0">
                         <div className="text-xs text-muted-foreground font-mono truncate">
                           {user?.login || "Dhruv-413"}
                         </div>
-                        <h3
-                          className="font-bold text-base transition-colors truncate"
-                          style={{
-                            color: isActive ? repoColor.color : undefined,
-                          }}
-                        >
+                        <h3 className="font-bold text-base transition-colors truncate">
                           {repo.name}
                         </h3>
                       </div>
@@ -1156,7 +1142,7 @@ export function GitHubSection() {
                       </p>
                     )}
 
-                    {/* Topics/Tags with Progressive Disclosure - Enhanced with repo color */}
+                    {/* Topics/Tags with Progressive Disclosure */}
                     {repo.topics && repo.topics.length > 0 && (
                       <div className="relative mb-4 flex-1">
                         <div className="flex flex-wrap gap-1.5">
@@ -1167,12 +1153,7 @@ export function GitHubSection() {
                             <motion.span
                               key={topic}
                               whileHover={{ scale: 1.05, y: -2 }}
-                              className="px-2 py-1 text-[10px] font-mono rounded-md transition-all cursor-default border"
-                              style={{
-                                backgroundColor: repoColor.bg,
-                                color: repoColor.color,
-                                borderColor: `${repoColor.color}40`,
-                              }}
+                              className="px-2 py-1 text-[10px] font-mono rounded-md transition-all cursor-default border bg-primary/10 text-muted-foreground border-border/50 hover:border-primary/40"
                             >
                               {topic}
                             </motion.span>
@@ -1182,8 +1163,7 @@ export function GitHubSection() {
                           expandedProject !== repo.name && (
                             <button
                               onClick={() => setExpandedProject(repo.name)}
-                              className="text-[10px] font-mono mt-2 flex items-center gap-1 transition-colors hover:opacity-80"
-                              style={{ color: repoColor.color }}
+                              className="text-[10px] font-mono mt-2 flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
                               aria-label="Show all topics"
                             >
                               +{repo.topics.length - 4} more
@@ -1199,8 +1179,7 @@ export function GitHubSection() {
                           repo.topics.length > 4 && (
                             <button
                               onClick={() => setExpandedProject(null)}
-                              className="text-[10px] font-mono mt-2 transition-colors hover:opacity-80"
-                              style={{ color: repoColor.color }}
+                              className="text-[10px] font-mono mt-2 text-muted-foreground hover:text-foreground transition-colors"
                               aria-label="Show fewer topics"
                             >
                               Show less
@@ -1251,7 +1230,7 @@ export function GitHubSection() {
                       </time>
                     </div>
 
-                    {/* CTA Buttons with repo color accents */}
+                    {/* CTA Buttons */}
                     <div className="relative flex gap-2 mb-3">
                       <a
                         href={repo.url}
@@ -1263,11 +1242,11 @@ export function GitHubSection() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="w-full text-xs group/btn transition-all"
-                          style={{
-                            borderColor: isActive ? repoColor.color : undefined,
-                            color: isActive ? repoColor.color : undefined,
-                          }}
+                          className={`w-full text-xs group/btn transition-all ${
+                            isActive
+                              ? "border-primary/50 hover:bg-primary/5"
+                              : ""
+                          }`}
                         >
                           <Github
                             className="h-3.5 w-3.5 mr-1.5"
@@ -1287,11 +1266,7 @@ export function GitHubSection() {
                         >
                           <Button
                             size="sm"
-                            className="w-full text-xs group/btn shadow-lg"
-                            style={{
-                              background: `linear-gradient(135deg, ${repoColor.color}, ${repoColor.color}cc)`,
-                              boxShadow: `0 4px 14px ${repoColor.color}40`,
-                            }}
+                            className="w-full text-xs group/btn shadow-lg bg-primary hover:bg-primary/90 shadow-primary/20"
                           >
                             <ExternalLink
                               className="h-3.5 w-3.5 mr-1.5"
@@ -1315,12 +1290,9 @@ export function GitHubSection() {
                           <Button
                             size="sm"
                             variant="outline"
-                            className="w-full text-xs transition-all"
-                            style={{
-                              borderColor: isActive
-                                ? `${repoColor.color}60`
-                                : undefined,
-                            }}
+                            className={`w-full text-xs transition-all ${
+                              isActive ? "border-primary/30" : ""
+                            }`}
                           >
                             <ExternalLink
                               className="h-3.5 w-3.5 mr-1.5"
@@ -1332,9 +1304,9 @@ export function GitHubSection() {
                       )}
                     </div>
 
-                    {/* Code-style Footer - Like Skills cards */}
+                    {/* Code-style Footer */}
                     <div className="relative pt-3 border-t border-border/50 font-mono text-[10px] text-muted-foreground">
-                      <span style={{ color: repoColor.color }}>{"// "}</span>
+                      <span style={{ color: repoColor }}>{"// "}</span>
                       <span className="italic">
                         {repo.language
                           ? `Built with ${repo.language}`
@@ -1342,6 +1314,16 @@ export function GitHubSection() {
                       </span>
                     </div>
                   </Card>
+
+                  {/* Top-Right Corner Accent */}
+                  <div
+                    className={`absolute -top-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 rounded-full blur-xl transition-opacity duration-300 ${
+                      isActive
+                        ? "opacity-60"
+                        : "opacity-0 group-hover:opacity-40"
+                    }`}
+                    style={{ backgroundColor: repoColor }}
+                  />
                 </motion.article>
               );
             })}
@@ -1443,95 +1425,156 @@ export function GitHubSection() {
                         repo.language === contributedRepoFilter
                     )
                     .slice(0, 12)
-                    .map((repo: ContributedRepository, index) => (
-                      <motion.div
-                        key={repo.url}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={isGalleryInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{
-                          duration: 0.3,
-                          delay: 0.55 + index * 0.05,
-                        }}
-                        whileHover={{ scale: 1.02, y: -4 }}
-                        className="group"
-                      >
-                        <Card className="p-5 bg-card/50 backdrop-blur-sm border-border/50 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 h-full flex flex-col relative overflow-hidden">
-                          {/* Animated Background Gradient on Hover */}
-                          <div className="absolute inset-0 bg-linear-to-br from-blue-500/5 via-transparent to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                          {/* Owner & Repo Name */}
-                          <div className="relative flex items-start gap-3 mb-3">
-                            <div className="p-2 rounded-lg bg-blue-500/10 group-hover:bg-blue-500/20 transition-colors shrink-0">
-                              <Github className="h-4 w-4 text-blue-500" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="text-xs text-muted-foreground font-mono truncate">
-                                {repo.owner}
-                              </div>
-                              <h3 className="font-bold text-base truncate group-hover:text-blue-500 transition-colors">
-                                {repo.name}
-                              </h3>
-                            </div>
-                          </div>
-
-                          {/* Description */}
-                          {repo.description && (
-                            <p className="relative text-xs text-muted-foreground line-clamp-2 mb-3 flex-1 leading-relaxed">
-                              {repo.description}
-                            </p>
-                          )}
-
-                          {/* Stats Row */}
-                          <div className="relative flex items-center justify-between gap-3 text-xs text-muted-foreground border-t border-border/50 pt-3 mb-3">
-                            {repo.language && (
-                              <div className="flex items-center gap-1.5 bg-muted/50 px-2.5 py-1.5 rounded-lg">
-                                <div
-                                  className="w-2.5 h-2.5 rounded-full ring-1 ring-offset-1 ring-offset-card ring-border/50"
-                                  style={{
-                                    backgroundColor:
-                                      repo.languageColor || "#666",
-                                  }}
-                                />
-                                <span className="font-mono text-[11px] font-medium">
-                                  {repo.language}
-                                </span>
-                              </div>
-                            )}
-                            <div className="flex items-center gap-3">
-                              <div className="flex items-center gap-1 hover:text-yellow-500 transition-colors">
-                                <Star className="h-3.5 w-3.5" />
-                                <span className="font-mono font-medium">
-                                  {repo.stargazerCount}
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-1 hover:text-blue-500 transition-colors">
-                                <GitFork className="h-3.5 w-3.5" />
-                                <span className="font-mono font-medium">
-                                  {repo.forkCount}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* View Button */}
-                          <a
-                            href={repo.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="relative w-full"
+                    .map((repo: ContributedRepository, index) => {
+                      const isActiveContrib =
+                        activeContributedRepo === repo.url;
+                      const contribColor = getRepoColor(repo.name);
+                      return (
+                        <motion.div
+                          key={repo.url}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={isGalleryInView ? { opacity: 1, y: 0 } : {}}
+                          transition={{
+                            duration: 0.3,
+                            delay: 0.55 + index * 0.05,
+                          }}
+                          whileHover={{ scale: 1.02, y: -4 }}
+                          className="group relative"
+                          onMouseEnter={() =>
+                            setActiveContributedRepo(repo.url)
+                          }
+                          onMouseLeave={() => setActiveContributedRepo(null)}
+                        >
+                          <Card
+                            className={`p-5 bg-card/50 backdrop-blur-sm transition-all duration-300 h-full flex flex-col relative overflow-hidden ${
+                              isActiveContrib
+                                ? "border-primary shadow-2xl shadow-white/15"
+                                : "border-border/50 hover:shadow-xl hover:shadow-white/10"
+                            }`}
                           >
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="w-full group/btn text-xs hover:border-blue-500/50 hover:bg-blue-500/5 hover:text-blue-500 transition-all"
+                            {/* Animated Background Gradient */}
+                            <div
+                              className={`absolute inset-0 rounded-xl transition-opacity duration-500 ${
+                                isActiveContrib
+                                  ? "opacity-15"
+                                  : "opacity-0 group-hover:opacity-10"
+                              }`}
+                              style={{
+                                background: `linear-gradient(135deg, ${contribColor}40 0%, transparent 60%)`,
+                              }}
+                            />
+
+                            {/* Scan Line Effect */}
+                            {isActiveContrib && (
+                              <motion.div
+                                className="absolute inset-x-0 h-px"
+                                style={{ backgroundColor: `${contribColor}80` }}
+                                initial={{ top: 0 }}
+                                animate={{ top: "100%" }}
+                                transition={{
+                                  duration: 2,
+                                  repeat: Infinity,
+                                  ease: "linear",
+                                }}
+                              />
+                            )}
+
+                            {/* Owner & Repo Name */}
+                            <div className="relative flex items-start gap-3 mb-3">
+                              <motion.div
+                                className="p-2 rounded-lg transition-colors shrink-0"
+                                style={{ backgroundColor: `${contribColor}20` }}
+                                whileHover={{ rotate: 360 }}
+                                transition={{ duration: 0.6 }}
+                              >
+                                <Github
+                                  className="h-4 w-4"
+                                  style={{ color: contribColor }}
+                                />
+                              </motion.div>
+                              <div className="flex-1 min-w-0">
+                                <div className="text-xs text-muted-foreground font-mono truncate">
+                                  {repo.owner}
+                                </div>
+                                <h3 className="font-bold text-base truncate transition-colors">
+                                  {repo.name}
+                                </h3>
+                              </div>
+                            </div>
+
+                            {/* Description */}
+                            {repo.description && (
+                              <p className="relative text-xs text-muted-foreground line-clamp-2 mb-3 flex-1 leading-relaxed">
+                                {repo.description}
+                              </p>
+                            )}
+
+                            {/* Stats Row */}
+                            <div className="relative flex items-center justify-between gap-3 text-xs text-muted-foreground border-t border-border/50 pt-3 mb-3">
+                              {repo.language && (
+                                <div className="flex items-center gap-1.5 bg-muted/50 px-2.5 py-1.5 rounded-lg">
+                                  <div
+                                    className="w-2.5 h-2.5 rounded-full ring-1 ring-offset-1 ring-offset-card ring-border/50"
+                                    style={{
+                                      backgroundColor:
+                                        repo.languageColor || "#666",
+                                    }}
+                                  />
+                                  <span className="font-mono text-[11px] font-medium">
+                                    {repo.language}
+                                  </span>
+                                </div>
+                              )}
+                              <div className="flex items-center gap-3">
+                                <div className="flex items-center gap-1 hover:text-yellow-500 transition-colors">
+                                  <Star className="h-3.5 w-3.5" />
+                                  <span className="font-mono font-medium">
+                                    {repo.stargazerCount}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-1 hover:text-primary transition-colors">
+                                  <GitFork className="h-3.5 w-3.5" />
+                                  <span className="font-mono font-medium">
+                                    {repo.forkCount}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* View Button */}
+                            <a
+                              href={repo.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="relative w-full"
                             >
-                              <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
-                              View Repository
-                            </Button>
-                          </a>
-                        </Card>
-                      </motion.div>
-                    ))}
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className={`w-full group/btn text-xs transition-all ${
+                                  isActiveContrib
+                                    ? "border-primary/50 hover:bg-primary/5"
+                                    : ""
+                                }`}
+                              >
+                                <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
+                                View Repository
+                              </Button>
+                            </a>
+                          </Card>
+
+                          {/* Top-Right Corner Accent */}
+                          <div
+                            className={`absolute -top-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 rounded-full blur-xl transition-opacity duration-300 ${
+                              isActiveContrib
+                                ? "opacity-60"
+                                : "opacity-0 group-hover:opacity-40"
+                            }`}
+                            style={{ backgroundColor: contribColor }}
+                          />
+                        </motion.div>
+                      );
+                    })}
                 </div>
               </motion.div>
             )}

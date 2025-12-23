@@ -23,7 +23,6 @@ import timelineData from "@/data/timeline.json";
 import { format } from "date-fns";
 import { useState, useRef } from "react";
 import { TechIcon } from "@/components/ui/TechIcon";
-import { Card } from "@/components/ui/card";
 
 const iconMap = {
   work: Briefcase,
@@ -93,6 +92,7 @@ const typeGradients: Record<string, string> = {
 export function TimelineSection() {
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
   const [activeItem, setActiveItem] = useState<string | null>(null);
+  const [activeStatIndex, setActiveStatIndex] = useState<number | null>(null);
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
@@ -170,7 +170,7 @@ export function TimelineSection() {
             excellence, and measurable real-world contributions.
           </motion.p>
 
-          {/* Stats Grid - Matching Projects Page Style */}
+          {/* Stats Grid - Elegant Design with Gradients */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -179,29 +179,74 @@ export function TimelineSection() {
           >
             {experienceStats.map((stat, index) => {
               const Icon = stat.icon;
+              const isActive = activeStatIndex === index;
+              const statColors = ["#a855f7", "#3b82f6", "#f59e0b", "#10b981"];
+              const statColor = statColors[index] || "#3b82f6";
               return (
-                <Card
+                <motion.div
                   key={index}
-                  className="p-3 sm:p-4 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all group"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ delay: 0.4 + index * 0.1 }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  onMouseEnter={() => setActiveStatIndex(index)}
+                  onMouseLeave={() => setActiveStatIndex(null)}
+                  className="group relative"
                 >
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ delay: 0.4 + index * 0.1 }}
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    className="flex flex-col items-center gap-1.5 sm:gap-2"
+                  <div
+                    className={`relative p-3 sm:p-4 bg-card/50 backdrop-blur-sm rounded-lg sm:rounded-xl border overflow-hidden transition-all duration-300 ${
+                      isActive
+                        ? "border-primary shadow-2xl shadow-white/15"
+                        : "border-border/50 hover:border-primary/30"
+                    }`}
                   >
-                    <div className="p-1.5 sm:p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                      <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                    {/* Animated Gradient Background */}
+                    <div
+                      className={`absolute inset-0 rounded-lg sm:rounded-xl transition-opacity duration-500 ${
+                        isActive ? "opacity-10" : "opacity-0"
+                      }`}
+                      style={{
+                        background: `linear-gradient(135deg, ${statColor}40, transparent)`,
+                      }}
+                    />
+
+                    {/* Scan Line Effect */}
+                    {isActive && (
+                      <motion.div
+                        className="absolute inset-x-0 h-px bg-primary/40"
+                        initial={{ top: 0 }}
+                        animate={{ top: "100%" }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
+                      />
+                    )}
+
+                    {/* Top-Right Corner Accent */}
+                    <div
+                      className="absolute -top-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"
+                      style={{ backgroundColor: statColor }}
+                    />
+
+                    <div className="relative flex flex-col items-center gap-1.5 sm:gap-2">
+                      <motion.div
+                        className="p-1.5 sm:p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors"
+                        whileHover={{ rotate: 360 }}
+                        transition={{ duration: 0.6 }}
+                      >
+                        <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                      </motion.div>
+                      <div className="text-xl sm:text-2xl md:text-3xl font-bold font-mono text-primary">
+                        {stat.value}
+                      </div>
+                      <div className="text-[10px] sm:text-xs text-center text-muted-foreground font-medium">
+                        {stat.label}
+                      </div>
                     </div>
-                    <div className="text-xl sm:text-2xl md:text-3xl font-bold font-mono text-primary">
-                      {stat.value}
-                    </div>
-                    <div className="text-[10px] sm:text-xs text-center text-muted-foreground font-medium">
-                      {stat.label}
-                    </div>
-                  </motion.div>
-                </Card>
+                  </div>
+                </motion.div>
               );
             })}
           </motion.div>
@@ -233,9 +278,8 @@ export function TimelineSection() {
             <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto px-2">
               Follow my journey through code, achievements, and innovation.{" "}
               <span className="text-primary">
-                Click to explore code snippets
-              </span>{" "}
-              and technical details.
+                Click to explore detailed impact metrics
+              </span>
             </p>
 
             {/* Technical Credibility Badges */}
@@ -340,6 +384,12 @@ export function TimelineSection() {
                           typeGradients[item.type]
                         }40, transparent)`,
                       }}
+                    />
+
+                    {/* Top-Right Corner Accent */}
+                    <div
+                      className="absolute -top-1 -right-1 w-8 h-8 sm:w-10 sm:h-10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"
+                      style={{ backgroundColor: typeGradients[item.type] }}
                     />
 
                     {/* Scan Line Effect - Always on hover/active */}

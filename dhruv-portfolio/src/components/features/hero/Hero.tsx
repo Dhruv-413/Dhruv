@@ -659,7 +659,7 @@ export function Hero() {
                   animate={isInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ delay: 0.7 + index * 0.1 }}
                   whileHover={{ scale: 1.02, y: -2 }}
-                  className="group"
+                  className="group relative"
                 >
                   <div className="relative p-4 sm:p-5 bg-card/50 backdrop-blur-sm rounded-lg sm:rounded-xl border border-border hover:border-primary/50 hover:shadow-xl hover:shadow-white/10 transition-all duration-300 overflow-hidden">
                     {/* Animated Gradient Background */}
@@ -698,6 +698,12 @@ export function Hero() {
                       </div>
                     </div>
                   </div>
+
+                  {/* Top-Right Corner Accent */}
+                  <div
+                    className="absolute -top-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{ backgroundColor: highlight.color.includes('blue') ? '#3b82f6' : highlight.color.includes('purple') ? '#a855f7' : highlight.color.includes('orange') ? '#f97316' : highlight.color.includes('indigo') ? '#6366f1' : '#10b981' }}
+                  />
                 </motion.div>
               );
             })}
@@ -738,18 +744,13 @@ export function Hero() {
                   whileHover={{ y: -10, scale: 1.02 }}
                   onMouseEnter={() => setActiveValueIndex(index)}
                   onMouseLeave={() => setActiveValueIndex(null)}
-                  className="group"
+                  className="group relative"
                 >
                   <div className={`relative p-4 sm:p-5 md:p-6 text-center h-full bg-card/50 backdrop-blur-sm rounded-lg sm:rounded-xl border overflow-hidden transition-all duration-300 ${
                     isActive
                       ? "border-primary shadow-2xl shadow-white/15"
                       : "border-border hover:border-primary/50"
                   }`}>
-                    {/* Animated Gradient Background */}
-                    <div className={`absolute inset-0 rounded-lg sm:rounded-xl transition-opacity duration-500 ${
-                      isActive ? "opacity-10" : "opacity-0"
-                    }`} style={{ background: "linear-gradient(135deg, var(--primary) 0%, transparent 60%)" }} />
-
                     {/* Scan Line Effect */}
                     {isActive && (
                       <motion.div
@@ -770,7 +771,7 @@ export function Hero() {
                           <Icon className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-primary" />
                         </motion.div>
                       </div>
-                      <h4 className="font-bold mb-2 text-base sm:text-lg group-hover:text-primary transition-colors">
+                      <h4 className="font-bold mb-2 text-base sm:text-lg transition-colors">
                         {value.title}
                       </h4>
                       <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
@@ -778,6 +779,13 @@ export function Hero() {
                       </p>
                     </div>
                   </div>
+
+                  {/* Top-Right Corner Accent */}
+                  <div
+                    className={`absolute -top-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 rounded-full blur-xl transition-opacity duration-300 bg-primary ${
+                      isActive ? "opacity-60" : "opacity-0 group-hover:opacity-40"
+                    }`}
+                  />
                 </motion.div>
               );
             })}
