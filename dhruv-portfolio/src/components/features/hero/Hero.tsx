@@ -50,7 +50,7 @@ const detailedCodeSnippet = `// About Me
 const developer = {
   name: "Dhruv Gupta",
   role: "Full-Stack Developer & AI/ML Engineer",
-  location: "Jaipur, India 🇮🇳",
+  location: "Jaipur, India",
   education: "B.Tech CSE @ Manipal University",
   experience: ["Ex-ONGC Intern"],
 
@@ -124,9 +124,9 @@ const values = [
 ];
 
 const aboutStats = [
-  { label: "Intern Experience", value: "6 Months", icon: Briefcase },
+  { label: "Intern Experience", value: "3 Months", icon: Briefcase },
   { label: "Projects Completed", value: "7+", icon: Rocket },
-  { label: "Technologies Learned", value: "15+", icon: Code2 },
+  { label: "Technologies Learned", value: "10+", icon: Code2 },
   { label: "Certifications", value: "5+", icon: Book },
 ];
 

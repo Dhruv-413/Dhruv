@@ -104,7 +104,7 @@ export function TimelineSection() {
       ref={sectionRef}
       className="relative min-h-screen overflow-hidden pt-16 pb-12 sm:pb-16 md:pb-20"
     >
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+      <div className="container mx-auto px-3 sm:px-4 md:px-6 relative z-10">
         {/* Hero Section - Centered Layout (Like Skills/Projects) */}
         <div className="max-w-4xl mx-auto text-center mb-12 sm:mb-16 md:mb-20">
           {/* Terminal Prompt */}
@@ -277,17 +277,17 @@ export function TimelineSection() {
                     delay: 0.8 + index * 0.1,
                     ease: [0.25, 0.4, 0.25, 1],
                   }}
-                  className="relative pl-20 md:pl-24"
+                  className="relative pl-14 sm:pl-20 md:pl-24"
                 >
                   {/* Icon Marker */}
                   <motion.div
-                    className="absolute left-0 md:left-2 top-0"
+                    className="absolute left-0 sm:left-1 md:left-2 top-0"
                     whileHover={{ scale: 1.2, rotate: 360 }}
                     transition={{ duration: 0.6 }}
                   >
                     <div
                       className={`
-                      w-12 h-12 rounded-full flex items-center justify-center
+                      w-9 h-9 sm:w-12 sm:h-12 rounded-full flex items-center justify-center
                       border-4 border-background shadow-lg
                       ${
                         item.type === "work"
@@ -298,7 +298,7 @@ export function TimelineSection() {
                       }
                     `}
                     >
-                      <Icon className="h-6 w-6 text-white" />
+                      <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                     </div>
                   </motion.div>
 
@@ -307,8 +307,8 @@ export function TimelineSection() {
                     whileHover={{ scale: 1.02, y: -4 }}
                     onClick={() => isExpandable && toggleItem(item.id)}
                     className={`
-                      group relative bg-card border rounded-2xl p-6
-                      transition-all duration-500 overflow-hidden
+                      group relative bg-card border rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6
+                      transition-all duration-500 overflow-hidden touch-manipulation
                       ${isExpandable ? "cursor-pointer" : ""}
                       ${
                         isExpanded
@@ -348,27 +348,27 @@ export function TimelineSection() {
                     {/* Content */}
                     <div className="relative">
                       {/* Header */}
-                      <div className="mb-4">
-                        <div className="flex items-start justify-between gap-4 mb-2">
-                          <h3 className="text-xl md:text-2xl font-bold group-hover:text-primary transition-colors">
+                      <div className="mb-3 sm:mb-4">
+                        <div className="flex items-start justify-between gap-2 sm:gap-4 mb-2">
+                          <h3 className="text-lg sm:text-xl md:text-2xl font-bold group-hover:text-primary transition-colors">
                             {item.title}
                           </h3>
                           <motion.div
                             animate={{ rotate: isExpanded ? 180 : 0 }}
                             transition={{ duration: 0.3 }}
                           >
-                            <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                            <ChevronDown className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground shrink-0" />
                           </motion.div>
                         </div>
 
-                        <p className="text-primary font-semibold text-lg mb-3 flex items-center gap-2">
-                          <Award className="h-4 w-4" />
+                        <p className="text-primary font-semibold text-base sm:text-lg mb-2 sm:mb-3 flex items-center gap-2">
+                          <Award className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
                           {item.organization}
                         </p>
 
-                        <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1.5">
-                            <Calendar className="h-4 w-4 text-primary" />
+                        <div className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
+                          <div className="flex items-center gap-1 sm:gap-1.5">
+                            <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary shrink-0" />
                             <span className="font-mono">
                               {format(new Date(item.startDate), "MMM yyyy")}
                               {!isAchievement &&
@@ -380,15 +380,15 @@ export function TimelineSection() {
                               {!isAchievement && !item.endDate && " - Present"}
                             </span>
                           </div>
-                          <div className="flex items-center gap-1.5">
-                            <MapPin className="h-4 w-4 text-accent" />
+                          <div className="flex items-center gap-1 sm:gap-1.5">
+                            <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent shrink-0" />
                             <span>{item.location}</span>
                           </div>
                         </div>
                       </div>
 
                       {/* Description */}
-                      <ul className="space-y-2 mb-4">
+                      <ul className="space-y-1.5 sm:space-y-2 mb-3 sm:mb-4">
                         {item.description.map((desc, idx) => (
                           <motion.li
                             key={idx}
@@ -397,9 +397,9 @@ export function TimelineSection() {
                             transition={{
                               delay: 0.9 + index * 0.1 + idx * 0.05,
                             }}
-                            className="text-sm md:text-base text-foreground/90 flex items-start gap-3"
+                            className="text-xs sm:text-sm md:text-base text-foreground/90 flex items-start gap-2 sm:gap-3"
                           >
-                            <Zap className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                            <Zap className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary mt-0.5 shrink-0" />
                             <span>{desc}</span>
                           </motion.li>
                         ))}
@@ -416,7 +416,7 @@ export function TimelineSection() {
                         className="overflow-hidden"
                       >
                         {item.metrics && item.metrics.length > 0 && (
-                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4 pt-2">
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-3 sm:mb-4 pt-2">
                             {item.metrics.map((metric, idx) => (
                               <motion.div
                                 key={idx}
@@ -428,12 +428,12 @@ export function TimelineSection() {
                                 }
                                 transition={{ delay: idx * 0.1 }}
                                 whileHover={{ scale: 1.05 }}
-                                className="relative group/metric bg-muted/50 backdrop-blur-sm rounded-xl p-4 text-center border border-border hover:border-primary/50 transition-all"
+                                className="relative group/metric bg-muted/50 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-border hover:border-primary/50 transition-all touch-manipulation"
                               >
-                                <div className="text-2xl md:text-3xl font-bold text-primary mb-1 font-mono">
+                                <div className="text-xl sm:text-2xl md:text-3xl font-bold text-primary mb-1 font-mono">
                                   {metric.value}
                                 </div>
-                                <div className="text-xs md:text-sm text-muted-foreground font-medium">
+                                <div className="text-[10px] sm:text-xs md:text-sm text-muted-foreground font-medium">
                                   {metric.label}
                                 </div>
 
@@ -448,10 +448,13 @@ export function TimelineSection() {
                       </motion.div>
 
                       {/* Technology Tags */}
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-1.5 sm:gap-2">
                         {item.tags.map((tag, idx) => {
                           const icon = (
-                            <TechIcon name={tag} className="h-3 w-3" />
+                            <TechIcon
+                              name={tag}
+                              className="h-2.5 w-2.5 sm:h-3 sm:w-3"
+                            />
                           );
                           return (
                             <motion.div
@@ -464,9 +467,9 @@ export function TimelineSection() {
                                 stiffness: 200,
                               }}
                               whileHover={{ scale: 1.1, y: -2 }}
-                              className="group/tag"
+                              className="group/tag touch-manipulation"
                             >
-                              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/80 backdrop-blur-sm rounded-lg text-xs md:text-sm font-medium border border-border hover:border-primary/50 transition-all">
+                              <div className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 bg-muted/80 backdrop-blur-sm rounded-md sm:rounded-lg text-[10px] sm:text-xs md:text-sm font-medium border border-border hover:border-primary/50 transition-all">
                                 <div className="group-hover/tag:scale-110 transition-transform">
                                   {icon}
                                 </div>
@@ -481,16 +484,16 @@ export function TimelineSection() {
 
                       {/* Expand Indicator - Only for ONGC */}
                       {isExpandable && hasMetrics && (
-                        <div className="text-center mt-4 pt-4 border-t border-border/50">
-                          <span className="text-xs font-mono text-muted-foreground">
+                        <div className="text-center mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-border/50">
+                          <span className="text-[10px] sm:text-xs font-mono text-muted-foreground">
                             {isExpanded ? (
-                              <span className="flex items-center justify-center gap-2">
-                                <ChevronUp className="h-3 w-3" />
+                              <span className="flex items-center justify-center gap-1.5 sm:gap-2">
+                                <ChevronUp className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                                 Click to collapse metrics
                               </span>
                             ) : (
-                              <span className="flex items-center justify-center gap-2">
-                                <ChevronDown className="h-3 w-3" />
+                              <span className="flex items-center justify-center gap-1.5 sm:gap-2">
+                                <ChevronDown className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                                 Click to view impact metrics
                               </span>
                             )}

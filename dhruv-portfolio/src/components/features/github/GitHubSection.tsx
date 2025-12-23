@@ -147,15 +147,20 @@ export function GitHubSection() {
           >
             {/* Terminal Prompt - Tech-forward aesthetic */}
             <div
-              className="flex items-center justify-center gap-2 mb-6"
+              className="flex items-center justify-center gap-1.5 sm:gap-2 mb-4 sm:mb-6"
               aria-label="Terminal prompt"
             >
-              <Terminal className="h-4 w-4 text-primary" aria-hidden="true" />
-              <span className="text-primary font-mono text-sm">~/github</span>
+              <Terminal
+                className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary"
+                aria-hidden="true"
+              />
+              <span className="text-primary font-mono text-xs sm:text-sm">
+                ~/github
+              </span>
               <motion.span
                 animate={{ opacity: [1, 0, 1] }}
                 transition={{ duration: 1, repeat: Infinity }}
-                className="text-primary font-mono"
+                className="text-primary font-mono text-xs sm:text-sm"
                 aria-hidden="true"
               >
                 _
@@ -165,7 +170,7 @@ export function GitHubSection() {
             {/* Title - MATCHING PROJECTS GRADIENT */}
             <h1
               id="github-heading"
-              className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6"
             >
               <span className="bg-linear-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent">
                 Open Source Journey
@@ -173,7 +178,7 @@ export function GitHubSection() {
             </h1>
 
             {/* Description - Showcasing technical credibility */}
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground mb-6 sm:mb-8 leading-relaxed px-2">
               Real-time statistics from my{" "}
               <span className="text-primary font-semibold">GitHub profile</span>{" "}
               showcasing{" "}
@@ -194,32 +199,32 @@ export function GitHubSection() {
 
             {/* Quick Stats - MATCHING PROJECTS CARD DESIGN */}
             <div
-              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8 max-w-6xl mx-auto"
+              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mb-6 sm:mb-8 max-w-6xl mx-auto px-2"
               role="list"
               aria-label="GitHub statistics"
             >
               <Card
-                className="p-4 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all group"
+                className="p-3 sm:p-4 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all group touch-manipulation active:scale-95"
                 role="listitem"
               >
                 <motion.div
                   whileHover={{ scale: 1.05, y: -2 }}
-                  className="flex flex-col items-center gap-2"
+                  className="flex flex-col items-center gap-1.5 sm:gap-2"
                 >
                   <div
-                    className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors"
+                    className="p-1.5 sm:p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors"
                     aria-hidden="true"
                   >
-                    <Folder className="h-5 w-5 text-primary" />
+                    <Folder className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                   </div>
                   <div className="text-center">
                     <div
-                      className="text-2xl font-bold font-mono"
+                      className="text-xl sm:text-2xl font-bold font-mono"
                       aria-label={`${totalReposCount} repositories`}
                     >
                       {totalReposCount}
                     </div>
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-[10px] sm:text-xs text-muted-foreground">
                       Repositories
                     </div>
                   </div>
@@ -227,27 +232,27 @@ export function GitHubSection() {
               </Card>
 
               <Card
-                className="p-4 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all group"
+                className="p-3 sm:p-4 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all group touch-manipulation active:scale-95"
                 role="listitem"
               >
                 <motion.div
                   whileHover={{ scale: 1.05, y: -2 }}
-                  className="flex flex-col items-center gap-2"
+                  className="flex flex-col items-center gap-1.5 sm:gap-2"
                 >
                   <div
-                    className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors"
+                    className="p-1.5 sm:p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors"
                     aria-hidden="true"
                   >
-                    <Star className="h-5 w-5 text-primary fill-primary" />
+                    <Star className="h-4 w-4 sm:h-5 sm:w-5 text-primary fill-primary" />
                   </div>
                   <div className="text-center">
                     <div
-                      className="text-2xl font-bold font-mono"
+                      className="text-xl sm:text-2xl font-bold font-mono"
                       aria-label={`${totalStarsCount} total stars`}
                     >
                       {totalStarsCount}
                     </div>
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-[10px] sm:text-xs text-muted-foreground">
                       Total Stars
                     </div>
                   </div>
@@ -255,27 +260,27 @@ export function GitHubSection() {
               </Card>
 
               <Card
-                className="p-4 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all group"
+                className="p-3 sm:p-4 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all group touch-manipulation active:scale-95"
                 role="listitem"
               >
                 <motion.div
                   whileHover={{ scale: 1.05, y: -2 }}
-                  className="flex flex-col items-center gap-2"
+                  className="flex flex-col items-center gap-1.5 sm:gap-2"
                 >
                   <div
-                    className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors"
+                    className="p-1.5 sm:p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors"
                     aria-hidden="true"
                   >
-                    <Code2 className="h-5 w-5 text-primary" />
+                    <Code2 className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                   </div>
                   <div className="text-center">
                     <div
-                      className="text-2xl font-bold font-mono"
+                      className="text-xl sm:text-2xl font-bold font-mono"
                       aria-label={`${uniqueLanguagesCount} programming languages`}
                     >
                       {uniqueLanguagesCount}+
                     </div>
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-[10px] sm:text-xs text-muted-foreground">
                       Languages
                     </div>
                   </div>
@@ -283,29 +288,29 @@ export function GitHubSection() {
               </Card>
 
               <Card
-                className="p-4 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all group"
+                className="p-3 sm:p-4 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all group touch-manipulation active:scale-95"
                 role="listitem"
               >
                 <motion.div
                   whileHover={{ scale: 1.05, y: -2 }}
-                  className="flex flex-col items-center gap-2"
+                  className="flex flex-col items-center gap-1.5 sm:gap-2"
                 >
                   <div
-                    className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors"
+                    className="p-1.5 sm:p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors"
                     aria-hidden="true"
                   >
-                    <GitCommit className="h-5 w-5 text-primary" />
+                    <GitCommit className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                   </div>
                   <div className="text-center">
                     <div
-                      className="text-2xl font-bold font-mono"
+                      className="text-xl sm:text-2xl font-bold font-mono"
                       aria-label={`${
                         contributions?.totalContributions || 0
                       } total contributions`}
                     >
                       {contributions?.totalContributions || 0}
                     </div>
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-[10px] sm:text-xs text-muted-foreground">
                       Contributions
                     </div>
                   </div>
@@ -313,29 +318,29 @@ export function GitHubSection() {
               </Card>
 
               <Card
-                className="p-4 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all group"
+                className="p-3 sm:p-4 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all group touch-manipulation active:scale-95"
                 role="listitem"
               >
                 <motion.div
                   whileHover={{ scale: 1.05, y: -2 }}
-                  className="flex flex-col items-center gap-2"
+                  className="flex flex-col items-center gap-1.5 sm:gap-2"
                 >
                   <div
-                    className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors"
+                    className="p-1.5 sm:p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors"
                     aria-hidden="true"
                   >
-                    <Flame className="h-5 w-5 text-orange-500" />
+                    <Flame className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500" />
                   </div>
                   <div className="text-center">
                     <div
-                      className="text-2xl font-bold font-mono text-orange-500"
+                      className="text-xl sm:text-2xl font-bold font-mono text-orange-500"
                       aria-label={`${
                         contributions?.currentStreak || 0
                       } day current streak`}
                     >
                       {contributions?.currentStreak || 0}
                     </div>
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-[10px] sm:text-xs text-muted-foreground">
                       Day Streak
                     </div>
                   </div>
@@ -343,29 +348,29 @@ export function GitHubSection() {
               </Card>
 
               <Card
-                className="p-4 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all group"
+                className="p-3 sm:p-4 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all group touch-manipulation active:scale-95"
                 role="listitem"
               >
                 <motion.div
                   whileHover={{ scale: 1.05, y: -2 }}
-                  className="flex flex-col items-center gap-2"
+                  className="flex flex-col items-center gap-1.5 sm:gap-2"
                 >
                   <div
-                    className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors"
+                    className="p-1.5 sm:p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors"
                     aria-hidden="true"
                   >
-                    <Award className="h-5 w-5 text-yellow-500" />
+                    <Award className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-500" />
                   </div>
                   <div className="text-center">
                     <div
-                      className="text-2xl font-bold font-mono text-yellow-500"
+                      className="text-xl sm:text-2xl font-bold font-mono text-yellow-500"
                       aria-label={`${
                         contributions?.longestStreak || 0
                       } days longest streak`}
                     >
                       {contributions?.longestStreak || 0}
                     </div>
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-[10px] sm:text-xs text-muted-foreground">
                       Longest Streak
                     </div>
                   </div>
@@ -396,11 +401,11 @@ export function GitHubSection() {
 
       {/* Repository Gallery Section */}
       <section
-        className="py-20 relative"
+        className="py-12 sm:py-16 lg:py-20 relative"
         ref={galleryRef}
         aria-labelledby="contribution-heading"
       >
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
           {/* Mobile Message: View on Web - Shown First on Mobile */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -961,19 +966,22 @@ export function GitHubSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={isGalleryInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-center mb-12"
+            className="text-center mb-8 sm:mb-12 px-2"
           >
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <div className="p-2.5 rounded-xl bg-linear-to-br from-primary/20 to-purple-500/20">
-                <Folder className="h-6 w-6 text-primary" />
+            <div className="flex items-center justify-center gap-2 mb-3 sm:mb-4">
+              <div className="p-2 sm:p-2.5 rounded-xl bg-linear-to-br from-primary/20 to-purple-500/20">
+                <Folder className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
               </div>
-              <h2 id="repositories-heading" className="text-2xl font-bold">
+              <h2
+                id="repositories-heading"
+                className="text-xl sm:text-2xl font-bold"
+              >
                 My Repositories
               </h2>
             </div>
 
             <div
-              className="flex flex-wrap justify-center gap-2"
+              className="flex flex-wrap justify-center gap-2 sm:gap-3"
               role="group"
               aria-label="Language filter buttons"
             >
@@ -989,7 +997,7 @@ export function GitHubSection() {
                   }}
                   aria-pressed={activeFilter === filter}
                   aria-label={`Filter repositories by ${filter}`}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+                  className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 touch-manipulation active:scale-95 ${
                     activeFilter === filter
                       ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105"
                       : "bg-card/50 backdrop-blur-sm border border-border/50 text-muted-foreground hover:border-primary/30 hover:text-foreground"
@@ -1016,7 +1024,7 @@ export function GitHubSection() {
 
           {/* Repository Grid - Unified Design Matching Contributed Repos */}
           <div
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-12"
             role="list"
             aria-label="Repository cards"
           >
@@ -1235,14 +1243,14 @@ export function GitHubSection() {
                 className="mb-16"
               >
                 {/* Section Header */}
-                <div className="text-center mb-8">
-                  <div className="flex items-center justify-center gap-2 mb-4">
-                    <div className="p-2.5 rounded-xl bg-linear-to-br from-primary/20 to-blue-300/20">
-                      <GitFork className="h-6 w-6 text-primary" />
+                <div className="text-center mb-6 sm:mb-8 px-2">
+                  <div className="flex items-center justify-center gap-2 mb-3 sm:mb-4">
+                    <div className="p-2 sm:p-2.5 rounded-xl bg-linear-to-br from-primary/20 to-blue-300/20">
+                      <GitFork className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                     </div>
                     <h2
                       id="repositories-heading"
-                      className="text-2xl font-bold"
+                      className="text-xl sm:text-2xl font-bold"
                     >
                       Open Source Contributions
                     </h2>
@@ -1312,7 +1320,7 @@ export function GitHubSection() {
                 </motion.div>
 
                 {/* Contributed Repositories Grid - Enhanced to Match My Repos */}
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-6xl mx-auto">
                   {contributedRepos.repositories
                     .filter(
                       (repo) =>

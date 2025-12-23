@@ -114,7 +114,7 @@ export function ProjectsSection() {
         className="min-h-screen relative overflow-hidden flex items-center"
         ref={heroRef}
       >
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
           {/* Centered Content */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -308,7 +308,7 @@ export function ProjectsSection() {
         className="py-12 sm:py-16 md:py-20 relative overflow-hidden"
         ref={galleryRef}
       >
-        <div className="container mx-auto px-4 sm:px-6">
+        <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
           {/* Technology Filters */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -322,7 +322,7 @@ export function ProjectsSection() {
                 Filter by Technology:
               </span>
             </div>
-            <div className="flex flex-wrap gap-2 sm:gap-3">
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 pb-2">
               {filterOptions.map((filter, index) => (
                 <motion.button
                   key={filter}
@@ -332,7 +332,7 @@ export function ProjectsSection() {
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setActiveFilter(filter)}
-                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-mono text-xs sm:text-sm transition-all border touch-manipulation ${
+                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-mono text-xs sm:text-sm transition-all border touch-manipulation active:scale-95 whitespace-nowrap shrink-0 ${
                     activeFilter === filter
                       ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/30"
                       : "bg-card/50 text-muted-foreground border-border/50 hover:border-primary/30 hover:bg-primary/5 hover:text-primary"
@@ -377,7 +377,7 @@ export function ProjectsSection() {
 
               <motion.div
                 layout
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6"
               >
                 {filteredFeatured.map((project, index) => (
                   <motion.div
@@ -427,7 +427,7 @@ export function ProjectsSection() {
 
               <motion.div
                 layout
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6"
               >
                 {filteredOther.map((project, index) => (
                   <motion.div
