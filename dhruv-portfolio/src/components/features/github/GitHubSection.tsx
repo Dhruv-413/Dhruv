@@ -36,6 +36,27 @@ import { formatDistanceToNow } from "date-fns";
 import { useState, useRef } from "react";
 import { TechIcon } from "@/components/ui/TechIcon";
 
+// Card color palette matching skill/project cards for consistent visual design
+const cardColors = [
+  { color: "#a855f7", bg: "#a855f720" }, // Purple
+  { color: "#3b82f6", bg: "#3b82f620" }, // Blue
+  { color: "#10b981", bg: "#10b98120" }, // Green
+  { color: "#f59e0b", bg: "#f59e0b20" }, // Amber
+  { color: "#ec4899", bg: "#ec489920" }, // Pink
+  { color: "#06b6d4", bg: "#06b6d420" }, // Cyan
+  { color: "#8b5cf6", bg: "#8b5cf620" }, // Violet
+  { color: "#f97316", bg: "#f9731620" }, // Orange
+];
+
+// Get consistent color based on repo name using hash
+const getRepoColor = (name: string) => {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return cardColors[Math.abs(hash) % cardColors.length];
+};
+
 export function GitHubSection() {
   const { data: user, isLoading: userLoading } = useGitHubUser();
   const { data: repos, isLoading: reposLoading } = useGitHubRepos();
@@ -47,6 +68,7 @@ export function GitHubSection() {
   const [contributedRepoFilter, setContributedRepoFilter] =
     useState<string>("All");
   const [expandedProject, setExpandedProject] = useState<string | null>(null);
+  const [activeRepo, setActiveRepo] = useState<string | null>(null);
   const [hoveredDay, setHoveredDay] = useState<{
     date: string;
     count: number;
@@ -1022,214 +1044,307 @@ export function GitHubSection() {
             </p>
           </motion.div>
 
-          {/* Repository Grid - Unified Design Matching Contributed Repos */}
+          {/* Repository Grid - Enhanced Design Matching Skill/Project Cards */}
           <div
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-12"
             role="list"
             aria-label="Repository cards"
           >
-            {filteredRepos?.slice(0, 12).map((repo, index) => (
-              <motion.article
-                key={repo.name}
-                initial={{ opacity: 0, y: 20 }}
-                animate={isGalleryInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
-                whileHover={{ scale: 1.02, y: -4 }}
-                role="listitem"
-                className="group"
-              >
-                <Card className="p-5 h-full bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 flex flex-col relative overflow-hidden">
-                  {/* Animated Background Gradient on Hover */}
-                  <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            {filteredRepos?.slice(0, 12).map((repo, index) => {
+              const repoColor = getRepoColor(repo.name);
+              const isActive = activeRepo === repo.name;
 
-                  {/* Deployment Badge */}
-                  {(repo.topics?.includes("deployed") ||
-                    repo.topics?.includes("live")) && (
-                    <div className="absolute top-0 right-0 bg-linear-to-r from-green-500 to-emerald-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-bl-xl flex items-center gap-1.5 shadow-lg">
-                      <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                      LIVE
-                    </div>
-                  )}
+              return (
+                <motion.article
+                  key={repo.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={isGalleryInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  whileHover={{ scale: 1.02, y: -4 }}
+                  role="listitem"
+                  className="group"
+                  onMouseEnter={() => setActiveRepo(repo.name)}
+                  onMouseLeave={() => setActiveRepo(null)}
+                >
+                  <Card
+                    className={`p-5 h-full bg-card border transition-all duration-500 flex flex-col relative overflow-hidden ${
+                      isActive
+                        ? "shadow-2xl"
+                        : "border-border/50 hover:shadow-xl"
+                    }`}
+                    style={{
+                      borderColor: isActive ? repoColor.color : undefined,
+                      boxShadow: isActive
+                        ? `0 25px 50px -12px ${repoColor.color}30`
+                        : undefined,
+                    }}
+                  >
+                    {/* Scan Line Effect */}
+                    {isActive && (
+                      <motion.div
+                        className="absolute inset-x-0 h-px"
+                        style={{ backgroundColor: `${repoColor.color}80` }}
+                        initial={{ top: 0 }}
+                        animate={{ top: "100%" }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
+                      />
+                    )}
 
-                  {/* Owner & Repo Name - Matching Contributed Repos */}
-                  <div className="relative flex items-start gap-3 mb-3">
-                    <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors shrink-0">
-                      <Github className="h-4 w-4 text-primary" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-xs text-muted-foreground font-mono truncate">
-                        {user?.login || "Dhruv-413"}
-                      </div>
-                      <h3 className="font-bold text-base group-hover:text-primary transition-colors truncate">
-                        {repo.name}
-                      </h3>
-                    </div>
-                  </div>
+                    {/* Animated Background Gradient */}
+                    <div
+                      className={`absolute inset-0 transition-opacity duration-500 ${
+                        isActive ? "opacity-100" : "opacity-0"
+                      }`}
+                      style={{
+                        background: `linear-gradient(135deg, ${repoColor.color}15, transparent 50%, ${repoColor.color}08)`,
+                      }}
+                    />
 
-                  {/* Description */}
-                  {repo.description && (
-                    <p className="relative text-xs text-muted-foreground line-clamp-2 mb-3 leading-relaxed">
-                      {repo.description}
-                    </p>
-                  )}
+                    {/* Corner Accent Blur */}
+                    <div
+                      className={`absolute -top-2 -right-2 w-12 h-12 rounded-full blur-xl transition-opacity duration-500 ${
+                        isActive ? "opacity-60" : "opacity-0"
+                      }`}
+                      style={{ backgroundColor: repoColor.color }}
+                    />
 
-                  {/* Topics/Tags with Progressive Disclosure */}
-                  {repo.topics && repo.topics.length > 0 && (
-                    <div className="relative mb-4 flex-1">
-                      <div className="flex flex-wrap gap-1.5">
-                        {(expandedProject === repo.name
-                          ? repo.topics
-                          : repo.topics.slice(0, 4)
-                        ).map((topic) => (
-                          <span
-                            key={topic}
-                            className="px-2 py-1 text-[10px] font-mono bg-primary/10 text-primary rounded-md hover:bg-primary/20 transition-colors cursor-default border border-primary/20"
-                          >
-                            {topic}
-                          </span>
-                        ))}
-                      </div>
-                      {repo.topics.length > 4 &&
-                        expandedProject !== repo.name && (
-                          <button
-                            onClick={() => setExpandedProject(repo.name)}
-                            className="text-[10px] text-primary hover:text-primary/80 font-mono mt-2 flex items-center gap-1 transition-colors"
-                            aria-label="Show all topics"
-                          >
-                            +{repo.topics.length - 4} more
-                            <motion.span
-                              animate={{ x: [0, 2, 0] }}
-                              transition={{ duration: 1, repeat: Infinity }}
-                            >
-                              →
-                            </motion.span>
-                          </button>
-                        )}
-                      {expandedProject === repo.name &&
-                        repo.topics.length > 4 && (
-                          <button
-                            onClick={() => setExpandedProject(null)}
-                            className="text-[10px] text-primary hover:text-primary/80 font-mono mt-2 transition-colors"
-                            aria-label="Show fewer topics"
-                          >
-                            Show less
-                          </button>
-                        )}
-                    </div>
-                  )}
-
-                  {/* Stats Row - Enhanced Design */}
-                  <div className="relative flex items-center justify-between gap-3 text-xs text-muted-foreground border-t border-border/50 pt-3 mb-3">
-                    {repo.language && (
-                      <div className="flex items-center gap-1.5 bg-muted/50 px-2.5 py-1.5 rounded-lg">
-                        <div
-                          className="w-2.5 h-2.5 rounded-full ring-1 ring-offset-1 ring-offset-card ring-border/50"
-                          style={{
-                            backgroundColor: repo.languageColor || "#666",
-                          }}
-                        />
-                        <span className="font-mono text-[11px] font-medium">
-                          {repo.language}
-                        </span>
+                    {/* Deployment Badge */}
+                    {(repo.topics?.includes("deployed") ||
+                      repo.topics?.includes("live")) && (
+                      <div className="absolute top-0 right-0 bg-linear-to-r from-green-500 to-emerald-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-bl-xl flex items-center gap-1.5 shadow-lg z-10">
+                        <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                        LIVE
                       </div>
                     )}
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-1 hover:text-yellow-500 transition-colors">
-                        <Star className="h-3.5 w-3.5" />
-                        <span className="font-mono font-medium">
-                          {repo.stargazerCount}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1 hover:text-blue-500 transition-colors">
-                        <GitFork className="h-3.5 w-3.5" />
-                        <span className="font-mono font-medium">
-                          {repo.forkCount}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
 
-                  {/* Updated Time */}
-                  <div className="relative flex items-center gap-1.5 text-[10px] text-muted-foreground mb-3">
-                    <Clock className="h-3 w-3" aria-hidden="true" />
-                    <span>Updated</span>
-                    <time dateTime={repo.updatedAt} className="font-mono">
-                      {formatDistanceToNow(new Date(repo.updatedAt), {
-                        addSuffix: true,
-                      })}
-                    </time>
-                  </div>
-
-                  {/* CTA Buttons */}
-                  <div className="relative flex gap-2">
-                    <a
-                      href={repo.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1"
-                      aria-label={`View ${repo.name} source code on GitHub`}
-                    >
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="w-full text-xs group/btn hover:border-primary hover:bg-primary/5 hover:text-primary transition-all"
+                    {/* Owner & Repo Name with Colored Icon */}
+                    <div className="relative flex items-start gap-3 mb-3">
+                      <motion.div
+                        className="p-2 rounded-lg transition-colors shrink-0"
+                        style={{ backgroundColor: repoColor.bg }}
+                        whileHover={{ rotate: 360 }}
+                        transition={{ duration: 0.6 }}
                       >
                         <Github
-                          className="h-3.5 w-3.5 mr-1.5"
-                          aria-hidden="true"
+                          className="h-4 w-4"
+                          style={{ color: repoColor.color }}
                         />
-                        View Code
-                      </Button>
-                    </a>
-                    {repo.topics?.includes("deployed") ||
-                    repo.topics?.includes("live") ? (
-                      <a
-                        href={repo.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1"
-                        aria-label={`Open ${repo.name} live demo`}
-                      >
-                        <Button
-                          size="sm"
-                          className="w-full text-xs group/btn bg-linear-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/20"
+                      </motion.div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs text-muted-foreground font-mono truncate">
+                          {user?.login || "Dhruv-413"}
+                        </div>
+                        <h3
+                          className="font-bold text-base transition-colors truncate"
+                          style={{
+                            color: isActive ? repoColor.color : undefined,
+                          }}
                         >
-                          <ExternalLink
-                            className="h-3.5 w-3.5 mr-1.5"
-                            aria-hidden="true"
+                          {repo.name}
+                        </h3>
+                      </div>
+                    </div>
+
+                    {/* Description */}
+                    {repo.description && (
+                      <p className="relative text-xs text-muted-foreground line-clamp-2 mb-3 leading-relaxed">
+                        {repo.description}
+                      </p>
+                    )}
+
+                    {/* Topics/Tags with Progressive Disclosure - Enhanced with repo color */}
+                    {repo.topics && repo.topics.length > 0 && (
+                      <div className="relative mb-4 flex-1">
+                        <div className="flex flex-wrap gap-1.5">
+                          {(expandedProject === repo.name
+                            ? repo.topics
+                            : repo.topics.slice(0, 4)
+                          ).map((topic) => (
+                            <motion.span
+                              key={topic}
+                              whileHover={{ scale: 1.05, y: -2 }}
+                              className="px-2 py-1 text-[10px] font-mono rounded-md transition-all cursor-default border"
+                              style={{
+                                backgroundColor: repoColor.bg,
+                                color: repoColor.color,
+                                borderColor: `${repoColor.color}40`,
+                              }}
+                            >
+                              {topic}
+                            </motion.span>
+                          ))}
+                        </div>
+                        {repo.topics.length > 4 &&
+                          expandedProject !== repo.name && (
+                            <button
+                              onClick={() => setExpandedProject(repo.name)}
+                              className="text-[10px] font-mono mt-2 flex items-center gap-1 transition-colors hover:opacity-80"
+                              style={{ color: repoColor.color }}
+                              aria-label="Show all topics"
+                            >
+                              +{repo.topics.length - 4} more
+                              <motion.span
+                                animate={{ x: [0, 2, 0] }}
+                                transition={{ duration: 1, repeat: Infinity }}
+                              >
+                                →
+                              </motion.span>
+                            </button>
+                          )}
+                        {expandedProject === repo.name &&
+                          repo.topics.length > 4 && (
+                            <button
+                              onClick={() => setExpandedProject(null)}
+                              className="text-[10px] font-mono mt-2 transition-colors hover:opacity-80"
+                              style={{ color: repoColor.color }}
+                              aria-label="Show fewer topics"
+                            >
+                              Show less
+                            </button>
+                          )}
+                      </div>
+                    )}
+
+                    {/* Stats Row - Enhanced Design */}
+                    <div className="relative flex items-center justify-between gap-3 text-xs text-muted-foreground border-t border-border/50 pt-3 mb-3">
+                      {repo.language && (
+                        <div className="flex items-center gap-1.5 bg-muted/50 px-2.5 py-1.5 rounded-lg">
+                          <div
+                            className="w-2.5 h-2.5 rounded-full ring-1 ring-offset-1 ring-offset-card ring-border/50"
+                            style={{
+                              backgroundColor: repo.languageColor || "#666",
+                            }}
                           />
-                          Live Demo
-                          <Rocket
-                            className="h-3 w-3 ml-1 opacity-0 group-hover/btn:opacity-100 transition-opacity"
-                            aria-hidden="true"
-                          />
-                        </Button>
-                      </a>
-                    ) : (
+                          <span className="font-mono text-[11px] font-medium">
+                            {repo.language}
+                          </span>
+                        </div>
+                      )}
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1 hover:text-yellow-500 transition-colors">
+                          <Star className="h-3.5 w-3.5" />
+                          <span className="font-mono font-medium">
+                            {repo.stargazerCount}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1 hover:text-blue-500 transition-colors">
+                          <GitFork className="h-3.5 w-3.5" />
+                          <span className="font-mono font-medium">
+                            {repo.forkCount}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Updated Time */}
+                    <div className="relative flex items-center gap-1.5 text-[10px] text-muted-foreground mb-3">
+                      <Clock className="h-3 w-3" aria-hidden="true" />
+                      <span>Updated</span>
+                      <time dateTime={repo.updatedAt} className="font-mono">
+                        {formatDistanceToNow(new Date(repo.updatedAt), {
+                          addSuffix: true,
+                        })}
+                      </time>
+                    </div>
+
+                    {/* CTA Buttons with repo color accents */}
+                    <div className="relative flex gap-2 mb-3">
                       <a
                         href={repo.url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex-1"
-                        aria-label={`View ${repo.name} details`}
+                        aria-label={`View ${repo.name} source code on GitHub`}
                       >
                         <Button
                           size="sm"
                           variant="outline"
-                          className="w-full text-xs hover:bg-primary/5 hover:border-primary/50"
+                          className="w-full text-xs group/btn transition-all"
+                          style={{
+                            borderColor: isActive ? repoColor.color : undefined,
+                            color: isActive ? repoColor.color : undefined,
+                          }}
                         >
-                          <ExternalLink
+                          <Github
                             className="h-3.5 w-3.5 mr-1.5"
                             aria-hidden="true"
                           />
-                          Details
+                          View Code
                         </Button>
                       </a>
-                    )}
-                  </div>
-                </Card>
-              </motion.article>
-            ))}
+                      {repo.topics?.includes("deployed") ||
+                      repo.topics?.includes("live") ? (
+                        <a
+                          href={repo.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1"
+                          aria-label={`Open ${repo.name} live demo`}
+                        >
+                          <Button
+                            size="sm"
+                            className="w-full text-xs group/btn shadow-lg"
+                            style={{
+                              background: `linear-gradient(135deg, ${repoColor.color}, ${repoColor.color}cc)`,
+                              boxShadow: `0 4px 14px ${repoColor.color}40`,
+                            }}
+                          >
+                            <ExternalLink
+                              className="h-3.5 w-3.5 mr-1.5"
+                              aria-hidden="true"
+                            />
+                            Live Demo
+                            <Rocket
+                              className="h-3 w-3 ml-1 opacity-0 group-hover/btn:opacity-100 transition-opacity"
+                              aria-hidden="true"
+                            />
+                          </Button>
+                        </a>
+                      ) : (
+                        <a
+                          href={repo.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1"
+                          aria-label={`View ${repo.name} details`}
+                        >
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="w-full text-xs transition-all"
+                            style={{
+                              borderColor: isActive
+                                ? `${repoColor.color}60`
+                                : undefined,
+                            }}
+                          >
+                            <ExternalLink
+                              className="h-3.5 w-3.5 mr-1.5"
+                              aria-hidden="true"
+                            />
+                            Details
+                          </Button>
+                        </a>
+                      )}
+                    </div>
+
+                    {/* Code-style Footer - Like Skills cards */}
+                    <div className="relative pt-3 border-t border-border/50 font-mono text-[10px] text-muted-foreground">
+                      <span style={{ color: repoColor.color }}>{"// "}</span>
+                      <span className="italic">
+                        {repo.language
+                          ? `Built with ${repo.language}`
+                          : "Open source project"}
+                      </span>
+                    </div>
+                  </Card>
+                </motion.article>
+              );
+            })}
           </div>
 
           {/* Repositories Contributed To Section - Enhanced Design */}

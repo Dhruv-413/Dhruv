@@ -83,8 +83,16 @@ const experienceStats = [
   },
 ];
 
+// Type-based colors for timeline card gradients
+const typeGradients: Record<string, string> = {
+  work: "#3b82f6", // Blue
+  education: "#a855f7", // Purple
+  achievement: "#f59e0b", // Amber
+};
+
 export function TimelineSection() {
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+  const [activeItem, setActiveItem] = useState<string | null>(null);
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
@@ -257,8 +265,13 @@ export function TimelineSection() {
 
           {/* Timeline Grid */}
           <div className="relative space-y-4 sm:space-y-6">
-            {/* Vertical Line */}
-            <div className="absolute left-4 sm:left-6 md:left-8 top-0 bottom-0 w-0.5 bg-linear-to-b from-primary via-purple-500 to-accent" />
+            {/* Elegant Vertical Line */}
+            <div className="absolute left-[7px] sm:left-[9px] top-0 bottom-0 flex flex-col items-center">
+              {/* Main subtle line */}
+              <div className="absolute inset-0 w-px bg-linear-to-b from-primary/40 via-primary/20 to-primary/40" />
+              {/* Subtle glow effect */}
+              <div className="absolute inset-0 w-px bg-linear-to-b from-primary/10 via-primary/5 to-primary/10 blur-[2px]" />
+            </div>
 
             {sortedTimeline.map((item, index) => {
               const Icon = iconMap[item.type];
@@ -266,6 +279,7 @@ export function TimelineSection() {
               const hasMetrics = item.metrics && item.metrics.length > 0;
               const isExpandable = hasMetrics; // Items with metrics can expand
               const isAchievement = item.type === "achievement"; // Achievements show only start date
+              const isActive = activeItem === item.id;
 
               return (
                 <motion.div
@@ -277,29 +291,28 @@ export function TimelineSection() {
                     delay: 0.8 + index * 0.1,
                     ease: [0.25, 0.4, 0.25, 1],
                   }}
-                  className="relative pl-14 sm:pl-20 md:pl-24"
+                  className="relative pl-6 sm:pl-8"
+                  onMouseEnter={() => setActiveItem(item.id)}
+                  onMouseLeave={() => setActiveItem(null)}
                 >
-                  {/* Icon Marker */}
+                  {/* Elegant Timeline Dot */}
                   <motion.div
-                    className="absolute left-0 sm:left-1 md:left-2 top-0"
-                    whileHover={{ scale: 1.2, rotate: 360 }}
-                    transition={{ duration: 0.6 }}
+                    className="absolute left-0 top-6 sm:top-7"
+                    initial={{ scale: 0 }}
+                    animate={isInView ? { scale: 1 } : {}}
+                    transition={{
+                      delay: 0.8 + index * 0.1,
+                      type: "spring",
+                      stiffness: 200,
+                    }}
                   >
                     <div
-                      className={`
-                      w-9 h-9 sm:w-12 sm:h-12 rounded-full flex items-center justify-center
-                      border-4 border-background shadow-lg
-                      ${
-                        item.type === "work"
-                          ? "bg-blue-500"
-                          : item.type === "education"
-                          ? "bg-purple-500"
-                          : "bg-amber-500"
-                      }
-                    `}
-                    >
-                      <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
-                    </div>
+                      className={`w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border-2 border-background shadow-sm transition-all duration-300 ${
+                        isActive
+                          ? "bg-primary shadow-primary/50 scale-125"
+                          : "bg-primary/60"
+                      }`}
+                    />
                   </motion.div>
 
                   {/* Card */}
@@ -311,14 +324,26 @@ export function TimelineSection() {
                       transition-all duration-500 overflow-hidden touch-manipulation
                       ${isExpandable ? "cursor-pointer" : ""}
                       ${
-                        isExpanded
-                          ? "border-primary shadow-2xl shadow-primary/20"
+                        isExpanded || isActive
+                          ? "border-primary shadow-2xl shadow-white/20"
                           : "border-border hover:border-primary/50 hover:shadow-xl"
                       }
                     `}
                   >
-                    {/* Scan Line Effect - Only for ONGC when expanded */}
-                    {isExpanded && isExpandable && (
+                    {/* Animated Gradient Background */}
+                    <div
+                      className={`absolute inset-0 rounded-xl sm:rounded-2xl transition-opacity duration-500 ${
+                        isActive ? "opacity-10" : "opacity-0"
+                      }`}
+                      style={{
+                        background: `linear-gradient(135deg, ${
+                          typeGradients[item.type]
+                        }40, transparent)`,
+                      }}
+                    />
+
+                    {/* Scan Line Effect - Always on hover/active */}
+                    {isActive && (
                       <motion.div
                         className="absolute inset-x-0 h-px bg-primary/50"
                         initial={{ top: 0 }}
@@ -331,26 +356,26 @@ export function TimelineSection() {
                       />
                     )}
 
-                    {/* Background Gradient */}
-                    <div
-                      className={`
-                      absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity
-                      ${
-                        item.type === "work"
-                          ? "bg-linear-to-br from-blue-500 to-cyan-500"
-                          : item.type === "education"
-                          ? "bg-linear-to-br from-purple-500 to-pink-500"
-                          : "bg-linear-to-br from-amber-500 to-orange-500"
-                      }
-                    `}
-                    />
-
                     {/* Content */}
                     <div className="relative">
-                      {/* Header */}
+                      {/* Header with Type Badge */}
                       <div className="mb-3 sm:mb-4">
+                        {/* Type Badge */}
+                        <div className="flex items-center gap-2 mb-2 sm:mb-3">
+                          <motion.div
+                            className="p-1.5 sm:p-2 rounded-lg bg-primary/10"
+                            whileHover={{ rotate: 360 }}
+                            transition={{ duration: 0.6 }}
+                          >
+                            <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                          </motion.div>
+                          <span className="text-[10px] sm:text-xs font-mono uppercase tracking-wider text-muted-foreground">
+                            {item.type}
+                          </span>
+                        </div>
+
                         <div className="flex items-start justify-between gap-2 sm:gap-4 mb-2">
-                          <h3 className="text-lg sm:text-xl md:text-2xl font-bold group-hover:text-primary transition-colors">
+                          <h3 className="text-lg sm:text-xl md:text-2xl font-bold transition-colors group-hover:text-primary">
                             {item.title}
                           </h3>
                           <motion.div
@@ -361,8 +386,8 @@ export function TimelineSection() {
                           </motion.div>
                         </div>
 
-                        <p className="text-primary font-semibold text-base sm:text-lg mb-2 sm:mb-3 flex items-center gap-2">
-                          <Award className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                        <p className="font-semibold text-base sm:text-lg mb-2 sm:mb-3 flex items-center gap-2 text-muted-foreground">
+                          <Award className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-primary" />
                           {item.organization}
                         </p>
 
@@ -500,6 +525,18 @@ export function TimelineSection() {
                           </span>
                         </div>
                       )}
+
+                      {/* Code-style Footer - Like Skills cards */}
+                      <div className="relative pt-3 sm:pt-4 mt-3 sm:mt-4 border-t border-border/50 font-mono text-[10px] sm:text-xs text-muted-foreground">
+                        <span className="text-primary">{"// "}</span>
+                        <span className="italic">
+                          {item.type === "work"
+                            ? "Professional experience"
+                            : item.type === "education"
+                            ? "Academic foundation"
+                            : "Key achievement"}
+                        </span>
+                      </div>
                     </div>
                   </motion.div>
                 </motion.div>

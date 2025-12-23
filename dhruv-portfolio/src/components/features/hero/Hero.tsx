@@ -132,6 +132,8 @@ const aboutStats = [
 
 export function Hero() {
   const [currentRole, setCurrentRole] = useState(0);
+  const [activeStatIndex, setActiveStatIndex] = useState<number | null>(null);
+  const [activeValueIndex, setActiveValueIndex] = useState<number | null>(null);
   const { data: user } = useGitHubUser();
   const { data: stats } = useGitHubStats();
   const sectionRef = useRef(null);
@@ -492,7 +494,7 @@ export function Hero() {
 
         {/* Scroll Indicator - Hidden on mobile to save space */}
         <motion.div
-          className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2"
+          className="hidden sm:flex absolute bottom-3 left-1/2 -translate-x-1/2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, y: [0, 10, 0] }}
           transition={{
@@ -500,7 +502,7 @@ export function Hero() {
             y: { duration: 1.5, repeat: Infinity },
           }}
         >
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center mt-8 pt-8">
             <span className="text-xs font-mono text-muted-foreground">
               Scroll to explore
             </span>
@@ -520,6 +522,7 @@ export function Hero() {
         >
           {aboutStats.map((stat, index) => {
             const Icon = stat.icon;
+            const isActive = activeStatIndex === index;
             return (
               <motion.div
                 key={index}
@@ -527,18 +530,46 @@ export function Hero() {
                 animate={isInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ delay: 0.4 + index * 0.1 }}
                 whileHover={{ scale: 1.05, y: -5 }}
+                onMouseEnter={() => setActiveStatIndex(index)}
+                onMouseLeave={() => setActiveStatIndex(null)}
+                className="group"
               >
-                <div className="p-3 sm:p-4 md:p-6 text-center hover:border-primary/30 transition-all group bg-card/50 backdrop-blur-sm rounded-lg border border-border">
-                  <div className="flex justify-center mb-2 sm:mb-3">
-                    <div className="p-2 sm:p-3 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                      <Icon className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-primary" />
+                <div className={`relative p-3 sm:p-4 md:p-6 text-center bg-card/50 backdrop-blur-sm rounded-lg sm:rounded-xl border overflow-hidden transition-all duration-300 ${
+                  isActive
+                    ? "border-primary shadow-2xl shadow-white/15"
+                    : "border-border hover:border-primary/50"
+                }`}>
+                  {/* Animated Gradient Background */}
+                  <div className={`absolute inset-0 rounded-lg sm:rounded-xl transition-opacity duration-500 ${
+                    isActive ? "opacity-10" : "opacity-0"
+                  }`} style={{ background: "linear-gradient(135deg, var(--primary) 0%, transparent 60%)" }} />
+
+                  {/* Scan Line Effect */}
+                  {isActive && (
+                    <motion.div
+                      className="absolute inset-x-0 h-px bg-primary/40"
+                      initial={{ top: 0 }}
+                      animate={{ top: "100%" }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    />
+                  )}
+
+                  <div className="relative flex flex-col items-center">
+                    <div className="flex justify-center mb-2 sm:mb-3">
+                      <motion.div
+                        className="p-2 sm:p-3 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors"
+                        whileHover={{ rotate: 360 }}
+                        transition={{ duration: 0.6 }}
+                      >
+                        <Icon className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-primary" />
+                      </motion.div>
                     </div>
-                  </div>
-                  <div className="text-xl sm:text-2xl md:text-3xl font-bold font-mono text-primary mb-1 sm:mb-2">
-                    {stat.value}
-                  </div>
-                  <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider leading-tight">
-                    {stat.label}
+                    <div className="text-xl sm:text-2xl md:text-3xl font-bold font-mono text-primary mb-1 sm:mb-2">
+                      {stat.value}
+                    </div>
+                    <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider leading-tight">
+                      {stat.label}
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -613,8 +644,8 @@ export function Hero() {
             className="space-y-3 sm:space-y-4 px-2 sm:px-0"
           >
             <div className="mb-4 sm:mb-5">
-              <h3 className="text-lg sm:text-xl font-bold flex items-center gap-2">
-                <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+              <h3 className="text-lg sm:text-xl font-bold flex items-center gap-2 font-mono">
+                <span className="text-primary">{"// "}</span>
                 Highlights
               </h3>
             </div>
@@ -627,17 +658,38 @@ export function Hero() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={isInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ delay: 0.7 + index * 0.1 }}
-                  whileHover={{ x: 5 }}
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  className="group"
                 >
-                  <div className="p-4 sm:p-5 md:p-6 hover:border-primary/30 transition-all group bg-card/50 backdrop-blur-sm rounded-lg border border-border">
-                    <div className="flex items-start gap-3 sm:gap-4">
-                      <div
-                        className={`p-2.5 sm:p-3 md:p-3.5 rounded-lg bg-linear-to-br ${highlight.color} bg-opacity-10 shrink-0`}
+                  <div className="relative p-4 sm:p-5 bg-card/50 backdrop-blur-sm rounded-lg sm:rounded-xl border border-border hover:border-primary/50 hover:shadow-xl hover:shadow-white/10 transition-all duration-300 overflow-hidden">
+                    {/* Animated Gradient Background */}
+                    <div
+                      className="absolute inset-0 rounded-lg sm:rounded-xl transition-opacity duration-500 opacity-0 group-hover:opacity-10"
+                      style={{ background: `linear-gradient(135deg, ${highlight.color.includes('blue') ? '#3b82f6' : highlight.color.includes('purple') ? '#a855f7' : highlight.color.includes('orange') ? '#f97316' : highlight.color.includes('indigo') ? '#6366f1' : '#10b981'}40, transparent)` }}
+                    />
+
+                    {/* Subtle scan line on hover */}
+                    <motion.div
+                      className="absolute inset-x-0 h-px bg-primary/30 opacity-0 group-hover:opacity-100"
+                      initial={{ top: 0 }}
+                      animate={{ top: "100%" }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
+                    />
+
+                    <div className="relative flex items-start gap-3 sm:gap-4">
+                      <motion.div
+                        className="p-2 sm:p-2.5 rounded-lg bg-primary/10 shrink-0"
+                        whileHover={{ rotate: 360 }}
+                        transition={{ duration: 0.6 }}
                       >
-                        <Icon className="h-5 w-5 sm:h-6 sm:w-6 md:h-6 md:w-6 text-primary" />
-                      </div>
+                        <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                      </motion.div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-sm sm:text-base mb-1.5 sm:mb-2 group-hover:text-primary transition-colors">
+                        <h4 className="font-semibold text-sm sm:text-base mb-1 group-hover:text-primary transition-colors">
                           {highlight.title}
                         </h4>
                         <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
@@ -672,6 +724,7 @@ export function Hero() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
             {values.map((value, index) => {
               const Icon = value.icon;
+              const isActive = activeValueIndex === index;
               return (
                 <motion.div
                   key={index}
@@ -683,19 +736,47 @@ export function Hero() {
                     stiffness: 100,
                   }}
                   whileHover={{ y: -10, scale: 1.02 }}
+                  onMouseEnter={() => setActiveValueIndex(index)}
+                  onMouseLeave={() => setActiveValueIndex(null)}
+                  className="group"
                 >
-                  <div className="p-4 sm:p-5 md:p-6 text-center h-full hover:border-primary/30 hover:shadow-lg hover:shadow-primary/10 transition-all group bg-card/50 backdrop-blur-sm rounded-lg border border-border">
-                    <div className="flex justify-center mb-3 sm:mb-4">
-                      <div className="p-3 sm:p-3.5 md:p-4 rounded-full bg-primary/10 group-hover:bg-primary/20 group-hover:scale-110 transition-all">
-                        <Icon className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-primary" />
+                  <div className={`relative p-4 sm:p-5 md:p-6 text-center h-full bg-card/50 backdrop-blur-sm rounded-lg sm:rounded-xl border overflow-hidden transition-all duration-300 ${
+                    isActive
+                      ? "border-primary shadow-2xl shadow-white/15"
+                      : "border-border hover:border-primary/50"
+                  }`}>
+                    {/* Animated Gradient Background */}
+                    <div className={`absolute inset-0 rounded-lg sm:rounded-xl transition-opacity duration-500 ${
+                      isActive ? "opacity-10" : "opacity-0"
+                    }`} style={{ background: "linear-gradient(135deg, var(--primary) 0%, transparent 60%)" }} />
+
+                    {/* Scan Line Effect */}
+                    {isActive && (
+                      <motion.div
+                        className="absolute inset-x-0 h-px bg-primary/40"
+                        initial={{ top: 0 }}
+                        animate={{ top: "100%" }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                      />
+                    )}
+
+                    <div className="relative">
+                      <div className="flex justify-center mb-3 sm:mb-4">
+                        <motion.div
+                          className="p-3 sm:p-3.5 md:p-4 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-all"
+                          whileHover={{ rotate: 360 }}
+                          transition={{ duration: 0.6 }}
+                        >
+                          <Icon className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-primary" />
+                        </motion.div>
                       </div>
+                      <h4 className="font-bold mb-2 text-base sm:text-lg group-hover:text-primary transition-colors">
+                        {value.title}
+                      </h4>
+                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                        {value.description}
+                      </p>
                     </div>
-                    <h4 className="font-bold mb-2 text-base sm:text-lg group-hover:text-primary transition-colors">
-                      {value.title}
-                    </h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                      {value.description}
-                    </p>
                   </div>
                 </motion.div>
               );
