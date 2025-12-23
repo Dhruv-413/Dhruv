@@ -2,6 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import skillsData from "@/data/skills.json";
+import certificationsData from "@/data/certifications.json";
 import { useRef, useState } from "react";
 import TechIcon from "@/components/ui/TechIcon";
 import {
@@ -15,6 +16,8 @@ import {
   Layers,
   Zap,
   Rocket,
+  Award,
+  ExternalLink,
 } from "lucide-react";
 
 const categoryIcons: Record<
@@ -284,7 +287,7 @@ export function SkillsSection() {
           transition={{ duration: 0.5 }}
           className="text-center mb-10 sm:mb-12 lg:mb-16"
         >
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 gradient-text">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 text-foreground">
             Skills Breakdown
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-base lg:text-lg">
@@ -428,6 +431,153 @@ export function SkillsSection() {
             );
           })}
         </div>
+
+        {/* Certifications Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mt-16 sm:mt-20 lg:mt-24"
+        >
+          {/* Certifications Header */}
+          <div className="text-center mb-10 sm:mb-12 lg:mb-16">
+            <div className="flex items-center gap-1.5 sm:gap-2 mb-4 sm:mb-6 justify-center">
+              <Award className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
+              <span className="text-primary font-mono text-xs sm:text-sm">
+                ~/certifications
+              </span>
+              <motion.span
+                animate={{ opacity: [1, 0, 1] }}
+                transition={{ duration: 1, repeat: Infinity }}
+                className="text-primary font-mono text-xs sm:text-sm"
+              >
+                _
+              </motion.span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 text-foreground">
+              Certifications & Credentials
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-base lg:text-lg">
+              Professional certifications validating expertise in AI/ML, Data
+              Science, and Software Engineering
+            </p>
+          </div>
+
+          {/* Certifications Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 max-w-7xl mx-auto">
+            {certificationsData.map((cert, index) => {
+              // Use consistent purple accent color for ALL certificates
+              const certColor = "#8b5cf6";
+
+              // Format date consistently to avoid hydration mismatch
+              const dateObj = new Date(cert.date);
+              const months = [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec",
+              ];
+              const formattedDate = `${
+                months[dateObj.getMonth()]
+              } ${dateObj.getFullYear()}`;
+
+              return (
+                <motion.a
+                  key={cert.credentialId}
+                  href={cert.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{
+                    duration: 0.5,
+                    delay: 0.4 + index * 0.1,
+                    ease: [0.25, 0.4, 0.25, 1],
+                  }}
+                  whileHover={{ scale: 1.02, y: -4 }}
+                  className="group relative touch-manipulation block"
+                >
+                  <div className="relative h-full bg-card rounded-lg sm:rounded-xl p-4 sm:p-5 lg:p-6 border border-border hover:border-primary/50 transition-all duration-500 active:scale-[0.98]">
+                    {/* Animated Background */}
+                    <div
+                      className="absolute inset-0 rounded-lg sm:rounded-xl transition-opacity duration-500 opacity-0 group-hover:opacity-10"
+                      style={{
+                        background: `linear-gradient(135deg, ${certColor}40, transparent)`,
+                      }}
+                    />
+
+                    {/* Header with Icon */}
+                    <div className="relative flex items-start gap-2 sm:gap-3 mb-3 sm:mb-4">
+                      <motion.div
+                        className="p-2 sm:p-2.5 rounded-lg shrink-0"
+                        style={{ backgroundColor: `${certColor}20` }}
+                        whileHover={{ rotate: 360 }}
+                        transition={{ duration: 0.6 }}
+                      >
+                        <Award
+                          className="h-5 w-5 sm:h-6 sm:w-6"
+                          style={{ color: certColor }}
+                        />
+                      </motion.div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-bold text-sm sm:text-base lg:text-lg mb-1 text-foreground group-hover:text-primary transition-colors line-clamp-2">
+                          {cert.name}
+                        </h3>
+                        <div className="flex items-center gap-1.5 sm:gap-2 text-muted-foreground">
+                          <span className="text-[10px] sm:text-xs font-mono truncate">
+                            {cert.issuer}
+                          </span>
+                          <span className="text-[10px] sm:text-xs">•</span>
+                          <span className="text-[10px] sm:text-xs font-mono">
+                            {formattedDate}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Skills Tags */}
+                    <div className="relative flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4">
+                      {cert.skills.map((skill, idx) => (
+                        <span
+                          key={idx}
+                          className="px-2 sm:px-2.5 py-1 bg-muted/80 rounded-md text-[10px] sm:text-xs font-medium text-muted-foreground border border-border/50"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* View Credential Link */}
+                    <div className="relative flex items-center justify-between pt-3 sm:pt-4 border-t border-border/50">
+                      <span className="text-[10px] sm:text-xs font-mono text-muted-foreground">
+                        <span className="text-primary">{"// "}</span>
+                        Verified Credential
+                      </span>
+                      <div className="flex items-center gap-1 text-primary text-[10px] sm:text-xs font-semibold group-hover:gap-2 transition-all">
+                        <span>View</span>
+                        <ExternalLink className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Corner Accent */}
+                  <div
+                    className="absolute -top-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{ backgroundColor: certColor }}
+                  />
+                </motion.a>
+              );
+            })}
+          </div>
+        </motion.div>
       </div>
     </section>
   );
