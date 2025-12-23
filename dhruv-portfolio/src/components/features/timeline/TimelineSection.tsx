@@ -170,7 +170,7 @@ export function TimelineSection() {
             excellence, and measurable real-world contributions.
           </motion.p>
 
-          {/* Stats Grid - Elegant Design with Gradients */}
+          {/* Stats Grid - Unified Elegant Design */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -194,7 +194,7 @@ export function TimelineSection() {
                   className="group relative"
                 >
                   <div
-                    className={`relative p-3 sm:p-4 bg-card/50 backdrop-blur-sm rounded-lg sm:rounded-xl border overflow-hidden transition-all duration-300 ${
+                    className={`relative p-3 sm:p-4 bg-card/50 backdrop-blur-sm rounded-xl border overflow-hidden transition-all duration-300 ${
                       isActive
                         ? "border-primary shadow-2xl shadow-white/15"
                         : "border-border/50 hover:border-primary/30"
@@ -202,18 +202,21 @@ export function TimelineSection() {
                   >
                     {/* Animated Gradient Background */}
                     <div
-                      className={`absolute inset-0 rounded-lg sm:rounded-xl transition-opacity duration-500 ${
-                        isActive ? "opacity-10" : "opacity-0"
+                      className={`absolute inset-0 rounded-xl transition-opacity duration-500 ${
+                        isActive
+                          ? "opacity-15"
+                          : "opacity-0 group-hover:opacity-10"
                       }`}
                       style={{
-                        background: `linear-gradient(135deg, ${statColor}40, transparent)`,
+                        background: `linear-gradient(135deg, ${statColor}40 0%, transparent 60%)`,
                       }}
                     />
 
                     {/* Scan Line Effect */}
                     {isActive && (
                       <motion.div
-                        className="absolute inset-x-0 h-px bg-primary/40"
+                        className="absolute inset-x-0 h-px"
+                        style={{ backgroundColor: `${statColor}60` }}
                         initial={{ top: 0 }}
                         animate={{ top: "100%" }}
                         transition={{
@@ -224,21 +227,19 @@ export function TimelineSection() {
                       />
                     )}
 
-                    {/* Top-Right Corner Accent */}
-                    <div
-                      className="absolute -top-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"
-                      style={{ backgroundColor: statColor }}
-                    />
-
                     <div className="relative flex flex-col items-center gap-1.5 sm:gap-2">
                       <motion.div
-                        className="p-1.5 sm:p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors"
+                        className="p-2 sm:p-2.5 rounded-lg transition-colors"
+                        style={{ backgroundColor: `${statColor}20` }}
                         whileHover={{ rotate: 360 }}
                         transition={{ duration: 0.6 }}
                       >
-                        <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                        <Icon
+                          className="h-5 w-5 sm:h-6 sm:w-6"
+                          style={{ color: statColor }}
+                        />
                       </motion.div>
-                      <div className="text-xl sm:text-2xl md:text-3xl font-bold font-mono text-primary">
+                      <div className="text-xl sm:text-2xl md:text-3xl font-bold font-mono">
                         {stat.value}
                       </div>
                       <div className="text-[10px] sm:text-xs text-center text-muted-foreground font-medium">
@@ -246,6 +247,16 @@ export function TimelineSection() {
                       </div>
                     </div>
                   </div>
+
+                  {/* Top-Right Corner Accent */}
+                  <div
+                    className={`absolute -top-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 rounded-full blur-xl transition-opacity duration-300 ${
+                      isActive
+                        ? "opacity-60"
+                        : "opacity-0 group-hover:opacity-40"
+                    }`}
+                    style={{ backgroundColor: statColor }}
+                  />
                 </motion.div>
               );
             })}
