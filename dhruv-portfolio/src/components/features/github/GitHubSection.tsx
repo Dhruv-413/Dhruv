@@ -20,6 +20,8 @@ import {
   Award,
   Calendar,
   Monitor,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -78,6 +80,10 @@ export function GitHubSection() {
     x: number;
     y: number;
   } | null>(null);
+
+  // State for "View More" functionality
+  const [showAllRepos, setShowAllRepos] = useState(false);
+  const [showAllContributedRepos, setShowAllContributedRepos] = useState(false);
 
   // Refs for scroll animations - Matching Projects page pattern
   const heroRef = useRef(null);
@@ -1049,285 +1055,315 @@ export function GitHubSection() {
 
           {/* Repository Grid - Enhanced Design Matching Skill/Project Cards */}
           <div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-12"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
             role="list"
             aria-label="Repository cards"
           >
-            {filteredRepos?.slice(0, 12).map((repo, index) => {
-              const isActive = activeRepo === repo.name;
-              const repoColor = getRepoColor(repo.name);
+            {filteredRepos
+              ?.slice(0, showAllRepos ? undefined : 6)
+              .map((repo, index) => {
+                const isActive = activeRepo === repo.name;
+                const repoColor = getRepoColor(repo.name);
 
-              return (
-                <motion.article
-                  key={repo.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={isGalleryInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.3, delay: index * 0.05 }}
-                  whileHover={{ scale: 1.02, y: -4 }}
-                  role="listitem"
-                  className="group relative"
-                  onMouseEnter={() => setActiveRepo(repo.name)}
-                  onMouseLeave={() => setActiveRepo(null)}
-                >
-                  <Card
-                    className={`p-5 h-full bg-card border transition-all duration-500 flex flex-col relative overflow-hidden ${
-                      isActive
-                        ? "border-primary shadow-2xl shadow-white/15"
-                        : "border-border/50 hover:shadow-xl hover:shadow-white/10"
-                    }`}
+                return (
+                  <motion.article
+                    key={repo.name}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={isGalleryInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                    whileHover={{ scale: 1.02, y: -4 }}
+                    role="listitem"
+                    className="group relative"
+                    onMouseEnter={() => setActiveRepo(repo.name)}
+                    onMouseLeave={() => setActiveRepo(null)}
                   >
-                    {/* Animated Background Gradient */}
-                    <div
-                      className={`absolute inset-0 rounded-xl transition-opacity duration-500 ${
+                    <Card
+                      className={`p-5 h-full bg-card border transition-all duration-500 flex flex-col relative overflow-hidden ${
                         isActive
-                          ? "opacity-15"
-                          : "opacity-0 group-hover:opacity-10"
+                          ? "border-primary shadow-2xl shadow-white/15"
+                          : "border-border/50 hover:shadow-xl hover:shadow-white/10"
                       }`}
-                      style={{
-                        background: `linear-gradient(135deg, ${repoColor}40 0%, transparent 60%)`,
-                      }}
-                    />
-
-                    {/* Scan Line Effect */}
-                    {isActive && (
-                      <motion.div
-                        className="absolute inset-x-0 h-px"
-                        style={{ backgroundColor: `${repoColor}80` }}
-                        initial={{ top: 0 }}
-                        animate={{ top: "100%" }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: "linear",
+                    >
+                      {/* Animated Background Gradient */}
+                      <div
+                        className={`absolute inset-0 rounded-xl transition-opacity duration-500 ${
+                          isActive
+                            ? "opacity-15"
+                            : "opacity-0 group-hover:opacity-10"
+                        }`}
+                        style={{
+                          background: `linear-gradient(135deg, ${repoColor}40 0%, transparent 60%)`,
                         }}
                       />
-                    )}
 
-                    {/* Deployment Badge */}
-                    {(repo.topics?.includes("deployed") ||
-                      repo.topics?.includes("live")) && (
-                      <div className="absolute top-0 right-0 bg-linear-to-r from-green-500 to-emerald-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-bl-xl flex items-center gap-1.5 shadow-lg z-10">
-                        <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                        LIVE
-                      </div>
-                    )}
-
-                    {/* Owner & Repo Name */}
-                    <div className="relative flex items-start gap-3 mb-3">
-                      <motion.div
-                        className="p-2 rounded-lg transition-colors shrink-0"
-                        style={{ backgroundColor: `${repoColor}20` }}
-                        whileHover={{ rotate: 360 }}
-                        transition={{ duration: 0.6 }}
-                      >
-                        <Github
-                          className="h-4 w-4"
-                          style={{ color: repoColor }}
+                      {/* Scan Line Effect */}
+                      {isActive && (
+                        <motion.div
+                          className="absolute inset-x-0 h-px"
+                          style={{ backgroundColor: `${repoColor}80` }}
+                          initial={{ top: 0 }}
+                          animate={{ top: "100%" }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "linear",
+                          }}
                         />
-                      </motion.div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-xs text-muted-foreground font-mono truncate">
-                          {user?.login || "Dhruv-413"}
-                        </div>
-                        <h3 className="font-bold text-base transition-colors truncate">
-                          {repo.name}
-                        </h3>
-                      </div>
-                    </div>
+                      )}
 
-                    {/* Description */}
-                    {repo.description && (
-                      <p className="relative text-xs text-muted-foreground line-clamp-2 mb-3 leading-relaxed">
-                        {repo.description}
-                      </p>
-                    )}
-
-                    {/* Topics/Tags with Progressive Disclosure */}
-                    {repo.topics && repo.topics.length > 0 && (
-                      <div className="relative mb-4 flex-1">
-                        <div className="flex flex-wrap gap-1.5">
-                          {(expandedProject === repo.name
-                            ? repo.topics
-                            : repo.topics.slice(0, 4)
-                          ).map((topic) => (
-                            <motion.span
-                              key={topic}
-                              whileHover={{ scale: 1.05, y: -2 }}
-                              className="px-2 py-1 text-[10px] font-mono rounded-md transition-all cursor-default border bg-primary/10 text-muted-foreground border-border/50 hover:border-primary/40"
-                            >
-                              {topic}
-                            </motion.span>
-                          ))}
-                        </div>
-                        {repo.topics.length > 4 &&
-                          expandedProject !== repo.name && (
-                            <button
-                              onClick={() => setExpandedProject(repo.name)}
-                              className="text-[10px] font-mono mt-2 flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
-                              aria-label="Show all topics"
-                            >
-                              +{repo.topics.length - 4} more
-                              <motion.span
-                                animate={{ x: [0, 2, 0] }}
-                                transition={{ duration: 1, repeat: Infinity }}
-                              >
-                                →
-                              </motion.span>
-                            </button>
-                          )}
-                        {expandedProject === repo.name &&
-                          repo.topics.length > 4 && (
-                            <button
-                              onClick={() => setExpandedProject(null)}
-                              className="text-[10px] font-mono mt-2 text-muted-foreground hover:text-foreground transition-colors"
-                              aria-label="Show fewer topics"
-                            >
-                              Show less
-                            </button>
-                          )}
-                      </div>
-                    )}
-
-                    {/* Stats Row - Enhanced Design */}
-                    <div className="relative flex items-center justify-between gap-3 text-xs text-muted-foreground border-t border-border/50 pt-3 mb-3">
-                      {repo.language && (
-                        <div className="flex items-center gap-1.5 bg-muted/50 px-2.5 py-1.5 rounded-lg">
-                          <div
-                            className="w-2.5 h-2.5 rounded-full ring-1 ring-offset-1 ring-offset-card ring-border/50"
-                            style={{
-                              backgroundColor: repo.languageColor || "#666",
-                            }}
-                          />
-                          <span className="font-mono text-[11px] font-medium">
-                            {repo.language}
-                          </span>
+                      {/* Deployment Badge */}
+                      {(repo.topics?.includes("deployed") ||
+                        repo.topics?.includes("live")) && (
+                        <div className="absolute top-0 right-0 bg-linear-to-r from-green-500 to-emerald-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-bl-xl flex items-center gap-1.5 shadow-lg z-10">
+                          <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                          LIVE
                         </div>
                       )}
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-1 hover:text-yellow-500 transition-colors">
-                          <Star className="h-3.5 w-3.5" />
-                          <span className="font-mono font-medium">
-                            {repo.stargazerCount}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1 hover:text-blue-500 transition-colors">
-                          <GitFork className="h-3.5 w-3.5" />
-                          <span className="font-mono font-medium">
-                            {repo.forkCount}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
 
-                    {/* Updated Time */}
-                    <div className="relative flex items-center gap-1.5 text-[10px] text-muted-foreground mb-3">
-                      <Clock className="h-3 w-3" aria-hidden="true" />
-                      <span>Updated</span>
-                      <time dateTime={repo.updatedAt} className="font-mono">
-                        {formatDistanceToNow(new Date(repo.updatedAt), {
-                          addSuffix: true,
-                        })}
-                      </time>
-                    </div>
-
-                    {/* CTA Buttons */}
-                    <div className="relative flex gap-2 mb-3">
-                      <a
-                        href={repo.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1"
-                        aria-label={`View ${repo.name} source code on GitHub`}
-                      >
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className={`w-full text-xs group/btn transition-all ${
-                            isActive
-                              ? "border-primary/50 hover:bg-primary/5"
-                              : ""
-                          }`}
+                      {/* Owner & Repo Name */}
+                      <div className="relative flex items-start gap-3 mb-3">
+                        <motion.div
+                          className="p-2 rounded-lg transition-colors shrink-0"
+                          style={{ backgroundColor: `${repoColor}20` }}
+                          whileHover={{ rotate: 360 }}
+                          transition={{ duration: 0.6 }}
                         >
                           <Github
-                            className="h-3.5 w-3.5 mr-1.5"
-                            aria-hidden="true"
+                            className="h-4 w-4"
+                            style={{ color: repoColor }}
                           />
-                          View Code
-                        </Button>
-                      </a>
-                      {repo.topics?.includes("deployed") ||
-                      repo.topics?.includes("live") ? (
+                        </motion.div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs text-muted-foreground font-mono truncate">
+                            {user?.login || "Dhruv-413"}
+                          </div>
+                          <h3 className="font-bold text-base transition-colors truncate">
+                            {repo.name}
+                          </h3>
+                        </div>
+                      </div>
+
+                      {/* Description */}
+                      {repo.description && (
+                        <p className="relative text-xs text-muted-foreground line-clamp-2 mb-3 leading-relaxed">
+                          {repo.description}
+                        </p>
+                      )}
+
+                      {/* Topics/Tags with Progressive Disclosure */}
+                      {repo.topics && repo.topics.length > 0 && (
+                        <div className="relative mb-4 flex-1">
+                          <div className="flex flex-wrap gap-1.5">
+                            {(expandedProject === repo.name
+                              ? repo.topics
+                              : repo.topics.slice(0, 4)
+                            ).map((topic) => (
+                              <motion.span
+                                key={topic}
+                                whileHover={{ scale: 1.05, y: -2 }}
+                                className="px-2 py-1 text-[10px] font-mono rounded-md transition-all cursor-default border bg-primary/10 text-muted-foreground border-border/50 hover:border-primary/40"
+                              >
+                                {topic}
+                              </motion.span>
+                            ))}
+                          </div>
+                          {repo.topics.length > 4 &&
+                            expandedProject !== repo.name && (
+                              <button
+                                onClick={() => setExpandedProject(repo.name)}
+                                className="text-[10px] font-mono mt-2 flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+                                aria-label="Show all topics"
+                              >
+                                +{repo.topics.length - 4} more
+                                <motion.span
+                                  animate={{ x: [0, 2, 0] }}
+                                  transition={{ duration: 1, repeat: Infinity }}
+                                >
+                                  →
+                                </motion.span>
+                              </button>
+                            )}
+                          {expandedProject === repo.name &&
+                            repo.topics.length > 4 && (
+                              <button
+                                onClick={() => setExpandedProject(null)}
+                                className="text-[10px] font-mono mt-2 text-muted-foreground hover:text-foreground transition-colors"
+                                aria-label="Show fewer topics"
+                              >
+                                Show less
+                              </button>
+                            )}
+                        </div>
+                      )}
+
+                      {/* Stats Row - Enhanced Design */}
+                      <div className="relative flex items-center justify-between gap-3 text-xs text-muted-foreground border-t border-border/50 pt-3 mb-3">
+                        {repo.language && (
+                          <div className="flex items-center gap-1.5 bg-muted/50 px-2.5 py-1.5 rounded-lg">
+                            <div
+                              className="w-2.5 h-2.5 rounded-full ring-1 ring-offset-1 ring-offset-card ring-border/50"
+                              style={{
+                                backgroundColor: repo.languageColor || "#666",
+                              }}
+                            />
+                            <span className="font-mono text-[11px] font-medium">
+                              {repo.language}
+                            </span>
+                          </div>
+                        )}
+                        <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-1 hover:text-yellow-500 transition-colors">
+                            <Star className="h-3.5 w-3.5" />
+                            <span className="font-mono font-medium">
+                              {repo.stargazerCount}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1 hover:text-blue-500 transition-colors">
+                            <GitFork className="h-3.5 w-3.5" />
+                            <span className="font-mono font-medium">
+                              {repo.forkCount}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Updated Time */}
+                      <div className="relative flex items-center gap-1.5 text-[10px] text-muted-foreground mb-3">
+                        <Clock className="h-3 w-3" aria-hidden="true" />
+                        <span>Updated</span>
+                        <time dateTime={repo.updatedAt} className="font-mono">
+                          {formatDistanceToNow(new Date(repo.updatedAt), {
+                            addSuffix: true,
+                          })}
+                        </time>
+                      </div>
+
+                      {/* CTA Buttons */}
+                      <div className="relative flex gap-2 mb-3">
                         <a
                           href={repo.url}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex-1"
-                          aria-label={`Open ${repo.name} live demo`}
-                        >
-                          <Button
-                            size="sm"
-                            className="w-full text-xs group/btn shadow-lg bg-primary hover:bg-primary/90 shadow-primary/20"
-                          >
-                            <ExternalLink
-                              className="h-3.5 w-3.5 mr-1.5"
-                              aria-hidden="true"
-                            />
-                            Live Demo
-                            <Rocket
-                              className="h-3 w-3 ml-1 opacity-0 group-hover/btn:opacity-100 transition-opacity"
-                              aria-hidden="true"
-                            />
-                          </Button>
-                        </a>
-                      ) : (
-                        <a
-                          href={repo.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-1"
-                          aria-label={`View ${repo.name} details`}
+                          aria-label={`View ${repo.name} source code on GitHub`}
                         >
                           <Button
                             size="sm"
                             variant="outline"
-                            className={`w-full text-xs transition-all ${
-                              isActive ? "border-primary/30" : ""
+                            className={`w-full text-xs group/btn transition-all ${
+                              isActive
+                                ? "border-primary/50 hover:bg-primary/5"
+                                : ""
                             }`}
                           >
-                            <ExternalLink
+                            <Github
                               className="h-3.5 w-3.5 mr-1.5"
                               aria-hidden="true"
                             />
-                            Details
+                            View Code
                           </Button>
                         </a>
-                      )}
-                    </div>
+                        {repo.topics?.includes("deployed") ||
+                        repo.topics?.includes("live") ? (
+                          <a
+                            href={repo.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1"
+                            aria-label={`Open ${repo.name} live demo`}
+                          >
+                            <Button
+                              size="sm"
+                              className="w-full text-xs group/btn shadow-lg bg-primary hover:bg-primary/90 shadow-primary/20"
+                            >
+                              <ExternalLink
+                                className="h-3.5 w-3.5 mr-1.5"
+                                aria-hidden="true"
+                              />
+                              Live Demo
+                              <Rocket
+                                className="h-3 w-3 ml-1 opacity-0 group-hover/btn:opacity-100 transition-opacity"
+                                aria-hidden="true"
+                              />
+                            </Button>
+                          </a>
+                        ) : (
+                          <a
+                            href={repo.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1"
+                            aria-label={`View ${repo.name} details`}
+                          >
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className={`w-full text-xs transition-all ${
+                                isActive ? "border-primary/30" : ""
+                              }`}
+                            >
+                              <ExternalLink
+                                className="h-3.5 w-3.5 mr-1.5"
+                                aria-hidden="true"
+                              />
+                              Details
+                            </Button>
+                          </a>
+                        )}
+                      </div>
 
-                    {/* Code-style Footer */}
-                    <div className="relative pt-3 border-t border-border/50 font-mono text-[10px] text-muted-foreground">
-                      <span style={{ color: repoColor }}>{"// "}</span>
-                      <span className="italic">
-                        {repo.language
-                          ? `Built with ${repo.language}`
-                          : "Open source project"}
-                      </span>
-                    </div>
-                  </Card>
+                      {/* Code-style Footer */}
+                      <div className="relative pt-3 border-t border-border/50 font-mono text-[10px] text-muted-foreground">
+                        <span style={{ color: repoColor }}>{"// "}</span>
+                        <span className="italic">
+                          {repo.language
+                            ? `Built with ${repo.language}`
+                            : "Open source project"}
+                        </span>
+                      </div>
+                    </Card>
 
-                  {/* Top-Right Corner Accent */}
-                  <div
-                    className={`absolute -top-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 rounded-full blur-xl transition-opacity duration-300 ${
-                      isActive
-                        ? "opacity-60"
-                        : "opacity-0 group-hover:opacity-40"
-                    }`}
-                    style={{ backgroundColor: repoColor }}
-                  />
-                </motion.article>
-              );
-            })}
+                    {/* Top-Right Corner Accent */}
+                    <div
+                      className={`absolute -top-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 rounded-full blur-xl transition-opacity duration-300 ${
+                        isActive
+                          ? "opacity-60"
+                          : "opacity-0 group-hover:opacity-40"
+                      }`}
+                      style={{ backgroundColor: repoColor }}
+                    />
+                  </motion.article>
+                );
+              })}
           </div>
+
+          {/* View More Button for My Repositories */}
+          {filteredRepos && filteredRepos.length > 6 && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={isGalleryInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.4, delay: 0.3 }}
+              className="flex justify-center mt-8 mb-12"
+            >
+              <Button
+                variant="outline"
+                onClick={() => setShowAllRepos(!showAllRepos)}
+                className="group font-mono text-sm hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300"
+              >
+                {showAllRepos ? (
+                  <>
+                    <ChevronUp className="h-4 w-4 mr-2 group-hover:-translate-y-0.5 transition-transform" />
+                    Show Less
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="h-4 w-4 mr-2 group-hover:translate-y-0.5 transition-transform" />
+                    View {filteredRepos.length - 6} More
+                  </>
+                )}
+              </Button>
+            </motion.div>
+          )}
 
           {/* Repositories Contributed To Section - Enhanced Design */}
           {contributedRepos &&
@@ -1424,7 +1460,7 @@ export function GitHubSection() {
                         contributedRepoFilter === "All" ||
                         repo.language === contributedRepoFilter
                     )
-                    .slice(0, 12)
+                    .slice(0, showAllContributedRepos ? undefined : 6)
                     .map((repo: ContributedRepository, index) => {
                       const isActiveContrib =
                         activeContributedRepo === repo.url;
@@ -1576,6 +1612,44 @@ export function GitHubSection() {
                       );
                     })}
                 </div>
+
+                {/* View More Button for Contributed Repositories */}
+                {(() => {
+                  const filteredContribRepos =
+                    contributedRepos.repositories.filter(
+                      (repo) =>
+                        contributedRepoFilter === "All" ||
+                        repo.language === contributedRepoFilter
+                    );
+                  return filteredContribRepos.length > 6 ? (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={isGalleryInView ? { opacity: 1, y: 0 } : {}}
+                      transition={{ duration: 0.4, delay: 0.6 }}
+                      className="flex justify-center mt-8"
+                    >
+                      <Button
+                        variant="outline"
+                        onClick={() =>
+                          setShowAllContributedRepos(!showAllContributedRepos)
+                        }
+                        className="group font-mono text-sm hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300"
+                      >
+                        {showAllContributedRepos ? (
+                          <>
+                            <ChevronUp className="h-4 w-4 mr-2 group-hover:-translate-y-0.5 transition-transform" />
+                            Show Less
+                          </>
+                        ) : (
+                          <>
+                            <ChevronDown className="h-4 w-4 mr-2 group-hover:translate-y-0.5 transition-transform" />
+                            View {filteredContribRepos.length - 6} More
+                          </>
+                        )}
+                      </Button>
+                    </motion.div>
+                  ) : null;
+                })()}
               </motion.div>
             )}
         </div>
