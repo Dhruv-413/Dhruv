@@ -3,7 +3,6 @@
 import { motion, useInView } from "framer-motion";
 import {
   Mail,
-  Phone,
   MapPin,
   Send,
   Github,
@@ -491,33 +490,6 @@ export function ContactSection() {
                         )}
                       </Button>
                     </div>
-                  </div>
-                </motion.div>
-
-                {/* Phone */}
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={isInfoInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.4, delay: 0.5 }}
-                  className="flex items-start gap-3 sm:gap-4 group"
-                >
-                  <div className="p-2.5 sm:p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors shrink-0">
-                    <Phone
-                      className="h-5 w-5 sm:h-6 sm:w-6 text-primary"
-                      aria-hidden="true"
-                    />
-                  </div>
-                  <div>
-                    <p className="text-xs sm:text-sm text-muted-foreground mb-1 font-mono">
-                      {"// Phone"}
-                    </p>
-                    <a
-                      href={`tel:${SITE_CONFIG.contact.phone}`}
-                      className="font-medium hover:text-primary transition-colors font-mono text-xs sm:text-sm"
-                      aria-label="Call phone number"
-                    >
-                      {SITE_CONFIG.contact.phone}
-                    </a>
                   </div>
                 </motion.div>
 
