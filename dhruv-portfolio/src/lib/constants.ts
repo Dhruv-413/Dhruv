@@ -32,3 +32,44 @@ export const ANIMATION_DURATION = {
   normal: 0.3,
   slow: 0.5,
 } as const;
+
+// ============================================================================
+// Layout Constants
+// ============================================================================
+
+export const LAYOUT = {
+  MAX_WIDTH: "max-w-7xl",
+  CONTAINER: "container mx-auto px-3 sm:px-4 md:px-6 lg:px-8",
+  SECTION_PADDING: "py-12 sm:py-16 lg:py-20",
+  GRID_GAP: "gap-4 sm:gap-5 lg:gap-6",
+} as const;
+
+// ============================================================================
+// UI Constants
+// ============================================================================
+
+export const CONTRIBUTION_LEVELS = {
+  colors: [
+    "bg-muted/60 hover:bg-muted",
+    "bg-green-500/25 hover:bg-green-500/35",
+    "bg-green-500/45 hover:bg-green-500/55",
+    "bg-green-500/65 hover:bg-green-500/75",
+    "bg-green-500/85 hover:bg-green-500/95",
+    "bg-green-500 hover:bg-green-400",
+  ],
+} as const;
+
+export const CARD_STYLES = {
+  base: "bg-card border transition-all duration-500",
+  hover: "hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/20",
+  active: "border-primary shadow-2xl shadow-white/15 scale-105",
+  inactive: "border-border hover:border-primary/50",
+} as const;
+
+// ============================================================================
+// Filter Options
+// ============================================================================
+
+export const DEFAULT_FILTER = "All" as const;
+
+export const INITIAL_ITEMS_TO_SHOW = 6 as const;

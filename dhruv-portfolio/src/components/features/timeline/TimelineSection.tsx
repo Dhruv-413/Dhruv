@@ -21,8 +21,12 @@ import {
 import { TimelineItem } from "@/types/experience";
 import timelineData from "@/data/timeline.json";
 import { format } from "date-fns";
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { TechIcon } from "@/components/ui/TechIcon";
+import { SectionHeader } from "@/components/ui/SectionHeader";
+import { StatCard, StatCardGrid } from "@/components/ui/StatCard";
+import { Badge, BadgeGroup, CredibilityBadge } from "@/components/ui/Badge";
+import { ScanLineEffect } from "@/components/ui/ScanLineEffect";
 
 const iconMap = {
   work: Briefcase,
@@ -113,154 +117,50 @@ export function TimelineSection() {
       className="relative min-h-screen overflow-hidden pt-16 pb-12 sm:pb-16 md:pb-20"
     >
       <div className="container mx-auto px-3 sm:px-4 md:px-6 relative z-10">
-        {/* Hero Section - Centered Layout (Like Skills/Projects) */}
+        {/* Hero Section - Using SectionHeader */}
         <div className="max-w-4xl mx-auto text-center mb-12 sm:mb-16 md:mb-20">
-          {/* Terminal Prompt */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5 }}
-            className="flex items-center gap-1.5 sm:gap-2 mb-4 sm:mb-6 justify-center"
-          >
-            <Terminal className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
-            <span className="text-primary font-mono text-xs sm:text-sm">
-              ~/experience
-            </span>
-            <motion.span
-              animate={{ opacity: [1, 0, 1] }}
-              transition={{ duration: 1, repeat: Infinity }}
-              className="text-primary font-mono text-xs sm:text-sm"
-            >
-              _
-            </motion.span>
-          </motion.div>
+          <SectionHeader
+            terminalPath="~/experience"
+            title="Career Journey"
+            description={
+              <>
+                From{" "}
+                <span className="text-primary font-semibold">
+                  Computer Science Education
+                </span>{" "}
+                to{" "}
+                <span className="text-primary font-semibold">
+                  National Recognition
+                </span>{" "}
+                and{" "}
+                <span className="text-primary font-semibold">
+                  Enterprise Impact at ONGC
+                </span>
+                . A chronological journey showcasing continuous growth,
+                technical excellence, and measurable real-world contributions.
+              </>
+            }
+            isInView={isInView}
+          />
 
-          {/* Title */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6"
-          >
-            <span className="bg-linear-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent">
-              Career Journey
-            </span>
-          </motion.h1>
-
-          {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground mb-6 sm:mb-8 leading-relaxed px-2"
-          >
-            From{" "}
-            <span className="text-primary font-semibold">
-              Computer Science Education
-            </span>{" "}
-            to{" "}
-            <span className="text-primary font-semibold">
-              National Recognition
-            </span>{" "}
-            and{" "}
-            <span className="text-primary font-semibold">
-              Enterprise Impact at ONGC
-            </span>
-            . A chronological journey showcasing continuous growth, technical
-            excellence, and measurable real-world contributions.
-          </motion.p>
-
-          {/* Stats Grid - Unified Elegant Design */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8 max-w-3xl mx-auto"
-          >
+          {/* Stats Grid using StatCard */}
+          <StatCardGrid columns={4} className="mb-6 sm:mb-8 max-w-3xl mx-auto">
             {experienceStats.map((stat, index) => {
-              const Icon = stat.icon;
-              const isActive = activeStatIndex === index;
               const statColors = ["#a855f7", "#3b82f6", "#f59e0b", "#10b981"];
-              const statColor = statColors[index] || "#3b82f6";
               return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                  transition={{ delay: 0.4 + index * 0.1 }}
-                  whileHover={{ scale: 1.05, y: -5 }}
+                <StatCard
+                  key={stat.label}
+                  icon={stat.icon}
+                  value={stat.value}
+                  label={stat.label}
+                  color={statColors[index]}
+                  isActive={activeStatIndex === index}
                   onMouseEnter={() => setActiveStatIndex(index)}
                   onMouseLeave={() => setActiveStatIndex(null)}
-                  className="group relative"
-                >
-                  <div
-                    className={`relative p-3 sm:p-4 bg-card/50 backdrop-blur-sm rounded-xl border overflow-hidden transition-all duration-300 ${
-                      isActive
-                        ? "border-primary shadow-2xl shadow-white/15"
-                        : "border-border/50 hover:border-primary/30"
-                    }`}
-                  >
-                    {/* Animated Gradient Background */}
-                    <div
-                      className={`absolute inset-0 rounded-xl transition-opacity duration-500 ${
-                        isActive
-                          ? "opacity-15"
-                          : "opacity-0 group-hover:opacity-10"
-                      }`}
-                      style={{
-                        background: `linear-gradient(135deg, ${statColor}40 0%, transparent 60%)`,
-                      }}
-                    />
-
-                    {/* Scan Line Effect */}
-                    {isActive && (
-                      <motion.div
-                        className="absolute inset-x-0 h-px"
-                        style={{ backgroundColor: `${statColor}60` }}
-                        initial={{ top: 0 }}
-                        animate={{ top: "100%" }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: "linear",
-                        }}
-                      />
-                    )}
-
-                    <div className="relative flex flex-col items-center gap-1.5 sm:gap-2">
-                      <motion.div
-                        className="p-2 sm:p-2.5 rounded-lg transition-colors"
-                        style={{ backgroundColor: `${statColor}20` }}
-                        whileHover={{ rotate: 360 }}
-                        transition={{ duration: 0.6 }}
-                      >
-                        <Icon
-                          className="h-5 w-5 sm:h-6 sm:w-6"
-                          style={{ color: statColor }}
-                        />
-                      </motion.div>
-                      <div className="text-xl sm:text-2xl md:text-3xl font-bold font-mono">
-                        {stat.value}
-                      </div>
-                      <div className="text-[10px] sm:text-xs text-center text-muted-foreground font-medium">
-                        {stat.label}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Top-Right Corner Accent */}
-                  <div
-                    className={`absolute -top-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 rounded-full blur-xl transition-opacity duration-300 ${
-                      isActive
-                        ? "opacity-60"
-                        : "opacity-0 group-hover:opacity-40"
-                    }`}
-                    style={{ backgroundColor: statColor }}
-                  />
-                </motion.div>
+                />
               );
             })}
-          </motion.div>
+          </StatCardGrid>
         </div>
 
         {/* Interactive Timeline */}
@@ -293,28 +193,18 @@ export function TimelineSection() {
               </span>
             </p>
 
-            {/* Technical Credibility Badges */}
+            {/* Technical Credibility Badges using CredibilityBadge */}
             <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mt-4 sm:mt-6 px-2">
-              {technicalBadges.map((badge, index) => {
-                const Icon = badge.icon;
-                return (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ delay: 0.8 + index * 0.05 }}
-                    whileHover={{ scale: 1.1, y: -2 }}
-                    className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 bg-card/50 backdrop-blur-sm border border-border/50 rounded-full"
-                  >
-                    <Icon
-                      className={`h-3 w-3 sm:h-3.5 sm:w-3.5 ${badge.color}`}
-                    />
-                    <span className="text-[10px] sm:text-xs font-mono text-foreground/80">
-                      {badge.label}
-                    </span>
-                  </motion.div>
-                );
-              })}
+              {technicalBadges.map((badge, index) => (
+                <CredibilityBadge
+                  key={index}
+                  label={badge.label}
+                  icon={badge.icon}
+                  color={badge.color}
+                  isInView={isInView}
+                  animationDelay={0.8 + index * 0.05}
+                />
+              ))}
             </div>
           </div>
 

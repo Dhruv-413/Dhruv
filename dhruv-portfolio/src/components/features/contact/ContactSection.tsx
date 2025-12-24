@@ -23,6 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SITE_CONFIG } from "@/lib/constants";
 import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -140,54 +141,31 @@ export function ContactSection() {
           initial={{ opacity: 0, y: 50 }}
           animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-10 sm:mb-12 md:mb-16 max-w-4xl mx-auto"
+          className="mb-10 sm:mb-12 md:mb-16 max-w-4xl mx-auto"
         >
-          {/* Terminal Prompt */}
-          <div
-            className="flex items-center justify-center gap-2 mb-4 sm:mb-6"
-            aria-label="Terminal prompt"
-          >
-            <Terminal
-              className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary"
-              aria-hidden="true"
-            />
-            <span className="text-primary font-mono text-xs sm:text-sm">
-              ~/contact
-            </span>
-            <motion.span
-              animate={{ opacity: [1, 0, 1] }}
-              transition={{ duration: 1, repeat: Infinity }}
-              className="text-primary font-mono text-xs sm:text-sm"
-              aria-hidden="true"
-            >
-              _
-            </motion.span>
-          </div>
-
-          {/* Title */}
-          <h1
-            id="contact-heading"
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6"
-          >
-            <span className="bg-linear-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent">
-              Let&apos;s Build Together
-            </span>
-          </h1>
-
-          {/* Description */}
-          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground mb-6 sm:mb-8 leading-relaxed px-2">
-            Have a project in mind or want to discuss opportunities?{" "}
-            <span className="text-primary font-semibold">
-              I&apos;m all ears.
-            </span>{" "}
-            Whether it&apos;s a{" "}
-            <span className="text-primary font-semibold">
-              full-stack application
-            </span>
-            , or{" "}
-            <span className="text-primary font-semibold">API development</span>,
-            let&apos;s create something amazing.
-          </p>
+          <SectionHeader
+            terminalPath="~/contact"
+            title="Let's Build Together"
+            description={
+              <>
+                Have a project in mind or want to discuss opportunities?{" "}
+                <span className="text-primary font-semibold">
+                  I&apos;m all ears.
+                </span>{" "}
+                Whether it&apos;s a{" "}
+                <span className="text-primary font-semibold">
+                  full-stack application
+                </span>
+                , or{" "}
+                <span className="text-primary font-semibold">
+                  API development
+                </span>
+                , let&apos;s create something amazing.
+              </>
+            }
+            isInView={isHeroInView}
+            headingId="contact-heading"
+          />
 
           {/* Quick Stats */}
           <div

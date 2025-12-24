@@ -389,7 +389,7 @@ function calculateStreaksFromCalendar(weeks: GraphQLContributionWeek[]): {
 }
 
 // ============================================================================
-// Main Hook
+// Main Hook - Single Query Pattern
 // ============================================================================
 
 export function useGitHubGraphQL() {
@@ -402,171 +402,274 @@ export function useGitHubGraphQL() {
 }
 
 // ============================================================================
-// Derived Hooks (GraphQL-only - Extract specific data from main query)
+// Data Transformation Functions (Pure functions - no hooks)
 // ============================================================================
 
+function transformToUser(
+  data: GitHubGraphQLData | undefined
+): GitHubUser | null {
+  if (!data?.user) return null;
+
+  const user = data.user;
+  return {
+    login: user.login,
+    name: user.name,
+    avatarUrl: user.avatarUrl,
+    bio: user.bio,
+    company: user.company,
+    location: user.location,
+    websiteUrl: user.websiteUrl,
+    followers: user.followers.totalCount,
+    following: user.following.totalCount,
+    publicRepos: user.repositories.totalCount,
+  };
+}
+
+function transformToRepos(data: GitHubGraphQLData | undefined): GitHubRepo[] {
+  if (!data?.user?.repositories?.nodes) return [];
+
+  return data.user.repositories.nodes.map((repo) => ({
+    name: repo.name,
+    description: repo.description,
+    url: repo.url,
+    stargazerCount: repo.stargazerCount,
+    forkCount: repo.forkCount,
+    language: repo.primaryLanguage?.name || null,
+    languageColor: repo.primaryLanguage?.color || null,
+    updatedAt: repo.updatedAt,
+    topics: repo.repositoryTopics.nodes.map((t) => t.topic.name),
+  }));
+}
+
+function transformToStats(repos: GitHubRepo[]): GitHubStats | null {
+  if (!repos || repos.length === 0) return null;
+
+  const stats: GitHubStats = {
+    totalStars: 0,
+    totalForks: 0,
+    totalRepos: repos.length,
+    languages: {},
+  };
+
+  repos.forEach((repo) => {
+    stats.totalStars += repo.stargazerCount;
+    stats.totalForks += repo.forkCount;
+
+    if (repo.language) {
+      if (!stats.languages[repo.language]) {
+        stats.languages[repo.language] = {
+          count: 0,
+          color: repo.languageColor || "#666",
+        };
+      }
+      stats.languages[repo.language].count++;
+    }
+  });
+
+  return stats;
+}
+
+function getContributionLevel(count: number): number {
+  if (count === 0) return 0;
+  if (count < 3) return 1;
+  if (count < 6) return 2;
+  if (count < 10) return 3;
+  if (count < 15) return 4;
+  return 5;
+}
+
+function transformToContributions(
+  data: GitHubGraphQLData | undefined
+): GitHubContributions | null {
+  if (!data?.user) return null;
+
+  const calendar = data.user.contributionsCollection.contributionCalendar;
+  const streaks = calculateStreaksFromCalendar(calendar.weeks);
+
+  const weeks: ContributionWeek[] = calendar.weeks.map((week) => ({
+    days: week.contributionDays.map((day) => ({
+      date: day.date,
+      count: day.contributionCount,
+      level: getContributionLevel(day.contributionCount),
+    })),
+  }));
+
+  return {
+    totalContributions: calendar.totalContributions,
+    totalCommits: data.user.contributionsCollection.totalCommitContributions,
+    totalPRs: data.user.contributionsCollection.totalPullRequestContributions,
+    totalIssues: data.user.contributionsCollection.totalIssueContributions,
+    totalReviews:
+      data.user.contributionsCollection.totalPullRequestReviewContributions,
+    weeks,
+    currentStreak: streaks.currentStreak,
+    longestStreak: streaks.longestStreak,
+  };
+}
+
+function transformToContributedRepos(
+  data: GitHubGraphQLData | undefined
+): { totalCount: number; repositories: ContributedRepository[] } | null {
+  if (!data?.user?.repositoriesContributedTo?.nodes) return null;
+
+  return {
+    totalCount: data.user.repositoriesContributedTo.totalCount,
+    repositories: data.user.repositoriesContributedTo.nodes.map((repo) => ({
+      name: repo.name,
+      owner: repo.owner.login,
+      url: repo.url,
+      description: repo.description,
+      stargazerCount: repo.stargazerCount,
+      forkCount: repo.forkCount,
+      language: repo.primaryLanguage?.name || null,
+      languageColor: repo.primaryLanguage?.color || null,
+      updatedAt: repo.updatedAt,
+    })),
+  };
+}
+
+// ============================================================================
+// Derived Hooks - Using useMemo for efficient data transformation
+// ============================================================================
+
+import { useMemo } from "react";
+
+/**
+ * Hook to get GitHub user data
+ * Uses useMemo to derive data from the main query without creating nested queries
+ */
 export function useGitHubUser() {
-  const { data } = useGitHubGraphQL();
+  const query = useGitHubGraphQL();
 
-  return useQuery({
-    queryKey: ["github-user", data],
-    queryFn: () => {
-      if (!data?.user) return null;
+  const data = useMemo(() => transformToUser(query.data), [query.data]);
 
-      const user = data.user;
-      return {
-        login: user.login,
-        name: user.name,
-        avatarUrl: user.avatarUrl,
-        bio: user.bio,
-        company: user.company,
-        location: user.location,
-        websiteUrl: user.websiteUrl,
-        followers: user.followers.totalCount,
-        following: user.following.totalCount,
-        publicRepos: user.repositories.totalCount,
-      } as GitHubUser;
-    },
-    enabled: !!data,
-    staleTime: 1000 * 60 * 60,
-  });
+  return {
+    data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+    refetch: query.refetch,
+  };
 }
 
+/**
+ * Hook to get GitHub repositories
+ * Uses useMemo to derive data from the main query without creating nested queries
+ */
 export function useGitHubRepos() {
-  const { data } = useGitHubGraphQL();
+  const query = useGitHubGraphQL();
 
-  return useQuery({
-    queryKey: ["github-repos", data],
-    queryFn: () => {
-      if (!data?.user?.repositories?.nodes) return [];
+  const data = useMemo(() => transformToRepos(query.data), [query.data]);
 
-      return data.user.repositories.nodes.map((repo) => ({
-        name: repo.name,
-        description: repo.description,
-        url: repo.url,
-        stargazerCount: repo.stargazerCount,
-        forkCount: repo.forkCount,
-        language: repo.primaryLanguage?.name || null,
-        languageColor: repo.primaryLanguage?.color || null,
-        updatedAt: repo.updatedAt,
-        topics: repo.repositoryTopics.nodes.map((t) => t.topic.name),
-      })) as GitHubRepo[];
-    },
-    enabled: !!data,
-    staleTime: 1000 * 60 * 60,
-  });
+  return {
+    data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+    refetch: query.refetch,
+  };
 }
 
+/**
+ * Hook to get GitHub statistics
+ * Uses useMemo to derive data from repos without creating nested queries
+ */
 export function useGitHubStats() {
-  const { data: repos } = useGitHubRepos();
+  const query = useGitHubGraphQL();
 
-  return useQuery({
-    queryKey: ["github-stats", repos],
-    queryFn: () => {
-      if (!repos || repos.length === 0) return null;
+  const repos = useMemo(() => transformToRepos(query.data), [query.data]);
 
-      const stats: GitHubStats = {
-        totalStars: 0,
-        totalForks: 0,
-        totalRepos: repos.length,
-        languages: {},
-      };
+  const data = useMemo(() => transformToStats(repos), [repos]);
 
-      repos.forEach((repo) => {
-        stats.totalStars += repo.stargazerCount;
-        stats.totalForks += repo.forkCount;
-
-        if (repo.language) {
-          if (!stats.languages[repo.language]) {
-            stats.languages[repo.language] = {
-              count: 0,
-              color: repo.languageColor || "#666",
-            };
-          }
-          stats.languages[repo.language].count++;
-        }
-      });
-
-      return stats;
-    },
-    enabled: !!repos && repos.length > 0,
-    staleTime: 1000 * 60 * 60,
-  });
+  return {
+    data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+    refetch: query.refetch,
+  };
 }
 
+/**
+ * Hook to get GitHub contributions
+ * Uses useMemo to derive data from the main query without creating nested queries
+ */
 export function useGitHubContributions() {
-  const { data } = useGitHubGraphQL();
+  const query = useGitHubGraphQL();
 
-  return useQuery({
-    queryKey: ["github-contributions", data],
-    queryFn: () => {
-      if (!data?.user) return null;
+  const data = useMemo(
+    () => transformToContributions(query.data),
+    [query.data]
+  );
 
-      const calendar = data.user.contributionsCollection.contributionCalendar;
-      const streaks = calculateStreaksFromCalendar(calendar.weeks);
-
-      const weeks: ContributionWeek[] = calendar.weeks.map((week) => ({
-        days: week.contributionDays.map((day) => ({
-          date: day.date,
-          count: day.contributionCount,
-          level:
-            day.contributionCount === 0
-              ? 0
-              : day.contributionCount < 3
-              ? 1
-              : day.contributionCount < 6
-              ? 2
-              : day.contributionCount < 10
-              ? 3
-              : day.contributionCount < 15
-              ? 4
-              : 5,
-        })),
-      }));
-
-      return {
-        totalContributions: calendar.totalContributions,
-        totalCommits:
-          data.user.contributionsCollection.totalCommitContributions,
-        totalPRs:
-          data.user.contributionsCollection.totalPullRequestContributions,
-        totalIssues: data.user.contributionsCollection.totalIssueContributions,
-        totalReviews:
-          data.user.contributionsCollection.totalPullRequestReviewContributions,
-        weeks,
-        currentStreak: streaks.currentStreak,
-        longestStreak: streaks.longestStreak,
-      } as GitHubContributions;
-    },
-    enabled: !!data,
-    staleTime: 1000 * 60 * 60,
-  });
+  return {
+    data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+    refetch: query.refetch,
+  };
 }
 
+/**
+ * Hook to get contributed repositories
+ * Uses useMemo to derive data from the main query without creating nested queries
+ */
 export function useGitHubContributedRepos() {
-  const { data } = useGitHubGraphQL();
+  const query = useGitHubGraphQL();
 
-  return useQuery({
-    queryKey: ["github-contributed-repos", data],
-    queryFn: () => {
-      if (!data?.user?.repositoriesContributedTo?.nodes) return null;
+  const data = useMemo(
+    () => transformToContributedRepos(query.data),
+    [query.data]
+  );
 
-      return {
-        totalCount: data.user.repositoriesContributedTo.totalCount,
-        repositories: data.user.repositoriesContributedTo.nodes.map((repo) => ({
-          name: repo.name,
-          owner: repo.owner.login,
-          url: repo.url,
-          description: repo.description,
-          stargazerCount: repo.stargazerCount,
-          forkCount: repo.forkCount,
-          language: repo.primaryLanguage?.name || null,
-          languageColor: repo.primaryLanguage?.color || null,
-          updatedAt: repo.updatedAt,
-        })) as ContributedRepository[],
-      };
-    },
-    enabled: !!data,
-    staleTime: 1000 * 60 * 60,
-  });
+  return {
+    data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+    refetch: query.refetch,
+  };
+}
+
+// ============================================================================
+// Combined Hook - Get all GitHub data in one call
+// ============================================================================
+
+export interface GitHubData {
+  user: GitHubUser | null;
+  repos: GitHubRepo[];
+  stats: GitHubStats | null;
+  contributions: GitHubContributions | null;
+  contributedRepos: {
+    totalCount: number;
+    repositories: ContributedRepository[];
+  } | null;
+}
+
+/**
+ * Combined hook to get all GitHub data at once
+ * More efficient than calling individual hooks when you need multiple data types
+ */
+export function useGitHubData() {
+  const query = useGitHubGraphQL();
+
+  const data = useMemo<GitHubData>(() => {
+    const repos = transformToRepos(query.data);
+    return {
+      user: transformToUser(query.data),
+      repos,
+      stats: transformToStats(repos),
+      contributions: transformToContributions(query.data),
+      contributedRepos: transformToContributedRepos(query.data),
+    };
+  }, [query.data]);
+
+  return {
+    data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+    refetch: query.refetch,
+  };
 }
