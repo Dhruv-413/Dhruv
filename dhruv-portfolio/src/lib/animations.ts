@@ -1,6 +1,7 @@
 /**
  * Reusable Animation Variants for Framer Motion
  * DRY principle: Define once, use everywhere
+ * Optimized with additional common patterns
  */
 
 import { Variants } from "framer-motion";
@@ -32,6 +33,12 @@ export const fadeInRight: Variants = {
 // Scale fade in
 export const scaleIn: Variants = {
   hidden: { opacity: 0, scale: 0.8 },
+  visible: { opacity: 1, scale: 1 },
+};
+
+// Scale fade in (subtle)
+export const scaleInSubtle: Variants = {
+  hidden: { opacity: 0, scale: 0.95 },
   visible: { opacity: 1, scale: 1 },
 };
 
@@ -125,3 +132,42 @@ export const rotateOnHover = {
     transition: { duration: 0.6, ease: "easeInOut" },
   },
 };
+
+// ============================================================================
+// Utility Functions for Dynamic Animations
+// ============================================================================
+
+/**
+ * Create a stagger delay based on index
+ */
+export function getStaggerDelay(index: number, baseDelay: number = 0.1): number {
+  return baseDelay + index * 0.05;
+}
+
+/**
+ * Create transition config with custom duration and delay
+ */
+export function createTransition(duration: number = 0.3, delay: number = 0) {
+  return {
+    duration,
+    delay,
+    ease: "easeOut",
+  };
+}
+
+/**
+ * Hover effect with lift and scale
+ */
+export const hoverLift = {
+  y: -4,
+  scale: 1.02,
+  transition: { duration: 0.2 },
+};
+
+/**
+ * Tap effect for buttons
+ */
+export const tapScale = {
+  scale: 0.95,
+};
+

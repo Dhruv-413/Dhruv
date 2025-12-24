@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo, useCallback } from "react";
 import { motion, useInView } from "framer-motion";
 import dynamic from "next/dynamic";
 import {
@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { ProjectCard } from "./ProjectCard";
 import { Button } from "@/components/ui/button";
+import { StatCard } from "@/components/ui/StatCard";
+import { FilterButtons } from "@/components/ui/FilterButtons";
 import { Project } from "@/types/project";
 import projectsData from "@/data/projects.json";
 import Link from "next/link";
@@ -32,7 +34,6 @@ export function ProjectsSection() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>("All");
-  const [activeStatIndex, setActiveStatIndex] = useState<number | null>(null);
 
   // Refs for scroll animations
   const heroRef = useRef(null);
@@ -44,59 +45,77 @@ export function ProjectsSection() {
     margin: "-100px",
   });
 
-  const projects = (projectsData as Project[]).sort((a, b) => {
-    // Featured projects first
-    if (a.featured && !b.featured) return -1;
-    if (!a.featured && b.featured) return 1;
-    // Then by date
-    return new Date(b.date).getTime() - new Date(a.date).getTime();
-  });
+  // Memoize sorted projects - expensive operation
+  const projects = useMemo(() => {
+    return (projectsData as Project[]).sort((a, b) => {
+      // Featured projects first
+      if (a.featured && !b.featured) return -1;
+      if (!a.featured && b.featured) return 1;
+      // Then by date
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    });
+  }, []);
 
-  // Get popular technologies for filter buttons (top 6)
-  const technologyCounts = projects
-    .flatMap((p) => p.technologies)
-    .reduce((acc, tech) => {
-      acc[tech] = (acc[tech] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+  // Memoize filter options calculation
+  const filterOptions = useMemo(() => {
+    const technologyCounts = projects
+      .flatMap((p) => p.technologies)
+      .reduce((acc, tech) => {
+        acc[tech] = (acc[tech] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
 
-  const popularTechnologies = Object.entries(technologyCounts)
-    .sort(([, a], [, b]) => b - a)
-    .slice(0, 6)
-    .map(([tech]) => tech);
+    const popularTechnologies = Object.entries(technologyCounts)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 6)
+      .map(([tech]) => tech);
 
-  const filterOptions = ["All", ...popularTechnologies];
+    return ["All", ...popularTechnologies];
+  }, [projects]);
 
-  // Filter projects based on active filter
-  const filteredProjects =
-    activeFilter === "All"
+  // Memoize filtered projects
+  const filteredProjects = useMemo(() => {
+    return activeFilter === "All"
       ? projects
       : projects.filter((p) => p.technologies.includes(activeFilter));
+  }, [projects, activeFilter]);
 
-  const filteredFeatured = filteredProjects.filter((p) => p.featured);
-  const filteredOther = filteredProjects.filter((p) => !p.featured);
+  const filteredFeatured = useMemo(
+    () => filteredProjects.filter((p) => p.featured),
+    [filteredProjects]
+  );
+  
+  const filteredOther = useMemo(
+    () => filteredProjects.filter((p) => !p.featured),
+    [filteredProjects]
+  );
 
-  // Calculate stats
-  const totalProjects = projects.length;
-  const featuredProjects = projects.filter((p) => p.featured);
-  const uniqueTechnologies = new Set(projects.flatMap((p) => p.technologies))
-    .size;
+  // Memoize stats calculation
+  const stats = useMemo(() => {
+    return {
+      totalProjects: projects.length,
+      featuredCount: projects.filter((p) => p.featured).length,
+      uniqueTechnologies: new Set(projects.flatMap((p) => p.technologies))
+        .size,
+    };
+  }, [projects]);
 
-  const handleProjectClick = (project: Project) => {
+  // Memoize callbacks
+  const handleProjectClick = useCallback((project: Project) => {
     setSelectedProject(project);
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (!selectedProject) return;
     const currentIndex = filteredProjects.findIndex(
       (p) => p.id === selectedProject.id
     );
     const nextIndex = (currentIndex + 1) % filteredProjects.length;
     setSelectedProject(filteredProjects[nextIndex]);
-  };
+  }, [selectedProject, filteredProjects]);
 
-  const handlePrevious = () => {
+  const handlePrevious = useCallback(() => {
     if (!selectedProject) return;
     const currentIndex = filteredProjects.findIndex(
       (p) => p.id === selectedProject.id
@@ -104,7 +123,44 @@ export function ProjectsSection() {
     const previousIndex =
       (currentIndex - 1 + filteredProjects.length) % filteredProjects.length;
     setSelectedProject(filteredProjects[previousIndex]);
-  };
+  }, [selectedProject, filteredProjects]);
+
+  const getFilterCount = useCallback(
+    (filter: string) => {
+      if (filter === "All") return projects.length;
+      return projects.filter((p) => p.technologies.includes(filter)).length;
+    },
+    [projects]
+  );
+
+  // Memoize stat cards data
+  const statCardsData = useMemo(() => [
+    {
+      icon: Folder,
+      value: stats.totalProjects,
+      label: "Projects",
+      color: "#3b82f6",
+    },
+    {
+      icon: Code2,
+      value: `${stats.uniqueTechnologies}+`,
+      label: "Technologies",
+      color: "#8b5cf6",
+    },
+    {
+      icon: Star,
+      value: stats.featuredCount,
+      label: "Featured",
+      color: "#f59e0b",
+      fill: true,
+    },
+    {
+      icon: Sparkles,
+      value: "100%",
+      label: "Production",
+      color: "#10b981",
+    },
+  ], [stats]);
 
   return (
     <>
@@ -148,7 +204,7 @@ export function ProjectsSection() {
             <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground mb-6 sm:mb-8 leading-relaxed px-2">
               A curated collection of{" "}
               <span className="text-primary font-semibold">
-                {totalProjects} production-ready projects
+                {stats.totalProjects} production-ready projects
               </span>{" "}
               spanning{" "}
               <span className="text-primary font-semibold">
@@ -166,121 +222,21 @@ export function ProjectsSection() {
               practices, and measurable real-world impact.
             </p>
 
-            {/* Quick Stats - Unified Elegant Design */}
+            {/* Quick Stats - Using StatCard Component */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8 max-w-3xl mx-auto">
-              {[
-                {
-                  icon: Folder,
-                  value: totalProjects,
-                  label: "Projects",
-                  color: "#3b82f6",
-                },
-                {
-                  icon: Code2,
-                  value: `${uniqueTechnologies}+`,
-                  label: "Technologies",
-                  color: "#8b5cf6",
-                },
-                {
-                  icon: Star,
-                  value: featuredProjects.length,
-                  label: "Featured",
-                  color: "#f59e0b",
-                  fill: true,
-                },
-                {
-                  icon: Sparkles,
-                  value: "100%",
-                  label: "Production",
-                  color: "#10b981",
-                },
-              ].map((stat, index) => {
-                const Icon = stat.icon;
-                const isActive = activeStatIndex === index;
-                return (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ delay: 0.3 + index * 0.1 }}
-                    whileHover={{ scale: 1.05, y: -5 }}
-                    onMouseEnter={() => setActiveStatIndex(index)}
-                    onMouseLeave={() => setActiveStatIndex(null)}
-                    className="group relative"
-                  >
-                    <div
-                      className={`relative p-3 sm:p-4 bg-card/50 backdrop-blur-sm rounded-xl border overflow-hidden transition-all duration-300 ${
-                        isActive
-                          ? "border-primary shadow-2xl shadow-white/15"
-                          : "border-border/50 hover:border-primary/30"
-                      }`}
-                    >
-                      {/* Animated Gradient Background */}
-                      <div
-                        className={`absolute inset-0 rounded-xl transition-opacity duration-500 ${
-                          isActive
-                            ? "opacity-15"
-                            : "opacity-0 group-hover:opacity-10"
-                        }`}
-                        style={{
-                          background: `linear-gradient(135deg, ${stat.color}40 0%, transparent 60%)`,
-                        }}
-                      />
-
-                      {/* Scan Line Effect */}
-                      {isActive && (
-                        <motion.div
-                          className="absolute inset-x-0 h-px"
-                          style={{ backgroundColor: `${stat.color}60` }}
-                          initial={{ top: 0 }}
-                          animate={{ top: "100%" }}
-                          transition={{
-                            duration: 2,
-                            repeat: Infinity,
-                            ease: "linear",
-                          }}
-                        />
-                      )}
-
-                      <div className="relative flex flex-col items-center gap-1.5 sm:gap-2">
-                        <motion.div
-                          className="p-2 sm:p-2.5 rounded-lg transition-colors"
-                          style={{ backgroundColor: `${stat.color}20` }}
-                          whileHover={{ rotate: 360 }}
-                          transition={{ duration: 0.6 }}
-                        >
-                          <Icon
-                            className={`h-5 w-5 sm:h-6 sm:w-6 ${
-                              stat.fill ? "fill-current" : ""
-                            }`}
-                            style={{ color: stat.color }}
-                          />
-                        </motion.div>
-                        <div className="text-center">
-                          <div className="text-xl sm:text-2xl font-bold font-mono">
-                            {stat.value}
-                          </div>
-                          <div className="text-[10px] sm:text-xs text-muted-foreground">
-                            {stat.label}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Top-Right Corner Accent */}
-                    <div
-                      className={`absolute -top-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 rounded-full blur-xl transition-opacity duration-300 ${
-                        isActive
-                          ? "opacity-60"
-                          : "opacity-0 group-hover:opacity-40"
-                      }`}
-                      style={{ backgroundColor: stat.color }}
-                    />
-                  </motion.div>
-                );
-              })}
+              {statCardsData.map((stat, index) => (
+                <StatCard
+                  key={index}
+                  icon={stat.icon}
+                  value={stat.value}
+                  label={stat.label}
+                  color={stat.color}
+                  fill={stat.fill}
+                  index={index}
+                  animated={isHeroInView}
+                />
+              ))}
             </div>
-
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center px-2">
               <Button
@@ -345,50 +301,16 @@ export function ProjectsSection() {
         ref={galleryRef}
       >
         <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
-          {/* Technology Filters */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isGalleryInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5 }}
-            className="mb-6 sm:mb-8"
-          >
-            <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
-              <Code2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
-              <span className="text-xs sm:text-sm font-mono text-muted-foreground">
-                Filter by Technology:
-              </span>
-            </div>
-            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 pb-2">
-              {filterOptions.map((filter, index) => (
-                <motion.button
-                  key={filter}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={isGalleryInView ? { opacity: 1, scale: 1 } : {}}
-                  transition={{ delay: 0.1 + index * 0.05 }}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setActiveFilter(filter)}
-                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-mono text-xs sm:text-sm transition-all border touch-manipulation active:scale-95 whitespace-nowrap shrink-0 ${
-                    activeFilter === filter
-                      ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/30"
-                      : "bg-card/50 text-muted-foreground border-border/50 hover:border-primary/30 hover:bg-primary/5 hover:text-primary"
-                  }`}
-                >
-                  {filter}
-                  {filter !== "All" && (
-                    <span className="ml-1.5 sm:ml-2 text-[10px] sm:text-xs opacity-70">
-                      (
-                      {
-                        projects.filter((p) => p.technologies.includes(filter))
-                          .length
-                      }
-                      )
-                    </span>
-                  )}
-                </motion.button>
-              ))}
-            </div>
-          </motion.div>
+          {/* Technology Filters - Using FilterButtons Component */}
+          <FilterButtons
+            filters={filterOptions}
+            activeFilter={activeFilter}
+            onFilterChange={setActiveFilter}
+            icon={Code2}
+            label="Filter by Technology:"
+            getCounts={getFilterCount}
+            animated={isGalleryInView}
+          />
 
           {/* Featured Projects Section */}
           {filteredFeatured.length > 0 && (
