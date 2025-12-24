@@ -27,6 +27,11 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { CodeSnippetWindow } from "@/components/ui/CodeSnippetWindow";
+import {
+  HighlightCard,
+  HighlightCardGrid,
+} from "@/components/ui/HighlightCard";
 import { SITE_CONFIG } from "@/lib/constants";
 import { useState, useEffect, useRef } from "react";
 import { useGitHubUser, useGitHubStats } from "@/hooks/useGitHub";
@@ -444,50 +449,16 @@ export function Hero() {
               </motion.div>
 
               {/* Code Snippet Card */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.9 }}
-                className="w-full max-w-md"
-              >
-                <div className="relative bg-card/50 backdrop-blur-xl border border-border/50 rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl hover:shadow-primary/10 transition-all">
-                  {/* Terminal Header */}
-                  <div className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 bg-muted/50 border-b border-border/50">
-                    <div className="flex gap-1.5 sm:gap-2">
-                      <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-500/80" />
-                      <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-yellow-500/80" />
-                      <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-500/80" />
-                    </div>
-                    <span className="text-[10px] sm:text-xs font-mono text-muted-foreground ml-2">
-                      developer.ts
-                    </span>
-                  </div>
-
-                  {/* Code Content */}
-                  <div className="relative">
-                    <pre className="p-4 sm:p-6 text-xs sm:text-sm font-mono leading-relaxed overflow-x-auto max-h-[300px] sm:max-h-[350px] custom-scrollbar">
-                      <code className="text-muted-foreground">
-                        {codeSnippet}
-                      </code>
-                    </pre>
-
-                    {/* Fade effect at bottom */}
-                    <div className="absolute bottom-0 left-0 right-0 h-12 sm:h-16 bg-linear-to-t from-card/90 to-transparent pointer-events-none" />
-                  </div>
-
-                  {/* Status Bar */}
-                  <div className="flex items-center justify-between px-3 sm:px-4 py-1.5 sm:py-2 bg-muted/30 border-t border-border/50 text-[10px] sm:text-xs font-mono">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                      <span className="text-muted-foreground">Ready</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span className="text-muted-foreground">TypeScript</span>
-                      <span className="text-muted-foreground">UTF-8</span>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+              <div className="w-full max-w-md">
+                <CodeSnippetWindow
+                  code={codeSnippet}
+                  filename="developer.ts"
+                  language="TypeScript"
+                  animationDelay={0.9}
+                  maxHeight="350px"
+                  className="order-0"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -536,15 +507,24 @@ export function Hero() {
                 onMouseLeave={() => setActiveStatIndex(null)}
                 className="group relative"
               >
-                <div className={`relative p-3 sm:p-4 md:p-5 text-center bg-card/50 backdrop-blur-sm rounded-xl border overflow-hidden transition-all duration-300 h-full ${
-                  isActive
-                    ? "border-primary shadow-2xl shadow-white/15"
-                    : "border-border/50 hover:border-primary/30"
-                }`}>
+                <div
+                  className={`relative p-3 sm:p-4 md:p-5 text-center bg-card/50 backdrop-blur-sm rounded-xl border overflow-hidden transition-all duration-300 h-full ${
+                    isActive
+                      ? "border-primary shadow-2xl shadow-white/15"
+                      : "border-border/50 hover:border-primary/30"
+                  }`}
+                >
                   {/* Animated Gradient Background */}
-                  <div className={`absolute inset-0 rounded-xl transition-opacity duration-500 ${
-                    isActive ? "opacity-15" : "opacity-0 group-hover:opacity-10"
-                  }`} style={{ background: `linear-gradient(135deg, ${statColor}40 0%, transparent 60%)` }} />
+                  <div
+                    className={`absolute inset-0 rounded-xl transition-opacity duration-500 ${
+                      isActive
+                        ? "opacity-15"
+                        : "opacity-0 group-hover:opacity-10"
+                    }`}
+                    style={{
+                      background: `linear-gradient(135deg, ${statColor}40 0%, transparent 60%)`,
+                    }}
+                  />
 
                   {/* Scan Line Effect */}
                   {isActive && (
@@ -553,7 +533,11 @@ export function Hero() {
                       style={{ backgroundColor: `${statColor}60` }}
                       initial={{ top: 0 }}
                       animate={{ top: "100%" }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
                     />
                   )}
 
@@ -564,7 +548,10 @@ export function Hero() {
                       whileHover={{ rotate: 360 }}
                       transition={{ duration: 0.6 }}
                     >
-                      <Icon className="h-5 w-5 sm:h-6 sm:w-6" style={{ color: statColor }} />
+                      <Icon
+                        className="h-5 w-5 sm:h-6 sm:w-6"
+                        style={{ color: statColor }}
+                      />
                     </motion.div>
                     <div className="text-xl sm:text-2xl md:text-3xl font-bold font-mono">
                       {stat.value}
@@ -605,45 +592,14 @@ export function Hero() {
               </div>
             </div>
 
-            <div className="relative bg-card/50 backdrop-blur-xl border border-border/50 rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl hover:shadow-primary/10 transition-all">
-              {/* Terminal Header */}
-              <div className="flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 bg-muted/50 border-b border-border/50">
-                <div className="flex gap-1.5 sm:gap-2">
-                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-500/80" />
-                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-yellow-500/80" />
-                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-500/80" />
-                </div>
-                <span className="text-[10px] sm:text-xs font-mono text-muted-foreground ml-2">
-                  developer.ts
-                </span>
-              </div>
-
-              {/* Code Content */}
-              <div className="relative">
-                <pre className="px-5 py-5 sm:px-6 sm:py-6 text-xs sm:text-sm font-mono leading-relaxed overflow-x-auto max-h-[400px] sm:max-h-[500px] custom-scrollbar">
-                  <code className="text-muted-foreground">
-                    {detailedCodeSnippet}
-                  </code>
-                </pre>
-
-                {/* Fade effect at bottom */}
-                <div className="absolute bottom-0 left-0 right-0 h-16 sm:h-20 bg-linear-to-t from-card/90 to-transparent pointer-events-none" />
-              </div>
-
-              {/* Status Bar */}
-              <div className="flex items-center justify-between px-4 sm:px-5 py-2 sm:py-2.5 bg-muted/30 border-t border-border/50 text-[10px] sm:text-xs font-mono">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                  <span className="text-muted-foreground">Ready</span>
-                </div>
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <span className="text-muted-foreground">TypeScript</span>
-                  <span className="hidden sm:inline text-muted-foreground">
-                    UTF-8
-                  </span>
-                </div>
-              </div>
-            </div>
+            <CodeSnippetWindow
+              code={detailedCodeSnippet}
+              filename="developer.ts"
+              language="TypeScript"
+              animationDelay={0}
+              maxHeight="500px"
+              className="order-0"
+            />
           </motion.div>
 
           {/* Highlights - Right Side */}
@@ -651,7 +607,7 @@ export function Hero() {
             initial={{ opacity: 0, x: 20 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.6 }}
-            className="space-y-3 sm:space-y-4 px-2 sm:px-0"
+            className="px-2 sm:px-0"
           >
             <div className="mb-4 sm:mb-5">
               <h3 className="text-lg sm:text-xl font-bold flex items-center gap-2 font-mono">
@@ -660,63 +616,33 @@ export function Hero() {
               </h3>
             </div>
 
-            {highlights.map((highlight, index) => {
-              const Icon = highlight.icon;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ delay: 0.7 + index * 0.1 }}
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  className="group relative"
-                >
-                  <div className="relative p-4 sm:p-5 bg-card/50 backdrop-blur-sm rounded-lg sm:rounded-xl border border-border hover:border-primary/50 hover:shadow-xl hover:shadow-white/10 transition-all duration-300 overflow-hidden">
-                    {/* Animated Gradient Background */}
-                    <div
-                      className="absolute inset-0 rounded-lg sm:rounded-xl transition-opacity duration-500 opacity-0 group-hover:opacity-10"
-                      style={{ background: `linear-gradient(135deg, ${highlight.color.includes('blue') ? '#3b82f6' : highlight.color.includes('purple') ? '#a855f7' : highlight.color.includes('orange') ? '#f97316' : highlight.color.includes('indigo') ? '#6366f1' : '#10b981'}40, transparent)` }}
-                    />
+            <HighlightCardGrid>
+              {highlights.map((highlight, index) => {
+                const highlightColors: Record<string, string> = {
+                  blue: "#3b82f6",
+                  purple: "#a855f7",
+                  orange: "#f97316",
+                  indigo: "#6366f1",
+                  green: "#10b981",
+                };
+                const colorKey =
+                  Object.keys(highlightColors).find((key) =>
+                    highlight.color.includes(key)
+                  ) || "blue";
 
-                    {/* Subtle scan line on hover */}
-                    <motion.div
-                      className="absolute inset-x-0 h-px bg-primary/30 opacity-0 group-hover:opacity-100"
-                      initial={{ top: 0 }}
-                      animate={{ top: "100%" }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "linear",
-                      }}
-                    />
-
-                    <div className="relative flex items-start gap-3 sm:gap-4">
-                      <motion.div
-                        className="p-2 sm:p-2.5 rounded-lg bg-primary/10 shrink-0"
-                        whileHover={{ rotate: 360 }}
-                        transition={{ duration: 0.6 }}
-                      >
-                        <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-                      </motion.div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-sm sm:text-base mb-1 group-hover:text-primary transition-colors">
-                          {highlight.title}
-                        </h4>
-                        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                          {highlight.description}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Top-Right Corner Accent */}
-                  <div
-                    className="absolute -top-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"
-                    style={{ backgroundColor: highlight.color.includes('blue') ? '#3b82f6' : highlight.color.includes('purple') ? '#a855f7' : highlight.color.includes('orange') ? '#f97316' : highlight.color.includes('indigo') ? '#6366f1' : '#10b981' }}
+                return (
+                  <HighlightCard
+                    key={index}
+                    icon={highlight.icon}
+                    title={highlight.title}
+                    description={highlight.description}
+                    color={highlightColors[colorKey]}
+                    isInView={isInView}
+                    animationDelay={0.7 + index * 0.1}
                   />
-                </motion.div>
-              );
-            })}
+                );
+              })}
+            </HighlightCardGrid>
           </motion.div>
         </div>
 
@@ -743,7 +669,12 @@ export function Hero() {
               const isActive = activeValueIndex === index;
               const valueColors = ["#3b82f6", "#8b5cf6", "#f59e0b", "#10b981"];
               const valueColor = valueColors[index] || "#3b82f6";
-              const footerTexts = ["results_driven", "innovative_thinker", "always_learning", "collaborative_spirit"];
+              const footerTexts = [
+                "results_driven",
+                "innovative_thinker",
+                "always_learning",
+                "collaborative_spirit",
+              ];
               return (
                 <motion.div
                   key={index}
@@ -759,15 +690,24 @@ export function Hero() {
                   onMouseLeave={() => setActiveValueIndex(null)}
                   className="group relative"
                 >
-                  <div className={`relative p-4 sm:p-5 md:p-6 text-center h-full bg-card/50 backdrop-blur-sm rounded-xl border overflow-hidden transition-all duration-300 flex flex-col ${
-                    isActive
-                      ? "border-primary shadow-2xl shadow-white/15"
-                      : "border-border/50 hover:border-primary/30"
-                  }`}>
+                  <div
+                    className={`relative p-4 sm:p-5 md:p-6 text-center h-full bg-card/50 backdrop-blur-sm rounded-xl border overflow-hidden transition-all duration-300 flex flex-col ${
+                      isActive
+                        ? "border-primary shadow-2xl shadow-white/15"
+                        : "border-border/50 hover:border-primary/30"
+                    }`}
+                  >
                     {/* Animated Gradient Background */}
-                    <div className={`absolute inset-0 rounded-xl transition-opacity duration-500 ${
-                      isActive ? "opacity-15" : "opacity-0 group-hover:opacity-10"
-                    }`} style={{ background: `linear-gradient(135deg, ${valueColor}40 0%, transparent 60%)` }} />
+                    <div
+                      className={`absolute inset-0 rounded-xl transition-opacity duration-500 ${
+                        isActive
+                          ? "opacity-15"
+                          : "opacity-0 group-hover:opacity-10"
+                      }`}
+                      style={{
+                        background: `linear-gradient(135deg, ${valueColor}40 0%, transparent 60%)`,
+                      }}
+                    />
 
                     {/* Scan Line Effect */}
                     {isActive && (
@@ -776,7 +716,11 @@ export function Hero() {
                         style={{ backgroundColor: `${valueColor}60` }}
                         initial={{ top: 0 }}
                         animate={{ top: "100%" }}
-                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
                       />
                     )}
 
@@ -788,7 +732,10 @@ export function Hero() {
                           whileHover={{ rotate: 360 }}
                           transition={{ duration: 0.6 }}
                         >
-                          <Icon className="h-6 w-6 sm:h-7 sm:w-7" style={{ color: valueColor }} />
+                          <Icon
+                            className="h-6 w-6 sm:h-7 sm:w-7"
+                            style={{ color: valueColor }}
+                          />
                         </motion.div>
                       </div>
                       <h4 className="font-bold mb-2 text-base sm:text-lg transition-colors">
@@ -809,7 +756,9 @@ export function Hero() {
                   {/* Top-Right Corner Accent */}
                   <div
                     className={`absolute -top-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 rounded-full blur-xl transition-opacity duration-300 ${
-                      isActive ? "opacity-60" : "opacity-0 group-hover:opacity-40"
+                      isActive
+                        ? "opacity-60"
+                        : "opacity-0 group-hover:opacity-40"
                     }`}
                     style={{ backgroundColor: valueColor }}
                   />
