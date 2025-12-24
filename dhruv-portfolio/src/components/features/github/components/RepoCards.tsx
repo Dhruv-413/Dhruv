@@ -50,8 +50,10 @@ export function RepositoryCard({
   isInView,
 }: RepositoryCardProps) {
   const repoColor = getColorFromString(repo.name);
-  const isLive =
-    repo.topics?.includes("deployed") || repo.topics?.includes("live");
+  // Use homepageUrl to determine if repo has a live site
+  const hasLiveUrl = Boolean(
+    repo.homepageUrl && repo.homepageUrl.trim() !== ""
+  );
 
   return (
     <motion.article
@@ -97,7 +99,7 @@ export function RepositoryCard({
         )}
 
         {/* Deployment Badge */}
-        {isLive && (
+        {hasLiveUrl && (
           <div className="absolute top-0 right-0 bg-linear-to-r from-green-500 to-emerald-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-bl-xl flex items-center gap-1.5 shadow-lg z-10">
             <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
             LIVE
@@ -198,7 +200,7 @@ export function RepositoryCard({
         <RepoButtons
           repoUrl={repo.url}
           repoName={repo.name}
-          isLive={isLive}
+          homepageUrl={repo.homepageUrl}
           isActive={isActive}
         />
 
@@ -400,23 +402,25 @@ function RepoStats({
 interface RepoButtonsProps {
   repoUrl: string;
   repoName: string;
-  isLive: boolean;
+  homepageUrl: string | null;
   isActive: boolean;
 }
 
 function RepoButtons({
   repoUrl,
   repoName,
-  isLive,
+  homepageUrl,
   isActive,
 }: RepoButtonsProps) {
+  const hasLiveUrl = Boolean(homepageUrl && homepageUrl.trim() !== "");
+
   return (
     <div className="relative flex gap-2 mb-3">
       <a
         href={repoUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex-1"
+        className={hasLiveUrl ? "flex-1" : "w-full"}
         aria-label={`View ${repoName} source code on GitHub`}
       >
         <Button
@@ -427,46 +431,27 @@ function RepoButtons({
           }`}
         >
           <Github className="h-3.5 w-3.5 mr-1.5" aria-hidden="true" />
-          View Code
+          Code
         </Button>
       </a>
-      {isLive ? (
+      {hasLiveUrl && (
         <a
-          href={repoUrl}
+          href={homepageUrl!}
           target="_blank"
           rel="noopener noreferrer"
           className="flex-1"
-          aria-label={`Open ${repoName} live demo`}
+          aria-label={`Open ${repoName} live site`}
         >
           <Button
             size="sm"
             className="w-full text-xs group/btn shadow-lg bg-primary hover:bg-primary/90 shadow-primary/20"
           >
             <ExternalLink className="h-3.5 w-3.5 mr-1.5" aria-hidden="true" />
-            Live Demo
+            Live
             <Rocket
               className="h-3 w-3 ml-1 opacity-0 group-hover/btn:opacity-100 transition-opacity"
               aria-hidden="true"
             />
-          </Button>
-        </a>
-      ) : (
-        <a
-          href={repoUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex-1"
-          aria-label={`View ${repoName} details`}
-        >
-          <Button
-            size="sm"
-            variant="outline"
-            className={`w-full text-xs transition-all ${
-              isActive ? "border-primary/30" : ""
-            }`}
-          >
-            <ExternalLink className="h-3.5 w-3.5 mr-1.5" aria-hidden="true" />
-            Details
           </Button>
         </a>
       )}
