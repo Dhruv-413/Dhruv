@@ -30,6 +30,7 @@ interface GraphQLRepository {
   name: string;
   description: string | null;
   url: string;
+  homepageUrl: string | null;
   stargazerCount: number;
   forkCount: number;
   primaryLanguage: GraphQLLanguage | null;
@@ -130,6 +131,7 @@ export interface GitHubRepo {
   name: string;
   description: string | null;
   url: string;
+  homepageUrl: string | null;
   stargazerCount: number;
   forkCount: number;
   language: string | null;
@@ -214,6 +216,7 @@ async function fetchGitHubGraphQLData(): Promise<GitHubGraphQLData> {
             name
             description
             url
+            homepageUrl
             stargazerCount
             forkCount
             primaryLanguage {
@@ -432,6 +435,7 @@ function transformToRepos(data: GitHubGraphQLData | undefined): GitHubRepo[] {
     name: repo.name,
     description: repo.description,
     url: repo.url,
+    homepageUrl: repo.homepageUrl || null,
     stargazerCount: repo.stargazerCount,
     forkCount: repo.forkCount,
     language: repo.primaryLanguage?.name || null,
