@@ -13,7 +13,6 @@ export const SITE_CONFIG = {
   },
   contact: {
     email: "dhruvgupta6580@gmail.com",
-    phone: "+91-9650791766",
     location: "Ghaziabad, Uttar Pradesh, India",
   },
 } as const;
