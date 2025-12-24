@@ -20,6 +20,7 @@ import { Project } from "@/types/project";
 import { Button } from "@/components/ui/button";
 import TechIcon from "@/components/ui/TechIcon";
 import { useState } from "react";
+import { CATEGORY_COLORS } from "@/lib/constants";
 
 interface ProjectCardProps {
   project: Project;
@@ -30,15 +31,9 @@ interface ProjectCardProps {
 export function ProjectCard({ project, onClick, index = 0 }: ProjectCardProps) {
   const [isActive, setIsActive] = useState(false);
 
-  const categoryColors: Record<string, { color: string; bg: string }> = {
-    "AI/ML": { color: "#a855f7", bg: "#a855f720" },
-    "Full-Stack": { color: "#3b82f6", bg: "#3b82f620" },
-    "Computer Vision": { color: "#10b981", bg: "#10b98120" },
-    Enterprise: { color: "#f59e0b", bg: "#f59e0b20" },
-  };
-
   const colors =
-    categoryColors[project.category] || categoryColors["Full-Stack"];
+    CATEGORY_COLORS[project.category as keyof typeof CATEGORY_COLORS] ||
+    CATEGORY_COLORS["Full-Stack"];
 
   return (
     <motion.div

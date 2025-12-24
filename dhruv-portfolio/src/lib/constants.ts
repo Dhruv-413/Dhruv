@@ -32,3 +32,16 @@ export const ANIMATION_DURATION = {
   normal: 0.3,
   slow: 0.5,
 } as const;
+
+/**
+ * Category colors for projects and skills
+ * Provides consistent color scheme across the application
+ */
+export const CATEGORY_COLORS = {
+  "AI/ML": { color: "#a855f7", bg: "#a855f720" },
+  "Full-Stack": { color: "#3b82f6", bg: "#3b82f620" },
+  "Computer Vision": { color: "#10b981", bg: "#10b98120" },
+  Enterprise: { color: "#f59e0b", bg: "#f59e0b20" },
+} as const;
+
+export type CategoryType = keyof typeof CATEGORY_COLORS;
