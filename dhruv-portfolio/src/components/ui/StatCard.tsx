@@ -45,7 +45,7 @@ export function StatCard({
         {/* Animated Gradient Background */}
         <div
           className={`absolute inset-0 rounded-xl transition-opacity duration-500 ${
-            isActive ? "opacity-15" : "opacity-0 group-hover:opacity-10"
+            isActive ? "opacity-[0.15]" : "opacity-0 group-hover:opacity-10"
           }`}
           style={{
             background: `linear-gradient(135deg, ${color}40 0%, transparent 60%)`,

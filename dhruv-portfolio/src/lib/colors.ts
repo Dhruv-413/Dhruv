@@ -29,5 +29,7 @@ export function getColorFromString(str: string): string {
  * Create gradient string for backgrounds
  */
 export function createGradient(color: string, opacity: number = 40): string {
-  return `linear-gradient(135deg, ${color}${opacity} 0%, transparent 60%)`;
+  // Convert opacity percentage to hex (0-100 to 00-FF)
+  const alphaHex = Math.round((opacity / 100) * 255).toString(16).padStart(2, '0');
+  return `linear-gradient(135deg, ${color}${alphaHex} 0%, transparent 60%)`;
 }

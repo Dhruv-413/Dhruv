@@ -316,27 +316,29 @@ function calculateStreaksFromCalendar(weeks: GraphQLContributionWeek[]): {
   currentStreak: number;
   longestStreak: number;
 } {
-  // Flatten all days and sort by date descending
-  const allDays = weeks
-    .flatMap((week) => week.contributionDays)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  // Flatten all days once
+  const allDays = weeks.flatMap((week) => week.contributionDays);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  // Calculate current streak
+  // Calculate current streak (most recent days first)
   let currentStreak = 0;
   let checkDate = new Date(today);
 
-  for (const day of allDays) {
-    const dayDate = new Date(day.date);
-    dayDate.setHours(0, 0, 0, 0);
+  // Sort once for current streak calculation (descending)
+  const sortedDesc = allDays
+    .map(day => ({ ...day, timestamp: new Date(day.date).getTime() }))
+    .sort((a, b) => b.timestamp - a.timestamp);
 
-    if (dayDate.getTime() === checkDate.getTime()) {
+  for (const day of sortedDesc) {
+    const dayTimestamp = new Date(day.date).setHours(0, 0, 0, 0);
+
+    if (dayTimestamp === checkDate.getTime()) {
       if (day.contributionCount > 0) {
         currentStreak++;
         checkDate.setDate(checkDate.getDate() - 1);
-      } else if (dayDate.getTime() !== today.getTime()) {
+      } else if (dayTimestamp !== today.getTime()) {
         // If we hit a day with no contributions (and it's not today), stop
         break;
       } else {
@@ -346,25 +348,22 @@ function calculateStreaksFromCalendar(weeks: GraphQLContributionWeek[]): {
     }
   }
 
-  // Calculate longest streak
+  // Calculate longest streak using pre-sorted ascending data
   let longestStreak = 0;
   let tempStreak = 0;
-  let prevDate: Date | null = null;
+  let prevTimestamp: number | null = null;
 
-  const sortedDays = allDays.sort(
-    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-  );
+  // Sort once for longest streak calculation (ascending)
+  const sortedAsc = sortedDesc.reverse();
 
-  for (const day of sortedDays) {
+  for (const day of sortedAsc) {
     if (day.contributionCount > 0) {
-      const dayDate = new Date(day.date);
-      dayDate.setHours(0, 0, 0, 0);
+      const dayTimestamp = day.timestamp;
 
-      if (prevDate) {
-        const expectedDate = new Date(prevDate);
-        expectedDate.setDate(expectedDate.getDate() + 1);
+      if (prevTimestamp !== null) {
+        const expectedTimestamp: number = prevTimestamp + 86400000; // Add 1 day in ms
 
-        if (dayDate.getTime() === expectedDate.getTime()) {
+        if (dayTimestamp === expectedTimestamp) {
           tempStreak++;
         } else {
           longestStreak = Math.max(longestStreak, tempStreak);
@@ -373,11 +372,11 @@ function calculateStreaksFromCalendar(weeks: GraphQLContributionWeek[]): {
       } else {
         tempStreak = 1;
       }
-      prevDate = dayDate;
+      prevTimestamp = dayTimestamp;
     } else if (tempStreak > 0) {
       longestStreak = Math.max(longestStreak, tempStreak);
       tempStreak = 0;
-      prevDate = null;
+      prevTimestamp = null;
     }
   }
 
