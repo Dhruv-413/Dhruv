@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import * as React from "react";
 
 const GITHUB_GRAPHQL_API = "https://api.github.com/graphql";
 const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN;
@@ -308,30 +309,25 @@ async function fetchGitHubGraphQLData(): Promise<GitHubGraphQLData> {
 }
 
 // ============================================================================
-// Utility Functions
+// Utility Functions - Optimized
 // ============================================================================
 
 function calculateStreaksFromCalendar(weeks: GraphQLContributionWeek[]): {
   currentStreak: number;
   longestStreak: number;
 } {
-  const allDays: GraphQLContributionDay[] = [];
-  weeks.forEach((week) => {
-    allDays.push(...week.contributionDays);
-  });
-
-  allDays.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
-
-  let currentStreak = 0;
-  let longestStreak = 0;
-  let tempStreak = 0;
+  // Flatten all days and sort by date descending
+  const allDays = weeks
+    .flatMap((week) => week.contributionDays)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const checkDate = new Date(today);
+  // Calculate current streak
+  let currentStreak = 0;
+  let checkDate = new Date(today);
+
   for (const day of allDays) {
     const dayDate = new Date(day.date);
     dayDate.setHours(0, 0, 0, 0);
@@ -340,28 +336,30 @@ function calculateStreaksFromCalendar(weeks: GraphQLContributionWeek[]): {
       if (day.contributionCount > 0) {
         currentStreak++;
         checkDate.setDate(checkDate.getDate() - 1);
+      } else if (dayDate.getTime() !== today.getTime()) {
+        // If we hit a day with no contributions (and it's not today), stop
+        break;
       } else {
-        if (dayDate.getTime() === today.getTime()) {
-          checkDate.setDate(checkDate.getDate() - 1);
-        } else {
-          break;
-        }
+        // If today has no contributions, continue checking yesterday
+        checkDate.setDate(checkDate.getDate() - 1);
       }
     }
   }
 
-  tempStreak = 0;
+  // Calculate longest streak
+  let longestStreak = 0;
+  let tempStreak = 0;
   let prevDate: Date | null = null;
 
-  const sortedDays = [...allDays].sort(
+  const sortedDays = allDays.sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
 
   for (const day of sortedDays) {
-    const dayDate = new Date(day.date);
-    dayDate.setHours(0, 0, 0, 0);
-
     if (day.contributionCount > 0) {
+      const dayDate = new Date(day.date);
+      dayDate.setHours(0, 0, 0, 0);
+
       if (prevDate) {
         const expectedDate = new Date(prevDate);
         expectedDate.setDate(expectedDate.getDate() + 1);
@@ -376,7 +374,7 @@ function calculateStreaksFromCalendar(weeks: GraphQLContributionWeek[]): {
         tempStreak = 1;
       }
       prevDate = dayDate;
-    } else {
+    } else if (tempStreak > 0) {
       longestStreak = Math.max(longestStreak, tempStreak);
       tempStreak = 0;
       prevDate = null;
@@ -402,171 +400,156 @@ export function useGitHubGraphQL() {
 }
 
 // ============================================================================
-// Derived Hooks (GraphQL-only - Extract specific data from main query)
+// Optimized Derived Hooks - Use useMemo instead of nested queries
 // ============================================================================
 
 export function useGitHubUser() {
-  const { data } = useGitHubGraphQL();
+  const { data, isLoading, error } = useGitHubGraphQL();
 
-  return useQuery({
-    queryKey: ["github-user", data],
-    queryFn: () => {
-      if (!data?.user) return null;
+  const user = React.useMemo(() => {
+    if (!data?.user) return null;
 
-      const user = data.user;
-      return {
-        login: user.login,
-        name: user.name,
-        avatarUrl: user.avatarUrl,
-        bio: user.bio,
-        company: user.company,
-        location: user.location,
-        websiteUrl: user.websiteUrl,
-        followers: user.followers.totalCount,
-        following: user.following.totalCount,
-        publicRepos: user.repositories.totalCount,
-      } as GitHubUser;
-    },
-    enabled: !!data,
-    staleTime: 1000 * 60 * 60,
-  });
+    const u = data.user;
+    return {
+      login: u.login,
+      name: u.name,
+      avatarUrl: u.avatarUrl,
+      bio: u.bio,
+      company: u.company,
+      location: u.location,
+      websiteUrl: u.websiteUrl,
+      followers: u.followers.totalCount,
+      following: u.following.totalCount,
+      publicRepos: u.repositories.totalCount,
+    } as GitHubUser;
+  }, [data]);
+
+  return { data: user, isLoading, error };
 }
 
 export function useGitHubRepos() {
-  const { data } = useGitHubGraphQL();
+  const { data, isLoading, error } = useGitHubGraphQL();
 
-  return useQuery({
-    queryKey: ["github-repos", data],
-    queryFn: () => {
-      if (!data?.user?.repositories?.nodes) return [];
+  const repos = React.useMemo(() => {
+    if (!data?.user?.repositories?.nodes) return [];
 
-      return data.user.repositories.nodes.map((repo) => ({
+    return data.user.repositories.nodes.map((repo) => ({
+      name: repo.name,
+      description: repo.description,
+      url: repo.url,
+      stargazerCount: repo.stargazerCount,
+      forkCount: repo.forkCount,
+      language: repo.primaryLanguage?.name || null,
+      languageColor: repo.primaryLanguage?.color || null,
+      updatedAt: repo.updatedAt,
+      topics: repo.repositoryTopics.nodes.map((t) => t.topic.name),
+    })) as GitHubRepo[];
+  }, [data]);
+
+  return { data: repos, isLoading, error };
+}
+
+export function useGitHubStats() {
+  const { data: repos, isLoading } = useGitHubRepos();
+
+  const stats = React.useMemo(() => {
+    if (!repos || repos.length === 0) return null;
+
+    const result: GitHubStats = {
+      totalStars: 0,
+      totalForks: 0,
+      totalRepos: repos.length,
+      languages: {},
+    };
+
+    repos.forEach((repo) => {
+      result.totalStars += repo.stargazerCount;
+      result.totalForks += repo.forkCount;
+
+      if (repo.language) {
+        if (!result.languages[repo.language]) {
+          result.languages[repo.language] = {
+            count: 0,
+            color: repo.languageColor || "#666",
+          };
+        }
+        result.languages[repo.language].count++;
+      }
+    });
+
+    return result;
+  }, [repos]);
+
+  return { data: stats, isLoading };
+}
+
+export function useGitHubContributions() {
+  const { data, isLoading, error } = useGitHubGraphQL();
+
+  const contributions = React.useMemo(() => {
+    if (!data?.user) return null;
+
+    const calendar = data.user.contributionsCollection.contributionCalendar;
+    const streaks = calculateStreaksFromCalendar(calendar.weeks);
+
+    const weeks: ContributionWeek[] = calendar.weeks.map((week) => ({
+      days: week.contributionDays.map((day) => ({
+        date: day.date,
+        count: day.contributionCount,
+        level:
+          day.contributionCount === 0
+            ? 0
+            : day.contributionCount < 3
+            ? 1
+            : day.contributionCount < 6
+            ? 2
+            : day.contributionCount < 10
+            ? 3
+            : day.contributionCount < 15
+            ? 4
+            : 5,
+      })),
+    }));
+
+    return {
+      totalContributions: calendar.totalContributions,
+      totalCommits:
+        data.user.contributionsCollection.totalCommitContributions,
+      totalPRs:
+        data.user.contributionsCollection.totalPullRequestContributions,
+      totalIssues: data.user.contributionsCollection.totalIssueContributions,
+      totalReviews:
+        data.user.contributionsCollection.totalPullRequestReviewContributions,
+      weeks,
+      currentStreak: streaks.currentStreak,
+      longestStreak: streaks.longestStreak,
+    } as GitHubContributions;
+  }, [data]);
+
+  return { data: contributions, isLoading, error };
+}
+
+export function useGitHubContributedRepos() {
+  const { data, isLoading, error } = useGitHubGraphQL();
+
+  const contributedRepos = React.useMemo(() => {
+    if (!data?.user?.repositoriesContributedTo?.nodes) return null;
+
+    return {
+      totalCount: data.user.repositoriesContributedTo.totalCount,
+      repositories: data.user.repositoriesContributedTo.nodes.map((repo) => ({
         name: repo.name,
-        description: repo.description,
+        owner: repo.owner.login,
         url: repo.url,
+        description: repo.description,
         stargazerCount: repo.stargazerCount,
         forkCount: repo.forkCount,
         language: repo.primaryLanguage?.name || null,
         languageColor: repo.primaryLanguage?.color || null,
         updatedAt: repo.updatedAt,
-        topics: repo.repositoryTopics.nodes.map((t) => t.topic.name),
-      })) as GitHubRepo[];
-    },
-    enabled: !!data,
-    staleTime: 1000 * 60 * 60,
-  });
-}
+      })) as ContributedRepository[],
+    };
+  }, [data]);
 
-export function useGitHubStats() {
-  const { data: repos } = useGitHubRepos();
-
-  return useQuery({
-    queryKey: ["github-stats", repos],
-    queryFn: () => {
-      if (!repos || repos.length === 0) return null;
-
-      const stats: GitHubStats = {
-        totalStars: 0,
-        totalForks: 0,
-        totalRepos: repos.length,
-        languages: {},
-      };
-
-      repos.forEach((repo) => {
-        stats.totalStars += repo.stargazerCount;
-        stats.totalForks += repo.forkCount;
-
-        if (repo.language) {
-          if (!stats.languages[repo.language]) {
-            stats.languages[repo.language] = {
-              count: 0,
-              color: repo.languageColor || "#666",
-            };
-          }
-          stats.languages[repo.language].count++;
-        }
-      });
-
-      return stats;
-    },
-    enabled: !!repos && repos.length > 0,
-    staleTime: 1000 * 60 * 60,
-  });
-}
-
-export function useGitHubContributions() {
-  const { data } = useGitHubGraphQL();
-
-  return useQuery({
-    queryKey: ["github-contributions", data],
-    queryFn: () => {
-      if (!data?.user) return null;
-
-      const calendar = data.user.contributionsCollection.contributionCalendar;
-      const streaks = calculateStreaksFromCalendar(calendar.weeks);
-
-      const weeks: ContributionWeek[] = calendar.weeks.map((week) => ({
-        days: week.contributionDays.map((day) => ({
-          date: day.date,
-          count: day.contributionCount,
-          level:
-            day.contributionCount === 0
-              ? 0
-              : day.contributionCount < 3
-              ? 1
-              : day.contributionCount < 6
-              ? 2
-              : day.contributionCount < 10
-              ? 3
-              : day.contributionCount < 15
-              ? 4
-              : 5,
-        })),
-      }));
-
-      return {
-        totalContributions: calendar.totalContributions,
-        totalCommits:
-          data.user.contributionsCollection.totalCommitContributions,
-        totalPRs:
-          data.user.contributionsCollection.totalPullRequestContributions,
-        totalIssues: data.user.contributionsCollection.totalIssueContributions,
-        totalReviews:
-          data.user.contributionsCollection.totalPullRequestReviewContributions,
-        weeks,
-        currentStreak: streaks.currentStreak,
-        longestStreak: streaks.longestStreak,
-      } as GitHubContributions;
-    },
-    enabled: !!data,
-    staleTime: 1000 * 60 * 60,
-  });
-}
-
-export function useGitHubContributedRepos() {
-  const { data } = useGitHubGraphQL();
-
-  return useQuery({
-    queryKey: ["github-contributed-repos", data],
-    queryFn: () => {
-      if (!data?.user?.repositoriesContributedTo?.nodes) return null;
-
-      return {
-        totalCount: data.user.repositoriesContributedTo.totalCount,
-        repositories: data.user.repositoriesContributedTo.nodes.map((repo) => ({
-          name: repo.name,
-          owner: repo.owner.login,
-          url: repo.url,
-          description: repo.description,
-          stargazerCount: repo.stargazerCount,
-          forkCount: repo.forkCount,
-          language: repo.primaryLanguage?.name || null,
-          languageColor: repo.primaryLanguage?.color || null,
-          updatedAt: repo.updatedAt,
-        })) as ContributedRepository[],
-      };
-    },
-    enabled: !!data,
-    staleTime: 1000 * 60 * 60,
-  });
+  return { data: contributedRepos, isLoading, error };
 }
