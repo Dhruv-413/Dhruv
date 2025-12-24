@@ -31,9 +31,7 @@ interface ProjectCardProps {
 export function ProjectCard({ project, onClick, index = 0 }: ProjectCardProps) {
   const [isActive, setIsActive] = useState(false);
 
-  const colors =
-    CATEGORY_COLORS[project.category as keyof typeof CATEGORY_COLORS] ||
-    CATEGORY_COLORS["Full-Stack"];
+  const colors = CATEGORY_COLORS[project.category] || CATEGORY_COLORS["Full-Stack"];
 
   return (
     <motion.div
