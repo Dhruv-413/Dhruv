@@ -4,14 +4,10 @@
 
 ### A Modern, Animated Portfolio Built with Next.js 16 & React 19
 
-[![Next.js](https://img.shields.io/badge/Next.js-16.0.0-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16.0.10-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.2.0-61DAFB?style=for-the-badge&logo=react)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-06B6D4?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com/)
-
-[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-dhruvgupta--nu.vercel.app-00C853?style=for-the-badge)](https://dhruvgupta-nu.vercel.app/)
-[![GitHub Stars](https://img.shields.io/github/stars/Dhruv-413/Dhruv?style=for-the-badge&logo=github)](https://github.com/Dhruv-413/Dhruv)
-[![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
 <p align="center">
   <strong>A sleek, performant developer portfolio featuring real-time GitHub integration, smooth animations, and a modern dark theme with elegant glass morphism effects.</strong>
@@ -48,6 +44,14 @@
 - **Image Optimization** - Automatic WebP conversion and lazy loading
 - **Suspense Boundaries** - Graceful loading states throughout
 - **React 19** - Latest concurrent features for smooth UX
+
+### 🌐 **SEO & AEO Optimized**
+
+- **Dynamic Metadata** - Per-page meta tags with Open Graph & Twitter Cards
+- **JSON-LD Structured Data** - Person, WebPage, and BreadcrumbList schemas
+- **Sitemap & Robots.txt** - Auto-generated for search engine crawling
+- **PWA Manifest** - Web App Manifest for installable experience
+- **Answer Engine Optimization** - Semantic HTML for AI search engines
 
 ### 🛠️ **Developer Experience**
 
@@ -107,6 +111,7 @@
 | [GitHub GraphQL API](https://docs.github.com/graphql) | Real-time GitHub data |
 | [EmailJS](https://www.emailjs.com/) | Contact form email delivery |
 | [Recharts](https://recharts.org/) | Data visualization charts |
+| [React Hot Toast](https://react-hot-toast.com/) | Toast notifications |
 
 ---
 
@@ -115,13 +120,20 @@
 ```
 dhruv-portfolio/
 ├── public/
-│   └── images/              # Static images and assets
+│   ├── images/              # Static images and assets
+│   ├── manifest.json        # PWA Web App Manifest
+│   └── favicon.ico          # Site favicon
 │
 ├── src/
 │   ├── app/                 # Next.js App Router
 │   │   ├── page.tsx         # Home/About page
 │   │   ├── layout.tsx       # Root layout with providers
 │   │   ├── globals.css      # Global styles & Tailwind
+│   │   ├── loading.tsx      # Root loading state
+│   │   ├── sitemap.ts       # Dynamic sitemap generation
+│   │   ├── robots.ts        # Robots.txt configuration
+│   │   ├── icon.svg         # Dynamic favicon
+│   │   ├── apple-icon.svg   # Apple touch icon
 │   │   ├── projects/        # Projects page
 │   │   ├── skills/          # Skills page
 │   │   ├── career/          # Career timeline page
@@ -143,10 +155,12 @@ dhruv-portfolio/
 │   │   │   ├── Footer.tsx   # Site footer
 │   │   │   └── Providers.tsx # Context providers
 │   │   │
-│   │   └── ui/              # Reusable UI primitives
+│   │   └── ui/              # Reusable UI primitives (21 components)
 │   │       ├── button.tsx   # Button component
 │   │       ├── card.tsx     # Card component
 │   │       ├── input.tsx    # Form inputs
+│   │       ├── AnimatedBackground.tsx
+│   │       ├── SectionHeader.tsx
 │   │       └── ...          # Other UI components
 │   │
 │   ├── data/                # Static data files
@@ -156,22 +170,30 @@ dhruv-portfolio/
 │   │   └── certifications.json
 │   │
 │   ├── hooks/               # Custom React hooks
-│   │   └── useGitHub.ts     # GitHub API integration
+│   │   ├── useGitHub.ts     # GitHub API integration
+│   │   └── useUIState.ts    # UI state management
 │   │
 │   ├── lib/                 # Utility functions
-│   │   ├── constants.ts     # Site configuration
-│   │   ├── utils.ts         # Helper utilities
-│   │   └── animations.ts    # Animation variants
+│   │   ├── constants.ts     # Site configuration (SITE_CONFIG)
+│   │   ├── utils.ts         # Helper utilities (cn, etc.)
+│   │   ├── animations.ts    # Framer Motion variants
+│   │   ├── helpers.ts       # Data transformation helpers
+│   │   ├── schema.ts        # Zod validation schemas
+│   │   └── index.ts         # Barrel exports
 │   │
-│   └── types/               # TypeScript definitions
-│       ├── project.ts       # Project types
-│       ├── experience.ts    # Timeline types
-│       └── api.ts           # API response types
+│   ├── types/               # TypeScript definitions
+│   │   ├── project.ts       # Project types
+│   │   ├── experience.ts    # Timeline types
+│   │   └── api.ts           # API response types
+│   │
+│   └── globals.d.ts         # Global type declarations
 │
 ├── package.json
 ├── tsconfig.json
 ├── next.config.ts
-└── tailwind.config.ts
+├── postcss.config.mjs
+├── eslint.config.mjs
+└── components.json          # shadcn/ui configuration
 ```
 
 ---
@@ -349,8 +371,9 @@ This portfolio is optimized for performance:
 - ⚡ **Lazy Loading** - Components load on demand
 - 🖼️ **Image Optimization** - Automatic WebP conversion
 - 📦 **Code Splitting** - Minimal initial bundle size
-- 🔄 **Incremental Static Regeneration** - Fast page loads
+- 🔄 **Static Generation** - Fast page loads with SSG
 - 💾 **Query Caching** - TanStack Query reduces API calls
+- 🔍 **SEO Ready** - Sitemap, robots.txt, and structured data
 
 ---
 
