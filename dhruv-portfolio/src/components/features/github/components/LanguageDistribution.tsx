@@ -46,7 +46,7 @@ export function LanguageDistribution({
 
       <Card className="p-6 bg-card/50 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-all duration-300 flex-1 flex flex-col relative overflow-hidden group">
         {/* Subtle Background Pattern */}
-        <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
         <div className="relative space-y-4 flex-1">
           {topLanguages.slice(0, 5).map(([language, data], index) => {
@@ -70,25 +70,27 @@ export function LanguageDistribution({
         <SummaryStats stats={stats} topLanguages={topLanguages} />
 
         {/* GitHub Profile Link */}
-        <a
-          href={SITE_CONFIG.links.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-4 block"
-          aria-label="View GitHub profile"
-        >
+        <div className="relative z-10 mt-4">
           <Button
+            asChild
             className="w-full group/link bg-linear-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/20 transition-all"
             size="sm"
           >
-            <Github className="h-4 w-4 mr-2" aria-hidden="true" />
-            <span className="font-semibold">View Full Profile</span>
-            <ExternalLink
-              className="h-4 w-4 ml-2 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform"
-              aria-hidden="true"
-            />
+            <a
+              href={SITE_CONFIG.links.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="View GitHub profile"
+            >
+              <Github className="h-4 w-4 mr-2" aria-hidden="true" />
+              <span className="font-semibold">View Full Profile</span>
+              <ExternalLink
+                className="h-4 w-4 ml-2 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform"
+                aria-hidden="true"
+              />
+            </a>
           </Button>
-        </a>
+        </div>
       </Card>
     </motion.div>
   );
@@ -206,7 +208,7 @@ function SummaryStats({ stats, topLanguages }: SummaryStatsProps) {
   };
 
   return (
-    <div className="relative mt-6 pt-6 border-t border-border/30">
+    <div className="relative mt-6 pt-6 border-t border-border/30 z-10">
       <div className="grid grid-cols-3 gap-3 text-center">
         {summaryItems.map(({ value, label, color }) => (
           <motion.div

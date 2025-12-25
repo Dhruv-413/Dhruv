@@ -344,16 +344,16 @@ function MobileDesktopMessage({ isInView }: { isInView: boolean }) {
             language statistics, please visit on a larger screen or check out my
             GitHub profile directly.
           </p>
-          <a
-            href={SITE_CONFIG.links.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block"
-            aria-label="View GitHub profile"
+          <Button
+            asChild
+            size="lg"
+            className="group/link bg-linear-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
           >
-            <Button
-              size="lg"
-              className="group/link bg-linear-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
+            <a
+              href={SITE_CONFIG.links.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="View GitHub profile"
             >
               <Github className="h-5 w-5 mr-2" aria-hidden="true" />
               <span className="font-semibold">Visit GitHub Profile</span>
@@ -361,8 +361,8 @@ function MobileDesktopMessage({ isInView }: { isInView: boolean }) {
                 className="h-5 w-5 ml-2 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform"
                 aria-hidden="true"
               />
-            </Button>
-          </a>
+            </a>
+          </Button>
         </div>
       </Card>
     </motion.div>
