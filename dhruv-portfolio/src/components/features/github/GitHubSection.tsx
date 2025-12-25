@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { SITE_CONFIG } from "@/lib/constants";
 import {
   useGitHubUser,
   useGitHubRepos,
@@ -21,7 +22,6 @@ import {
   useGitHubContributions,
   useGitHubContributedRepos,
   type GitHubRepo,
-  type GitHubUser,
   type ContributedRepository,
 } from "@/hooks/useGitHub";
 import { useState, useRef, useMemo } from "react";
@@ -198,7 +198,7 @@ export function GitHubSection() {
       >
         <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
           {/* Mobile Message */}
-          <MobileDesktopMessage user={user} isInView={isGalleryInView} />
+          <MobileDesktopMessage isInView={isGalleryInView} />
 
           {/* Desktop: Contribution Heatmap & Language Distribution */}
           <div className="hidden lg:grid lg:grid-cols-[3fr_2fr] gap-8 mb-16">
@@ -209,11 +209,7 @@ export function GitHubSection() {
               totalIssues={totalIssues}
               totalReviews={totalReviews}
             />
-            <LanguageDistribution
-              stats={stats}
-              topLanguages={topLanguages}
-              user={user}
-            />
+            <LanguageDistribution stats={stats} topLanguages={topLanguages} />
           </div>
 
           {/* My Repositories Section */}
@@ -325,13 +321,7 @@ function ScrollIndicator({ isInView }: { isInView: boolean }) {
   );
 }
 
-function MobileDesktopMessage({
-  user,
-  isInView,
-}: {
-  user: GitHubUser | null;
-  isInView: boolean;
-}) {
+function MobileDesktopMessage({ isInView }: { isInView: boolean }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -355,7 +345,7 @@ function MobileDesktopMessage({
             GitHub profile directly.
           </p>
           <a
-            href={`https://github.com/${user?.login}`}
+            href={SITE_CONFIG.links.github}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block"

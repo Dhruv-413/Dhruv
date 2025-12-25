@@ -5,19 +5,18 @@ import { BarChart3, Github, ExternalLink } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TechIcon } from "@/components/ui/TechIcon";
-import type { GitHubStats, GitHubUser } from "@/hooks/useGitHub";
+import { SITE_CONFIG } from "@/lib/constants";
+import type { GitHubStats } from "@/hooks/useGitHub";
 import { useRef } from "react";
 
 interface LanguageDistributionProps {
   stats: GitHubStats | null;
   topLanguages: [string, { count: number; color: string }][];
-  user: GitHubUser | null;
 }
 
 export function LanguageDistribution({
   stats,
   topLanguages,
-  user,
 }: LanguageDistributionProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
@@ -72,7 +71,7 @@ export function LanguageDistribution({
 
         {/* GitHub Profile Link */}
         <a
-          href={`https://github.com/${user?.login}`}
+          href={SITE_CONFIG.links.github}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-4 block"

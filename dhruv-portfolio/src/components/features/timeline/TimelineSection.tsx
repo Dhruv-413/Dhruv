@@ -12,7 +12,6 @@ import {
   TrendingUp,
   ChevronDown,
   ChevronUp,
-  Terminal,
   Shield,
   GitBranch,
   Activity,
@@ -21,12 +20,11 @@ import {
 import { TimelineItem } from "@/types/experience";
 import timelineData from "@/data/timeline.json";
 import { format } from "date-fns";
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef } from "react";
 import { TechIcon } from "@/components/ui/TechIcon";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { StatCard, StatCardGrid } from "@/components/ui/StatCard";
-import { Badge, BadgeGroup, CredibilityBadge } from "@/components/ui/Badge";
-import { ScanLineEffect } from "@/components/ui/ScanLineEffect";
+import { CredibilityBadge } from "@/components/ui/Badge";
 
 const iconMap = {
   work: Briefcase,
