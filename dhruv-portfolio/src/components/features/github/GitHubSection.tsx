@@ -201,7 +201,7 @@ export function GitHubSection() {
           <MobileDesktopMessage isInView={isGalleryInView} />
 
           {/* Desktop: Contribution Heatmap & Language Distribution */}
-          <div className="hidden lg:grid lg:grid-cols-[3fr_2fr] gap-8 mb-16">
+          <div className="hidden lg:grid lg:grid-cols-[7fr_3fr] gap-8 mb-16">
             <ContributionHeatmap
               contributions={contributions}
               totalCommits={totalCommits}
