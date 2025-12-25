@@ -46,9 +46,9 @@ export function CodeSnippetWindow({
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, delay: animationDelay }}
-      className={cn("order-2 lg:order-2", className)}
+      className={cn("order-2 lg:order-2 max-w-full overflow-hidden", className)}
     >
-      <div className="relative bg-card/50 backdrop-blur-xl border border-border/50 rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl hover:shadow-primary/10 transition-all">
+      <div className="relative bg-card/50 backdrop-blur-xl border border-border/50 rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl hover:shadow-primary/10 transition-all w-full">
         {/* Terminal Header */}
         <div className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 bg-muted/50 border-b border-border/50">
           <div className="flex gap-1.5 sm:gap-2">
@@ -71,12 +71,14 @@ export function CodeSnippetWindow({
         </div>
 
         {/* Code Content */}
-        <div className="relative">
+        <div className="relative overflow-hidden">
           <pre
-            className="p-4 sm:p-6 text-xs sm:text-sm font-mono leading-relaxed overflow-x-auto custom-scrollbar"
+            className="p-3 sm:p-4 md:p-6 text-[11px] sm:text-xs md:text-sm font-mono leading-relaxed overflow-x-auto custom-scrollbar"
             style={{ maxHeight }}
           >
-            <code className="language-typescript">{code}</code>
+            <code className="language-typescript whitespace-pre-wrap break-all sm:whitespace-pre sm:break-normal">
+              {code}
+            </code>
           </pre>
 
           {/* Gradient Fade at Bottom */}

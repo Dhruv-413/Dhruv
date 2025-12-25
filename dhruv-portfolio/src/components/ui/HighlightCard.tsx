@@ -69,7 +69,7 @@ export function HighlightCard({
           className="group-hover:opacity-100 opacity-0"
         />
 
-        <div className="relative flex items-start gap-3 sm:gap-4">
+        <div className="relative flex items-start gap-3 sm:gap-4 min-w-0">
           <motion.div
             className="p-2 sm:p-2.5 rounded-lg bg-primary/10 shrink-0"
             whileHover={{ rotate: 360 }}

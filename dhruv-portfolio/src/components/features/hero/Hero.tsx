@@ -39,12 +39,12 @@ import { useGitHubUser, useGitHubStats } from "@/hooks/useGitHub";
 const codeSnippet = `const developer = {
   name: "Dhruv Gupta",
   role: "Full-Stack Developer",
-  specialization: ["AI/ML", "Web Dev"],
-  status: "Available for Work",
+  specialization: ["AI/ML", "Web"],
+  status: "Available",
 
   build: async () => {
     const skills = await this.learn();
-    const projects = await this.create(skills);
+    const projects = this.create(skills);
     return this.deploy(projects);
   }
 };
@@ -54,18 +54,18 @@ developer.build();`;
 const detailedCodeSnippet = `// About Me
 const developer = {
   name: "Dhruv Gupta",
-  role: "Full-Stack Developer & AI/ML Engineer",
+  role: "Full-Stack Dev & AI/ML",
   location: "Jaipur, India",
-  education: "B.Tech CSE @ Manipal University",
+  education: "B.Tech CSE @ MUJ",
   experience: ["Ex-ONGC Intern"],
 
   passion: [
-    "Building scalable solutions",
+    "Scalable solutions",
     "AI/ML innovations",
-    "Full Stack Development"
+    "Full Stack Dev"
   ],
 
-  currentFocus: "Enterprise Software & AI",
+  currentFocus: "Enterprise & AI",
   availableForWork: true
 };
 
@@ -162,14 +162,14 @@ export function Hero() {
     <section
       id="hero"
       ref={sectionRef}
-      className="relative min-h-screen overflow-hidden pt-16 pb-20"
+      className="relative min-h-screen overflow-x-hidden pt-16 pb-20"
     >
       {/* Hero Content */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 container mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
         <div className="min-h-screen flex items-center justify-center py-12 sm:py-16 md:py-20">
           <div className="grid lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center max-w-7xl mx-auto w-full">
             {/* Left Column - Main Content */}
-            <div className="text-center lg:text-left order-2 lg:order-1">
+            <div className="text-center lg:text-left order-2 lg:order-1 min-w-0 overflow-hidden">
               {/* Terminal Prompt */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
@@ -231,12 +231,15 @@ export function Hero() {
 
               {/* Description */}
               <motion.p
-                className="text-sm sm:text-base md:text-lg text-muted-foreground mb-3"
+                className="text-xs sm:text-sm md:text-base lg:text-lg text-muted-foreground mb-3 wrap-break-word"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
               >
-                CS Student @ Manipal University Jaipur | Ex-ONGC Intern
+                <span className="hidden sm:inline">
+                  CS Student @ Manipal University Jaipur | Ex-ONGC Intern
+                </span>
+                <span className="sm:hidden">CS @ MUJ | Ex-ONGC Intern</span>
               </motion.p>
 
               <motion.p
@@ -261,23 +264,23 @@ export function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.6 }}
-                className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 mb-8 justify-center lg:justify-start"
+                className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 mb-8 justify-center lg:justify-start max-w-full overflow-hidden"
               >
-                <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg hover:border-primary/30 transition-all group">
-                  <Code2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary group-hover:scale-110 transition-transform" />
-                  <span className="text-xs sm:text-sm font-mono">
-                    {stats?.totalRepos || "10"}+ Projects
+                <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg hover:border-primary/30 transition-all group touch-manipulation active:scale-95">
+                  <Code2 className="h-3 w-3 sm:h-3.5 sm:w-3.5 md:h-4 md:w-4 text-primary group-hover:scale-110 transition-transform shrink-0" />
+                  <span className="text-[10px] sm:text-xs md:text-sm font-mono whitespace-nowrap">
+                    {stats?.totalRepos || "9"}+ Projects
                   </span>
                 </div>
-                <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg hover:border-primary/30 transition-all group">
-                  <StarIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary group-hover:scale-110 transition-transform" />
-                  <span className="text-xs sm:text-sm font-mono">
-                    {stats?.totalStars || "20+"} Git Star
+                <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg hover:border-primary/30 transition-all group touch-manipulation active:scale-95">
+                  <StarIcon className="h-3 w-3 sm:h-3.5 sm:w-3.5 md:h-4 md:w-4 text-primary group-hover:scale-110 transition-transform shrink-0" />
+                  <span className="text-[10px] sm:text-xs md:text-sm font-mono whitespace-nowrap">
+                    {stats?.totalStars || "1"} Star
                   </span>
                 </div>
-                <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-primary/10 border border-primary/20 rounded-lg hover:bg-primary/15 transition-all">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                  <span className="text-xs sm:text-sm font-mono text-primary font-semibold">
+                <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 bg-primary/10 border border-primary/20 rounded-lg hover:bg-primary/15 transition-all touch-manipulation active:scale-95">
+                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full animate-pulse shrink-0" />
+                  <span className="text-[10px] sm:text-xs md:text-sm font-mono text-primary font-semibold whitespace-nowrap">
                     Available
                   </span>
                 </div>
@@ -354,12 +357,13 @@ export function Hero() {
                 <motion.div
                   whileHover={{ scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.95 }}
+                  className="touch-manipulation"
                 >
                   <Link
                     href={SITE_CONFIG.links.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group p-2.5 sm:p-3 rounded-lg bg-card/50 backdrop-blur-sm border border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all inline-flex items-center gap-2"
+                    className="group p-2.5 sm:p-3 rounded-lg bg-card/50 backdrop-blur-sm border border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all inline-flex items-center gap-2 touch-manipulation"
                   >
                     <Github className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground group-hover:text-primary transition-colors" />
                     <span className="text-xs sm:text-sm font-mono text-muted-foreground group-hover:text-primary transition-colors">
@@ -372,12 +376,13 @@ export function Hero() {
                 <motion.div
                   whileHover={{ scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.95 }}
+                  className="touch-manipulation"
                 >
                   <Link
                     href={SITE_CONFIG.links.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group p-2.5 sm:p-3 rounded-lg bg-card/50 backdrop-blur-sm border border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all inline-flex items-center gap-2"
+                    className="group p-2.5 sm:p-3 rounded-lg bg-card/50 backdrop-blur-sm border border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all inline-flex items-center gap-2 touch-manipulation"
                   >
                     <Linkedin className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground group-hover:text-primary transition-colors" />
                     <span className="text-xs sm:text-sm font-mono text-muted-foreground group-hover:text-primary transition-colors">
@@ -449,7 +454,7 @@ export function Hero() {
               </motion.div>
 
               {/* Code Snippet Card */}
-              <div className="w-full max-w-md">
+              <div className="w-full max-w-full sm:max-w-md mx-auto lg:mx-0">
                 <CodeSnippetWindow
                   code={codeSnippet}
                   filename="developer.ts"
@@ -483,7 +488,7 @@ export function Hero() {
       </div>
 
       {/* About Content Section */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
+      <div className="relative z-10 container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
         {/* Stats Dashboard - Unified Elegant Design */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -503,9 +508,10 @@ export function Hero() {
                 animate={isInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ delay: 0.4 + index * 0.1 }}
                 whileHover={{ scale: 1.05, y: -5 }}
+                whileTap={{ scale: 0.98 }}
                 onMouseEnter={() => setActiveStatIndex(index)}
                 onMouseLeave={() => setActiveStatIndex(null)}
-                className="group relative"
+                className="group relative touch-manipulation"
               >
                 <div
                   className={`relative p-3 sm:p-4 md:p-5 text-center bg-card/50 backdrop-blur-sm rounded-xl border overflow-hidden transition-all duration-300 h-full ${
@@ -575,13 +581,13 @@ export function Hero() {
         </motion.div>
 
         {/* Highlights & Detailed Code Snippet Grid */}
-        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 mb-12 sm:mb-16">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 mb-12 sm:mb-16 overflow-hidden">
           {/* Detailed Code Snippet - Left Side */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.5 }}
-            className="px-2 sm:px-0"
+            className="min-w-0"
           >
             <div className="mb-4 sm:mb-5">
               <div className="flex items-center gap-2 mb-2 sm:mb-3">
@@ -607,7 +613,7 @@ export function Hero() {
             initial={{ opacity: 0, x: 20 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.6 }}
-            className="px-2 sm:px-0"
+            className="min-w-0"
           >
             <div className="mb-4 sm:mb-5">
               <h3 className="text-lg sm:text-xl font-bold flex items-center gap-2 font-mono">
@@ -686,9 +692,10 @@ export function Hero() {
                     stiffness: 100,
                   }}
                   whileHover={{ y: -8, scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   onMouseEnter={() => setActiveValueIndex(index)}
                   onMouseLeave={() => setActiveValueIndex(null)}
-                  className="group relative"
+                  className="group relative touch-manipulation"
                 >
                   <div
                     className={`relative p-4 sm:p-5 md:p-6 text-center h-full bg-card/50 backdrop-blur-sm rounded-xl border overflow-hidden transition-all duration-300 flex flex-col ${
