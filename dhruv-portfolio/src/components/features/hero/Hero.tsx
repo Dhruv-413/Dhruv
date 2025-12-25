@@ -288,7 +288,7 @@ export function Hero() {
 
               {/* Enhanced CTA Buttons */}
               <motion.div
-                className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start mb-6 sm:mb-8"
+                className="cta-buttons-container flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start mb-6 sm:mb-8"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.7 }}
@@ -301,11 +301,12 @@ export function Hero() {
                   <Button
                     size="lg"
                     asChild
-                    className="group shadow-xl hover:shadow-2xl hover:shadow-primary/30 transition-all font-semibold w-full sm:w-auto"
+                    className="cta-btn group shadow-xl hover:shadow-2xl hover:shadow-primary/30 transition-all font-semibold w-full sm:w-auto"
                   >
                     <Link href="/projects">
                       <Play className="mr-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
-                      View My Work
+                      <span className="cta-text-full">View My Work</span>
+                      <span className="cta-text-compact hidden">Projects</span>
                     </Link>
                   </Button>
                 </motion.div>
@@ -319,11 +320,12 @@ export function Hero() {
                     size="lg"
                     variant="outline"
                     asChild
-                    className="group hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all font-semibold w-full sm:w-auto"
+                    className="cta-btn group hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all font-semibold w-full sm:w-auto"
                   >
                     <a href="/Dhruv_resume.pdf" download>
                       <Download className="mr-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-y-1 transition-transform" />
-                      Download Resume
+                      <span className="cta-text-full">Download Resume</span>
+                      <span className="cta-text-compact hidden">Resume</span>
                     </a>
                   </Button>
                 </motion.div>
@@ -337,12 +339,12 @@ export function Hero() {
                     size="lg"
                     variant="outline"
                     asChild
-                    className="group transition-all font-semibold w-full sm:w-auto"
+                    className="cta-btn group transition-all font-semibold w-full sm:w-auto"
                   >
                     <Link href="/contact">
                       <Mail className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                      <span className="hidden xl:inline">Get in Touch</span>
-                      <span className="xl:hidden">Contact</span>
+                      <span className="cta-text-full">Get in Touch</span>
+                      <span className="cta-text-compact hidden">Contact</span>
                     </Link>
                   </Button>
                 </motion.div>
