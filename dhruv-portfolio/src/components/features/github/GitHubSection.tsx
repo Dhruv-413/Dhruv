@@ -200,8 +200,8 @@ export function GitHubSection() {
           {/* Mobile Message */}
           <MobileDesktopMessage isInView={isGalleryInView} />
 
-          {/* Desktop: Contribution Heatmap & Language Distribution */}
-          <div className="hidden lg:grid lg:grid-cols-[7fr_3fr] gap-8 mb-16">
+          {/* Desktop: Contribution Heatmap & Language Distribution - Only on true desktops (1536px+) */}
+          <div className="hidden 2xl:grid 2xl:grid-cols-[7fr_3fr] gap-8 mb-16">
             <ContributionHeatmap
               contributions={contributions}
               totalCommits={totalCommits}
@@ -327,7 +327,7 @@ function MobileDesktopMessage({ isInView }: { isInView: boolean }) {
       initial={{ opacity: 0, y: 20 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, delay: 0.1 }}
-      className="lg:hidden mb-12"
+      className="2xl:hidden mb-12"
     >
       <Card className="p-6 sm:p-8 bg-card/50 backdrop-blur-sm border-2 border-primary/30">
         <div className="text-center space-y-4">

@@ -288,7 +288,7 @@ export function Hero() {
 
               {/* Enhanced CTA Buttons */}
               <motion.div
-                className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start mb-6 sm:mb-8"
+                className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start mb-6 sm:mb-8"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.7 }}
@@ -341,7 +341,8 @@ export function Hero() {
                   >
                     <Link href="/contact">
                       <Mail className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                      Get in Touch
+                      <span className="hidden xl:inline">Get in Touch</span>
+                      <span className="xl:hidden">Contact</span>
                     </Link>
                   </Button>
                 </motion.div>
@@ -453,8 +454,8 @@ export function Hero() {
                 </motion.div>
               </motion.div>
 
-              {/* Code Snippet Card */}
-              <div className="w-full max-w-full sm:max-w-md mx-auto lg:mx-0">
+              {/* Code Snippet Card - Hidden on phones and portrait tablets, visible on landscape tablets and desktops */}
+              <div className="w-full max-w-full sm:max-w-md mx-auto lg:mx-0 hidden lg:block">
                 <CodeSnippetWindow
                   code={codeSnippet}
                   filename="developer.ts"
