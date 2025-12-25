@@ -1,19 +1,63 @@
 export const SITE_CONFIG = {
   name: "Dhruv Gupta",
-  title: "Dhruv Gupta",
+  title: "Dhruv Gupta | Full Stack Developer & AI/ML Engineer",
   description:
-    "Computer Science student at Manipal University with expertise in Full-Stack Development, AI/ML, and Enterprise Software. Ex-ONGC Intern specializing in Python, React, Next.js, and SAP.",
+    "Full Stack Developer & AI/ML Engineer with expertise in React, Next.js, Python, and enterprise software. B.Tech CS student at Manipal University Jaipur. Ex-ONGC Intern specializing in scalable web applications and intelligent systems.",
   url: "https://dhruvgupta.dev",
   siteUrl: "https://dhruvgupta.dev",
   ogImage: "/og-image.jpg",
+  twitterImage: "/twitter-image.jpg",
   links: {
     github: "https://github.com/Dhruv-413",
     linkedin: "https://www.linkedin.com/in/dhruvgpta/",
     email: "mailto:dhruvgupta6580@gmail.com",
+    twitter: "https://twitter.com/dhruvgpta",
   },
   contact: {
     email: "dhruvgupta6580@gmail.com",
-    location: "Ghaziabad, Uttar Pradesh, India",
+    location: "Jaipur, Rajasthan, India",
+    phone: "+91-XXXXXXXXXX",
+  },
+  // SEO Configuration
+  seo: {
+    keywords: [
+      "Dhruv Gupta",
+      "Full Stack Developer",
+      "AI/ML Engineer",
+      "React Developer",
+      "Next.js Developer",
+      "Python Developer",
+      "TypeScript",
+      "FastAPI",
+      "PostgreSQL",
+      "SAP ABAP",
+      "Computer Vision",
+      "Machine Learning",
+      "Web Developer Portfolio",
+      "Software Engineer India",
+      "Manipal University",
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  // Structured Data
+  person: {
+    jobTitle: "Full Stack Developer & AI/ML Engineer",
+    alumniOf: "Manipal University Jaipur",
+    knowsAbout: [
+      "React",
+      "Next.js",
+      "TypeScript",
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Machine Learning",
+      "Computer Vision",
+      "SAP ABAP",
+      "Docker",
+      "Full Stack Development",
+      "Web Development",
+    ],
   },
 } as const;
 

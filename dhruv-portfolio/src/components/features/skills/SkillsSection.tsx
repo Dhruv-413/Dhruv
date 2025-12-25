@@ -3,7 +3,7 @@
 import { motion, useInView } from "framer-motion";
 import skillsData from "@/data/skills.json";
 import certificationsData from "@/data/certifications.json";
-import { useRef, useState, useMemo } from "react";
+import { useRef, useState } from "react";
 import TechIcon from "@/components/ui/TechIcon";
 import { CodeSnippetWindow } from "@/components/ui/CodeSnippetWindow";
 import { CategoryCard, CategoryCardFooter } from "@/components/ui/CategoryCard";
@@ -17,7 +17,6 @@ import {
   Terminal,
   Braces,
   Layers,
-  Zap,
   Rocket,
   Award,
   ExternalLink,

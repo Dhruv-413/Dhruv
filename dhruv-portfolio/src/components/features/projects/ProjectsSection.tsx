@@ -18,6 +18,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { StatCard, StatCardGrid } from "@/components/ui/StatCard";
 import { FilterButton, FilterButtonGroup } from "@/components/ui/FilterButton";
 import { ScrollIndicator } from "@/components/ui/ScrollIndicator";
+import { SITE_CONFIG } from "@/lib/constants";
 import { Project } from "@/types/project";
 import projectsData from "@/data/projects.json";
 import Link from "next/link";
@@ -229,7 +230,7 @@ export function ProjectsSection() {
                 asChild
               >
                 <Link
-                  href="https://github.com/Dhruv-413"
+                  href={SITE_CONFIG.links.github}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
