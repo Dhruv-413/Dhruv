@@ -74,7 +74,7 @@ export default function CareerPage() {
       location: item.location,
       startDate: item.startDate,
       endDate: item.endDate,
-      description: item.description,
+      description: item.description ?? [],
     }))
   );
 
