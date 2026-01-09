@@ -81,5 +81,14 @@
       "Competed against thousands of participants nationwide"
     ],
     "tags": ["Competitive Programming", "Problem Solving"]
+  },
+  {
+    "id": "Deloitte-2026",
+    "type": "work",
+    "title": "Upcoming Virtual Intern",
+    "organization": "Deloitte",
+    "location": "Delhi, India",
+    "startDate": "2026-01-21",
+    "tags": ["SAP ABAP", "HANA DB"]
   }
 ]
