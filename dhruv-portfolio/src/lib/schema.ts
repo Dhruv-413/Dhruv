@@ -211,7 +211,9 @@ export function getCareerSchema(
           "@type": "City",
           name: exp.location,
         },
-        description: exp.description.join(". "),
+        description: Array.isArray(exp.description)
+          ? exp.description.join(". ")
+          : exp.description ?? "",
       })),
     },
   };

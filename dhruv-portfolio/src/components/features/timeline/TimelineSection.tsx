@@ -363,7 +363,7 @@ export function TimelineSection() {
 
                       {/* Description */}
                       <ul className="space-y-1.5 sm:space-y-2 mb-3 sm:mb-4">
-                        {item.description.map((desc, idx) => (
+                        {(item.description || []).map((desc, idx) => (
                           <motion.li
                             key={idx}
                             initial={{ opacity: 0, x: -10 }}
@@ -423,7 +423,7 @@ export function TimelineSection() {
 
                       {/* Technology Tags */}
                       <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                        {item.tags.map((tag, idx) => {
+                        {(item.tags || []).map((tag, idx) => {
                           const icon = (
                             <TechIcon
                               name={tag}
