@@ -20,7 +20,7 @@ profile.cov
 
 # Dependency directories
 vendor/
-
+package-lock.json
 # Go workspace file
 go.work
 go.work.sum
