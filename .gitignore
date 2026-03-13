@@ -208,3 +208,6 @@ temp/
 # Ignore vscode AI rules
 .github\instructions\codacy.instructions.md
 .vscode/
+sqlite_mcp_server.db
+opencode
+.opencode

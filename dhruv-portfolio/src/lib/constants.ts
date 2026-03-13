@@ -4,7 +4,7 @@ export const SITE_CONFIG = {
   description:
     "Full Stack Developer & AI/ML Engineer with expertise in React, Next.js, Python, and enterprise software. B.Tech CS student at Manipal University Jaipur. Ex-ONGC Intern specializing in scalable web applications and intelligent systems.",
   url: "https://dhruvgupta.dev",
-  siteUrl: "https://dhruvgupta.dev",
+  siteUrl: "https://dhruvgupta-nu.vercel.app/",
   ogImage: "/og-image.jpg",
   twitterImage: "/twitter-image.jpg",
   links: {

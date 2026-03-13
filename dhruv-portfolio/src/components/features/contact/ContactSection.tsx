@@ -23,13 +23,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { SITE_CONFIG } from "@/lib/constants";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import toast from "react-hot-toast";
-import emailjs from "@emailjs/browser";
+import { useEmail } from "@/hooks/useEmail";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -44,6 +44,9 @@ export function ContactSection() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [emailCopied, setEmailCopied] = useState(false);
   const [formSuccess, setFormSuccess] = useState(false);
+  
+  const { sendEmail } = useEmail();
+  const siteConfig = useSiteConfig();
 
   const heroRef = useRef(null);
   const formRef = useRef(null);
@@ -66,33 +69,12 @@ export function ContactSection() {
     setIsSubmitting(true);
 
     try {
-      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
-      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
-      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
-
-      if (!publicKey || !serviceId || !templateId) {
-        console.error("Missing EmailJS configuration:", {
-          publicKey: !!publicKey,
-          serviceId: !!serviceId,
-          templateId: !!templateId,
-        });
-        throw new Error(
-          "EmailJS configuration is missing. Please check your environment variables."
-        );
-      }
-      const templateParams = {
+      const response = await sendEmail({
         name: data.name,
         email: data.email,
         subject: data.subject,
         message: data.message,
-      };
-
-      const response = await emailjs.send(
-        serviceId,
-        templateId,
-        templateParams,
-        publicKey
-      );
+      });
 
       if (response.status === 200) {
         setFormSuccess(true);
@@ -107,10 +89,10 @@ export function ContactSection() {
         throw new Error("Failed to send email");
       }
     } catch (error) {
-      console.error("EmailJS Error:", error);
+      console.error("Email Error:", error);
       toast.error(
         "Failed to send message. Please try again or email me directly at " +
-          SITE_CONFIG.contact.email,
+          siteConfig.contact.email,
         {
           duration: 7000,
         }
@@ -121,7 +103,7 @@ export function ContactSection() {
   };
 
   const copyEmail = () => {
-    navigator.clipboard.writeText(SITE_CONFIG.contact.email);
+    navigator.clipboard.writeText(siteConfig.contact.email);
     setEmailCopied(true);
     toast.success("Email copied to clipboard!");
     setTimeout(() => setEmailCopied(false), 2000);
@@ -468,11 +450,11 @@ export function ContactSection() {
                     </p>
                     <div className="flex items-center gap-2">
                       <a
-                        href={SITE_CONFIG.links.email}
+                        href={siteConfig.links.email}
                         className="font-medium hover:text-primary transition-colors truncate font-mono text-xs sm:text-sm"
                         aria-label="Send email"
                       >
-                        {SITE_CONFIG.contact.email}
+                        {siteConfig.contact.email}
                       </a>
                       <Button
                         variant="ghost"
@@ -511,7 +493,7 @@ export function ContactSection() {
                       {"// Location"}
                     </p>
                     <p className="font-medium font-mono text-xs sm:text-sm">
-                      {SITE_CONFIG.contact.location}
+                      {siteConfig.contact.location}
                     </p>
                   </div>
                 </motion.div>
@@ -535,7 +517,7 @@ export function ContactSection() {
                     className="hover:border-primary hover:text-primary transition-all hover:scale-110 h-10 w-10 sm:h-11 sm:w-11"
                   >
                     <a
-                      href={SITE_CONFIG.links.github}
+                      href={siteConfig.links.github}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="GitHub profile"
@@ -550,7 +532,7 @@ export function ContactSection() {
                     className="hover:border-primary hover:text-primary transition-all hover:scale-110 h-10 w-10 sm:h-11 sm:w-11"
                   >
                     <a
-                      href={SITE_CONFIG.links.linkedin}
+                      href={siteConfig.links.linkedin}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="LinkedIn profile"
@@ -564,7 +546,7 @@ export function ContactSection() {
                     asChild
                     className="hover:border-primary hover:text-primary transition-all hover:scale-110 h-10 w-10 sm:h-11 sm:w-11"
                   >
-                    <a href={SITE_CONFIG.links.email} aria-label="Send email">
+                    <a href={siteConfig.links.email} aria-label="Send email">
                       <Mail className="h-4 w-4 sm:h-5 sm:w-5" />
                     </a>
                   </Button>

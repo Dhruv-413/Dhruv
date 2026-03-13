@@ -1,18 +1,40 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Github, Linkedin, Mail, Braces } from "lucide-react";
-import { NAV_ITEMS, SITE_CONFIG } from "@/lib/constants";
+import { NAV_ITEMS } from "@/lib/constants";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 import { Button } from "@/components/ui/button";
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const siteConfig = useSiteConfig();
 
+  // FIXED: Added focus trap for mobile menu accessibility
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      // Focus the close button when menu opens
+      closeButtonRef.current?.focus();
+      
+      // Handle escape key to close menu
+      const handleEscape = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          setIsMobileMenuOpen(false);
+        }
+      };
+      
+      document.addEventListener("keydown", handleEscape);
+      return () => document.removeEventListener("keydown", handleEscape);
+    }
+  }, [isMobileMenuOpen]);
+
+  // Handle scroll detection
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -21,6 +43,13 @@ export function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Close mobile menu on route change - intentional sync with router
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const handleNavClick = () => {
     setIsMobileMenuOpen(false);
@@ -150,7 +179,7 @@ export function Header() {
                 asChild
               >
                 <a
-                  href={SITE_CONFIG.links.github}
+                  href={siteConfig.links.github}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="GitHub Profile"
@@ -165,7 +194,7 @@ export function Header() {
                 asChild
               >
                 <a
-                  href={SITE_CONFIG.links.linkedin}
+                  href={siteConfig.links.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="LinkedIn Profile"
@@ -179,16 +208,17 @@ export function Header() {
                 className="h-9 w-9 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110 active:scale-95 touch-manipulation"
                 asChild
               >
-                <a href={SITE_CONFIG.links.email} aria-label="Send Email">
+                <a href={siteConfig.links.email} aria-label="Send Email">
                   <Mail className="h-4 w-4" aria-hidden="true" />
                 </a>
               </Button>
             </div>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu Button - FIXED: Added ref for focus trap */}
             <Button
               variant="ghost"
               size="icon"
+              ref={closeButtonRef}
               className="md:hidden h-9 w-9 sm:h-10 sm:w-10 rounded-md hover:bg-primary/10 hover:text-primary transition-all active:scale-95 touch-manipulation"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
@@ -288,7 +318,7 @@ export function Header() {
                       asChild
                     >
                       <a
-                        href={SITE_CONFIG.links.github}
+                        href={siteConfig.links.github}
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label="GitHub Profile"
@@ -307,7 +337,7 @@ export function Header() {
                       asChild
                     >
                       <a
-                        href={SITE_CONFIG.links.linkedin}
+                        href={siteConfig.links.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label="LinkedIn Profile"

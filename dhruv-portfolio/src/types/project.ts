@@ -3,7 +3,7 @@ export interface Project {
   title: string;
   description: string;
   longDescription?: string;
-  category: "AI/ML" | "Full-Stack" | "Computer Vision" | "Enterprise";
+  category: "AI/ML" | "Full-Stack" | "Computer Vision" | "Backend" | "Frontend" | "Enterprise";
   featured: boolean;
   technologies: string[];
   codeSnippet?: string;

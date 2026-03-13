@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useCallback, useEffect, useState } from "react";
 
 export interface ScrollIndicatorProps {
   /** Text to display above the arrow */
@@ -30,6 +31,8 @@ export interface ScrollIndicatorProps {
  *   isInView={isInView}
  * />
  * ```
+ *
+ * FIXED: Wrapped document access in useEffect to prevent SSR hydration issues
  */
 export function ScrollIndicator({
   text = "Scroll to explore",
@@ -38,11 +41,31 @@ export function ScrollIndicator({
   animationDelay = 1,
   className,
 }: ScrollIndicatorProps) {
-  const handleClick = () => {
-    if (targetId) {
-      document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" });
+  const [canScroll, setCanScroll] = useState(false);
+
+  // Check if target element exists after mount - intentional sync with DOM
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    if (!targetId) {
+      setCanScroll(false);
+      return;
     }
-  };
+
+    // Check if target element exists
+    const element = document.getElementById(targetId);
+    setCanScroll(!!element);
+  }, [targetId]);
+  /* eslint-enable react-hooks/set-state-in-effect */
+
+  // FIXED: useCallback for stable reference
+  const handleClick = useCallback(() => {
+    if (!targetId) return;
+
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [targetId]);
 
   return (
     <motion.div
@@ -59,6 +82,7 @@ export function ScrollIndicator({
         transition={{ duration: 2, repeat: Infinity }}
         className="flex flex-col items-center gap-2 text-muted-foreground cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/50 rounded-lg p-2"
         onClick={handleClick}
+        disabled={!canScroll}
         aria-label={`Scroll down to ${targetId || "next section"}`}
         type="button"
       >

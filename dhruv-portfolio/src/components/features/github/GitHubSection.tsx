@@ -11,10 +11,12 @@ import {
   Monitor,
   ChevronDown,
   ChevronUp,
+  AlertCircle,
+  RefreshCw,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { SITE_CONFIG } from "@/lib/constants";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 import {
   useGitHubUser,
   useGitHubRepos,
@@ -24,7 +26,7 @@ import {
   type GitHubRepo,
   type ContributedRepository,
 } from "@/hooks/useGitHub";
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 
 // Import sub-components
 import {
@@ -40,7 +42,7 @@ import {
 // ============================================================================
 
 export function GitHubSection() {
-  const { data: user, isLoading: userLoading } = useGitHubUser();
+  const { data: user, isLoading: userLoading, isError: userError, error: userErrorObj } = useGitHubUser();
   const { data: repos, isLoading: reposLoading } = useGitHubRepos();
   const { data: stats } = useGitHubStats();
   const { data: contributions } = useGitHubContributions();
@@ -61,11 +63,29 @@ export function GitHubSection() {
   // Refs for scroll animations
   const heroRef = useRef(null);
   const galleryRef = useRef(null);
+  
+  // FIX: Use useInView with fallback to ensure animations trigger on direct navigation
+  // The issue was that on SSR, useInView might detect elements as "not in view" initially
+  // and with once:true, they never animate. Adding a small delay or using fallback fixes this.
   const isHeroInView = useInView(heroRef, { once: true, margin: "-100px" });
   const isGalleryInView = useInView(galleryRef, {
     once: true,
     margin: "-100px",
   });
+
+  // Fallback: If not in view after a short delay, trigger animations anyway
+  // This fixes the issue where direct navigation to /github doesn't show components
+  const [forceAnimate, setForceAnimate] = useState(false);
+  
+  useEffect(() => {
+    // Faster fallback - 500ms is enough for initial render to complete
+    const timer = setTimeout(() => setForceAnimate(true), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Use fallback animation state when useInView hasn't triggered
+  const heroShouldAnimate = isHeroInView || forceAnimate;
+  const galleryShouldAnimate = isGalleryInView || forceAnimate;
 
   const isLoading = userLoading || reposLoading;
 
@@ -113,19 +133,30 @@ export function GitHubSection() {
     [stats]
   );
 
-  // Stats values
-  const totalReposCount = user?.publicRepos || 0;
-  const totalStarsCount = stats?.totalStars || 0;
+  // Stats values - with fallbacks for missing data
+  const totalReposCount = user?.publicRepos ?? 0;
+  const totalStarsCount = stats?.totalStars ?? 0;
   const uniqueLanguagesCount = languages.length;
-  const totalCommits = contributions?.totalCommits || 0;
-  const totalPRs = contributions?.totalPRs || 0;
-  const totalIssues = contributions?.totalIssues || 0;
-  const totalReviews = contributions?.totalReviews || 0;
+  const totalCommits = contributions?.totalCommits ?? 0;
+  const totalPRs = contributions?.totalPRs ?? 0;
+  const totalIssues = contributions?.totalIssues ?? 0;
+  const totalReviews = contributions?.totalReviews ?? 0;
 
+  // Show error state with fallback if there's an error but we have some data
+  const hasError = userError || userErrorObj;
+  const hasData = user && (repos?.length ?? 0) > 0;
+
+  // Show loading skeleton while fetching
   if (isLoading) {
     return <LoadingSkeleton />;
   }
 
+  // If there's an error but we have no data, show error state
+  if (hasError && !hasData) {
+    return <ErrorFallback error={userErrorObj} onRetry={() => window.location.reload()} />;
+  }
+
+  // Always render content - even with partial data or errors (we have fallbacks for missing data)
   return (
     <>
       {/* Hero Section */}
@@ -138,7 +169,7 @@ export function GitHubSection() {
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
-            animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+            animate={heroShouldAnimate ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto text-center"
           >
@@ -181,11 +212,11 @@ export function GitHubSection() {
               totalStars={totalStarsCount}
               uniqueLanguages={uniqueLanguagesCount}
               contributions={contributions}
-              isInView={isHeroInView}
+              isInView={heroShouldAnimate}
             />
 
             {/* Scroll Indicator */}
-            <ScrollIndicator isInView={isHeroInView} />
+            <ScrollIndicator isInView={heroShouldAnimate} />
           </motion.div>
         </div>
       </section>
@@ -198,7 +229,7 @@ export function GitHubSection() {
       >
         <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
           {/* Mobile Message */}
-          <MobileDesktopMessage isInView={isGalleryInView} />
+          <MobileDesktopMessage isInView={galleryShouldAnimate} />
 
           {/* Desktop: Contribution Heatmap & Language Distribution - Only on true desktops (1536px+) */}
           <div className="hidden 2xl:grid 2xl:grid-cols-[7fr_3fr] gap-8 mb-16">
@@ -219,7 +250,7 @@ export function GitHubSection() {
             onFilterChange={setActiveFilter}
             repos={filteredRepos}
             topRepos={topRepos}
-            isInView={isGalleryInView}
+            isInView={galleryShouldAnimate}
             showAll={showAllRepos}
             onToggleShowAll={() => setShowAllRepos(!showAllRepos)}
             activeRepo={activeRepo}
@@ -233,7 +264,7 @@ export function GitHubSection() {
           {contributedRepos && contributedRepos.repositories.length > 0 && (
             <ContributedRepositoriesSection
               contributedRepos={contributedRepos}
-              isInView={isGalleryInView}
+              isInView={galleryShouldAnimate}
               activeFilter={contributedRepoFilter}
               onFilterChange={setContributedRepoFilter}
               showAll={showAllContributedRepos}
@@ -270,6 +301,65 @@ function LoadingSkeleton() {
                 <div key={i} className="h-32 bg-muted rounded"></div>
               ))}
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ErrorFallback({ error, onRetry }: { error: Error | null; onRetry: () => void }) {
+  return (
+    <section
+      id="github"
+      className="min-h-screen relative overflow-hidden flex items-center"
+    >
+      <div className="container mx-auto px-4">
+        <div className="max-w-2xl mx-auto text-center">
+          <div className="flex justify-center mb-6">
+            <div className="p-4 rounded-full bg-destructive/10">
+              <AlertCircle className="h-12 w-12 text-destructive" />
+            </div>
+          </div>
+          <h1 className="text-3xl font-bold mb-4">Unable to Load GitHub Data</h1>
+          <p className="text-muted-foreground mb-6">
+            We couldn&apos;t load your GitHub profile data. This might be due to:
+          </p>
+          <ul className="text-left text-muted-foreground mb-8 space-y-2 max-w-md mx-auto">
+            <li className="flex items-start gap-2">
+              <span className="text-destructive">•</span>
+              <span>GitHub API rate limit exceeded</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-destructive">•</span>
+              <span>Network connectivity issues</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-destructive">•</span>
+              <span>GitHub token not configured</span>
+            </li>
+          </ul>
+          {error && (
+            <p className="text-sm text-muted-foreground mb-6 p-3 bg-muted rounded-lg font-mono">
+              {error.message}
+            </p>
+          )}
+          <div className="flex gap-4 justify-center">
+            <Button onClick={onRetry} className="gap-2">
+              <RefreshCw className="h-4 w-4" />
+              Retry
+            </Button>
+            <Button variant="outline" asChild>
+              <a
+                href="https://github.com/Dhruv-413"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="gap-2"
+              >
+                <Github className="h-4 w-4" />
+                View on GitHub
+              </a>
+            </Button>
           </div>
         </div>
       </div>
@@ -322,6 +412,8 @@ function ScrollIndicator({ isInView }: { isInView: boolean }) {
 }
 
 function MobileDesktopMessage({ isInView }: { isInView: boolean }) {
+  const siteConfig = useSiteConfig();
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -350,7 +442,7 @@ function MobileDesktopMessage({ isInView }: { isInView: boolean }) {
             className="group/link bg-linear-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
           >
             <a
-              href={SITE_CONFIG.links.github}
+              href={siteConfig.links.github}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="View GitHub profile"
@@ -463,6 +555,12 @@ function RepositoriesSection({
           <span className="font-mono text-primary">{repos?.length || 0}</span>{" "}
           repositories
         </p>
+
+        {(!repos || repos.length === 0) && (
+          <div className="text-center py-8 text-muted-foreground">
+            <p>No repositories found.</p>
+          </div>
+        )}
       </motion.div>
 
       {/* Repository Grid */}

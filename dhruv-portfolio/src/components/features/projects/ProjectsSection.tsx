@@ -18,7 +18,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { StatCard, StatCardGrid } from "@/components/ui/StatCard";
 import { FilterButton, FilterButtonGroup } from "@/components/ui/FilterButton";
 import { ScrollIndicator } from "@/components/ui/ScrollIndicator";
-import { SITE_CONFIG } from "@/lib/constants";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 import { Project } from "@/types/project";
 import projectsData from "@/data/projects.json";
 import Link from "next/link";
@@ -36,6 +36,8 @@ export function ProjectsSection() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>("All");
   const [activeStatIndex, setActiveStatIndex] = useState<number | null>(null);
+  
+  const siteConfig = useSiteConfig();
 
   // Refs for scroll animations
   const heroRef = useRef(null);
@@ -230,7 +232,7 @@ export function ProjectsSection() {
                 asChild
               >
                 <Link
-                  href={SITE_CONFIG.links.github}
+                  href={siteConfig.links.github}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

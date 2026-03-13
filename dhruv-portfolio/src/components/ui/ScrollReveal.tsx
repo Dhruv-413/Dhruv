@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useRef, useMemo } from "react";
 
 interface ScrollRevealProps {
@@ -18,19 +18,26 @@ export function ScrollReveal({
 }: ScrollRevealProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
+  
+  // FIXED: Check for reduced motion preference
+  const shouldReduceMotion = useReducedMotion();
 
-  // Responsive animation values - smaller movements on mobile
-  const directions = useMemo(() => {
-    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-    const offset = isMobile ? 20 : 40; // Reduced offset for mobile
+  // FIXED: Use static values to avoid stale closures
+  // The direction offsets are static - no need for window check in useMemo
+  const directions = useMemo(
+    () => ({
+      up: { y: 40 },
+      down: { y: -40 },
+      left: { x: 40 },
+      right: { x: -40 },
+    }),
+    []
+  );
 
-    return {
-      up: { y: offset },
-      down: { y: -offset },
-      left: { x: offset },
-      right: { x: -offset },
-    };
-  }, []);
+  // If reduced motion is preferred, just render without animation
+  if (shouldReduceMotion) {
+    return <div className={className}>{children}</div>;
+  }
 
   return (
     <motion.div

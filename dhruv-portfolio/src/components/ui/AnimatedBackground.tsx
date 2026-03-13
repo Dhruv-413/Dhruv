@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { memo } from "react";
 
 // Fixed seed for consistent particle positions - Performance optimized
@@ -23,7 +23,30 @@ const FIXED_PARTICLES = [
 ];
 
 // Memoized component for better performance
+// FIXED: Added prefers-reduced-motion support for accessibility
 export const AnimatedBackground = memo(function AnimatedBackground() {
+  // Check for reduced motion preference
+  const shouldReduceMotion = useReducedMotion();
+
+  // If user prefers reduced motion, render static background only
+  if (shouldReduceMotion) {
+    return (
+      <>
+        {/* Static base background layer - No animations for accessibility */}
+        <div className="fixed inset-0 -z-20 overflow-hidden">
+          <div className="absolute inset-0 bg-linear-to-br from-background via-background to-background" />
+        </div>
+
+        {/* Static grid layer */}
+        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+          <div className="absolute inset-0">
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808018_1px,transparent_1px),linear-gradient(to_bottom,#80808018_1px,transparent_1px)] bg-size-[24px_24px]" />
+            <div className="absolute inset-0 bg-linear-to-b from-transparent via-background/50 to-background" />
+          </div>
+        </div>
+      </>
+    );
+  }
   return (
     <>
       {/* Base background layer - Deepest layer */}

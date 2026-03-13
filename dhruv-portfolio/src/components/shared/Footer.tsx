@@ -3,12 +3,13 @@
 import { useState, useEffect } from "react";
 import { Github, Linkedin, Mail, ArrowUp, Terminal, Code2 } from "lucide-react";
 import { motion } from "framer-motion";
-import { SITE_CONFIG } from "@/lib/constants";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 import { Button } from "@/components/ui/button";
 
 export function Footer() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const currentYear = new Date().getFullYear();
+  const siteConfig = useSiteConfig();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -58,7 +59,7 @@ export function Footer() {
               <span>© {currentYear}</span>
               <span className="text-primary">•</span>
               <span className="bg-linear-to-r from-primary to-purple-400 bg-clip-text text-transparent font-semibold">
-                {SITE_CONFIG.name}
+                {siteConfig.name}
               </span>
             </div>
           </div>
@@ -74,7 +75,7 @@ export function Footer() {
                 asChild
               >
                 <a
-                  href={SITE_CONFIG.links.github}
+                  href={siteConfig.links.github}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="GitHub Profile"
@@ -89,7 +90,7 @@ export function Footer() {
                 asChild
               >
                 <a
-                  href={SITE_CONFIG.links.linkedin}
+                  href={siteConfig.links.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="LinkedIn Profile"
@@ -103,7 +104,7 @@ export function Footer() {
                 className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110 active:scale-95"
                 asChild
               >
-                <a href={SITE_CONFIG.links.email} aria-label="Send Email">
+                <a href={siteConfig.links.email} aria-label="Send Email">
                   <Mail className="h-3.5 w-3.5" aria-hidden="true" />
                 </a>
               </Button>

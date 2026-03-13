@@ -20,7 +20,6 @@ import {
   SiExpress,
   SiSocketdotio,
   SiRedis,
-  SiAmazon,
   SiGooglecloud,
   SiGit,
   SiGithub,
@@ -31,8 +30,7 @@ import {
   SiDjango,
   SiMysql,
   SiHtml5,
-  SiCss3,
-  SiSap,
+  SiCss,
   SiJenkins,
   SiJira,
   SiFigma,
@@ -46,7 +44,12 @@ import {
 } from "react-icons/si";
 import { DiJava } from "react-icons/di";
 import { BiLogoGoLang } from "react-icons/bi";
-import { TbApi, TbBrandCpp, TbBrandVscode, TbBrandAzure } from "react-icons/tb";
+import { TbApi, TbBrandCpp, TbBrandVscode, TbBrandAzure, TbBrandAws } from "react-icons/tb";
+
+// Simple Icons for SAP - exact brand logo
+import { SiSap } from "@icons-pack/react-simple-icons";
+
+// ============================================================================
 
 // Comprehensive mapping of technology names to their corresponding React Icons
 const iconMap: Record<string, IconType> = {
@@ -84,8 +87,8 @@ const iconMap: Record<string, IconType> = {
   "tailwind css": SiTailwindcss,
   html5: SiHtml5,
   html: SiHtml5,
-  css3: SiCss3,
-  css: SiCss3,
+  css3: SiCss,
+  css: SiCss,
 
   // Databases
   postgresql: SiPostgresql,
@@ -116,7 +119,7 @@ const iconMap: Record<string, IconType> = {
 
   // Cloud & DevOps
   docker: SiDocker,
-  aws: SiAmazon,
+  aws: TbBrandAws,
   azure: TbBrandAzure,
   gcp: SiGooglecloud,
   "google cloud": SiGooglecloud,
@@ -145,12 +148,14 @@ const iconMap: Record<string, IconType> = {
   githubactions: SiGithubactions,
   vscode: TbBrandVscode,
   jupyter: SiJupyter,
-  sap: SiSap,
-  "sap abap": SiSap,
-  abap: SiSap,
   jira: SiJira,
   figma: SiFigma,
   postman: SiPostman,
+
+  // SAP - from Simple Icons (exact brand logo) - using suppressHydrationWarning to prevent mismatch warning
+  sap: (props) => <SiSap suppressHydrationWarning {...props} />,
+  "sap abap": (props) => <SiSap suppressHydrationWarning {...props} />,
+  abap: (props) => <SiSap suppressHydrationWarning {...props} />,
 };
 
 interface TechIconProps {
@@ -160,7 +165,8 @@ interface TechIconProps {
 
 /**
  * TechIcon component that displays technology logos using react-icons
- * Falls back to null if icon is not found (allowing text-only display)
+ * Falls back to CoreUI icons for brands not available in react-icons
+ * Returns null if icon is not found (allowing text-only display)
  * Responsive sizing for better mobile/tablet/desktop experience
  */
 export function TechIcon({
@@ -168,9 +174,9 @@ export function TechIcon({
   className = "h-4 w-4 sm:h-5 sm:w-5",
 }: TechIconProps) {
   // Normalize the name to lowercase and handle common variations
-  const normalizedName = name.toLowerCase().trim();
+  const normalizedName = name.toLowerCase().trim().replace(/\s+/g, ' ');
 
-  // Get the icon component from the map
+  // Get the icon component from the icon map
   const IconComponent = iconMap[normalizedName];
 
   // If icon not found, return null (parent component should handle text-only display)

@@ -2,13 +2,14 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-const GITHUB_GRAPHQL_API = "https://api.github.com/graphql";
-const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN;
-const GITHUB_USERNAME = process.env.NEXT_PUBLIC_GITHUB_USERNAME || "Dhruv-413";
+const API_ROUTE = "/api/github";
 
 // ============================================================================
 // GraphQL Response Types
 // ============================================================================
+
+// Note: These types match the response from our internal /api/github route
+// The token is handled server-side, so no auth headers needed here
 
 interface GraphQLLanguage {
   name: string;
@@ -184,130 +185,59 @@ export interface ContributedRepository {
 // GraphQL Query
 // ============================================================================
 
-const graphqlHeaders: HeadersInit = GITHUB_TOKEN
-  ? {
-      Authorization: `bearer ${GITHUB_TOKEN}`,
-      "Content-Type": "application/json",
-    }
-  : {
-      "Content-Type": "application/json",
-    };
-
 async function fetchGitHubGraphQLData(): Promise<GitHubGraphQLData> {
-  const query = `
-    query($username: String!) {
-      user(login: $username) {
-        login
-        name
-        avatarUrl
-        bio
-        company
-        location
-        websiteUrl
-        followers {
-          totalCount
-        }
-        following {
-          totalCount
-        }
-        repositories(first: 100, ownerAffiliations: OWNER, orderBy: {field: UPDATED_AT, direction: DESC}, privacy: PUBLIC) {
-          totalCount
-          nodes {
-            name
-            description
-            url
-            homepageUrl
-            stargazerCount
-            forkCount
-            primaryLanguage {
-              name
-              color
-            }
-            languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {
-              edges {
-                size
-                node {
-                  name
-                  color
-                }
-              }
-            }
-            updatedAt
-            repositoryTopics(first: 10) {
-              nodes {
-                topic {
-                  name
-                }
-              }
-            }
-          }
-        }
-        contributionsCollection {
-          contributionCalendar {
-            totalContributions
-            weeks {
-              contributionDays {
-                contributionCount
-                date
-              }
-            }
-          }
-          restrictedContributionsCount
-          totalCommitContributions
-          totalIssueContributions
-          totalPullRequestContributions
-          totalPullRequestReviewContributions
-        }
-        repositoriesContributedTo(first: 100, contributionTypes: [COMMIT, ISSUE, PULL_REQUEST, REPOSITORY]) {
-          totalCount
-          nodes {
-            name
-            owner {
-              login
-            }
-            url
-            description
-            stargazerCount
-            forkCount
-            primaryLanguage {
-              name
-              color
-            }
-            updatedAt
-          }
-        }
-        pullRequests {
-          totalCount
-        }
-        issues {
-          totalCount
-        }
-      }
-    }
-  `;
-
-  const response = await fetch(GITHUB_GRAPHQL_API, {
-    method: "POST",
-    headers: graphqlHeaders,
-    body: JSON.stringify({
-      query,
-      variables: { username: GITHUB_USERNAME },
-    }),
+  // Fetch from internal API route - token is handled server-side
+  // This keeps the GitHub token completely hidden from the client
+  const response = await fetch(API_ROUTE, {
+    method: "GET",
     next: { revalidate: 3600 }, // Cache for 1 hour
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch GitHub GraphQL data");
+    const errorData = await response.json().catch(() => ({}));
+    console.error("GitHub API error:", response.status, errorData);
+    // Return a partial response with null user to trigger fallback UI
+    // instead of throwing an error
+    throw new Error(errorData.error || `Failed to fetch GitHub data: ${response.status}`);
   }
 
-  const result = await response.json();
+  const data = await response.json();
 
-  if (result.errors) {
-    console.error("GraphQL errors:", result.errors);
-    throw new Error("GraphQL query failed");
+  // Instead of throwing, return a structure that allows fallback UI
+  if (!data || !data.user) {
+    console.warn("GitHub API returned invalid data:", data);
+    // Return a mock response with null user - this allows the UI to show fallback
+    return {
+      user: {
+        login: "",
+        name: "",
+        avatarUrl: "",
+        bio: "",
+        company: null,
+        location: null,
+        websiteUrl: null,
+        followers: { totalCount: 0 },
+        following: { totalCount: 0 },
+        repositories: { totalCount: 0, nodes: [] },
+        contributionsCollection: {
+          contributionCalendar: {
+            totalContributions: 0,
+            weeks: []
+          },
+          restrictedContributionsCount: 0,
+          totalCommitContributions: 0,
+          totalIssueContributions: 0,
+          totalPullRequestContributions: 0,
+          totalPullRequestReviewContributions: 0
+        },
+        repositoriesContributedTo: { totalCount: 0, nodes: [] },
+        pullRequests: { totalCount: 0 },
+        issues: { totalCount: 0 }
+      }
+    } as GitHubGraphQLData;
   }
 
-  return result.data;
+  return data;
 }
 
 // ============================================================================
