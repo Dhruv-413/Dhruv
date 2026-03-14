@@ -6,7 +6,7 @@
  * making it easy to test and swap implementations.
  */
 
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { EmailPayload, EmailServiceResponse } from "@/lib/emailService";
 import { createEmailService } from "@/lib/email/emailJsService";
 
@@ -20,12 +20,14 @@ export function useEmail(): UseEmailReturn {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
+  // Create email service instance once using useMemo to avoid recreation on every call
+  const emailService = useMemo(() => createEmailService(), []);
+
   const sendEmail = useCallback(async (payload: EmailPayload) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const emailService = createEmailService();
       const response = await emailService.sendEmail(payload);
       return response;
     } catch (err) {
@@ -35,7 +37,7 @@ export function useEmail(): UseEmailReturn {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [emailService]);
 
   return {
     sendEmail,

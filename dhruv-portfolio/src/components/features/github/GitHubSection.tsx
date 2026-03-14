@@ -23,9 +23,8 @@ import {
   useGitHubStats,
   useGitHubContributions,
   useGitHubContributedRepos,
-  type GitHubRepo,
-  type ContributedRepository,
 } from "@/hooks/useGitHub";
+import type { GitHubRepo, ContributedRepository } from "@/types/github";
 import { useState, useRef, useMemo, useEffect } from "react";
 
 // Import sub-components

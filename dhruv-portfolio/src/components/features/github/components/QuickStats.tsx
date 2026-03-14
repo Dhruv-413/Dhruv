@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Folder, Star, Code2, GitCommit, Flame, Award } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import type { GitHubContributions } from "@/hooks/useGitHub";
+import type { GitHubContributions } from "@/types/github";
 
 interface QuickStatsProps {
   totalRepos: number;

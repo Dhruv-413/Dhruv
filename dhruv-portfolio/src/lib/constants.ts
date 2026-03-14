@@ -3,7 +3,7 @@ export const SITE_CONFIG = {
   title: "Dhruv Gupta | Full Stack Developer & AI/ML Engineer",
   description:
     "Full Stack Developer & AI/ML Engineer with expertise in React, Next.js, Python, and enterprise software. B.Tech CS student at Manipal University Jaipur. Ex-ONGC Intern specializing in scalable web applications and intelligent systems.",
-  url: "https://dhruvgupta.dev",
+  url: "https://dhruvgupta-nu.vercel.app/",
   siteUrl: "https://dhruvgupta-nu.vercel.app/",
   ogImage: "/og-image.jpg",
   twitterImage: "/twitter-image.jpg",
@@ -16,7 +16,7 @@ export const SITE_CONFIG = {
   contact: {
     email: "dhruvgupta6580@gmail.com",
     location: "Jaipur, Rajasthan, India",
-    phone: "+91-XXXXXXXXXX",
+    // Phone number intentionally removed for privacy - use email for contact
   },
   // SEO Configuration
   seo: {
@@ -116,3 +116,19 @@ export const CARD_STYLES = {
 export const DEFAULT_FILTER = "All" as const;
 
 export const INITIAL_ITEMS_TO_SHOW = 6 as const;
+
+// ============================================================================
+// Location Constants for Schema
+// ============================================================================
+
+export const LOCATION = {
+  city: "Jaipur",
+  state: "Rajasthan",
+  country: "IN",
+  fullAddress: "Jaipur, Rajasthan, India",
+} as const;
+
+export const UNIVERSITY = {
+  name: "Manipal University Jaipur",
+  url: "https://jaipur.manipal.edu/",
+} as const;

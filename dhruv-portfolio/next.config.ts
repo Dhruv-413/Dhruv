@@ -28,6 +28,12 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 60,
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
     imageSizes: [16, 32, 48, 64, 96, 128, 256],
+    // Security Note: dangerouslyAllowSVG is required for simpleicons.org CDN
+    // which serves SVG icons for skill/technology badges.
+    // The CSP header (contentSecurityPolicy) below provides some protection,
+    // but for production, consider hosting icons locally or using a different
+    // icon provider that supports other image formats.
+    // See: https://nextjs.org/docs/app/api-reference/components/image#dangerouslyallowsvg
     dangerouslyAllowSVG: true,
     contentDispositionType: "attachment",
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",

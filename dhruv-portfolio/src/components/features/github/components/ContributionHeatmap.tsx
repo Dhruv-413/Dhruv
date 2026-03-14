@@ -3,7 +3,7 @@
 import { motion, useInView } from "framer-motion";
 import { Activity, Calendar, GitCommit, Flame, Award, Eye } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import type { GitHubContributions, ContributionDay } from "@/hooks/useGitHub";
+import type { GitHubContributions, ContributionDay } from "@/types/github";
 import { useState, useRef } from "react";
 
 // Contribution level colors - Green theme

@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import type { GitHubRepo, ContributedRepository } from "@/hooks/useGitHub";
+import type { GitHubRepo, ContributedRepository } from "@/types/github";
 import { formatDistanceToNow } from "date-fns";
 import { getColorFromString } from "@/lib/helpers";
 

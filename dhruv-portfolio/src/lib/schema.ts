@@ -4,7 +4,7 @@
  * and enable rich snippets in search results.
  */
 
-import { SITE_CONFIG } from "./constants";
+import { SITE_CONFIG, LOCATION, UNIVERSITY } from "./constants";
 
 // Person Schema for the homepage
 export function getPersonSchema() {
@@ -20,14 +20,14 @@ export function getPersonSchema() {
     email: SITE_CONFIG.contact.email,
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Jaipur",
-      addressRegion: "Rajasthan",
-      addressCountry: "IN",
+      addressLocality: LOCATION.city,
+      addressRegion: LOCATION.state,
+      addressCountry: LOCATION.country,
     },
     alumniOf: {
       "@type": "EducationalOrganization",
       name: SITE_CONFIG.person.alumniOf,
-      url: "https://jaipur.manipal.edu/",
+      url: UNIVERSITY.url,
     },
     knowsAbout: SITE_CONFIG.person.knowsAbout,
     sameAs: [
@@ -233,9 +233,9 @@ export function getContactPageSchema() {
       email: SITE_CONFIG.contact.email,
       address: {
         "@type": "PostalAddress",
-        addressLocality: "Jaipur",
-        addressRegion: "Rajasthan",
-        addressCountry: "IN",
+        addressLocality: LOCATION.city,
+        addressRegion: LOCATION.state,
+        addressCountry: LOCATION.country,
       },
       contactPoint: {
         "@type": "ContactPoint",

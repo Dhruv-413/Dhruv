@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TechIcon } from "@/components/ui/TechIcon";
 import { SITE_CONFIG } from "@/lib/constants";
-import type { GitHubStats } from "@/hooks/useGitHub";
+import type { GitHubStats } from "@/types/github";
 import { useRef } from "react";
 
 interface LanguageDistributionProps {
