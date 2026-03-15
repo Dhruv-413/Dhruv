@@ -138,7 +138,7 @@
 
 /* Gradient text utilities */
 .gradient-text {
-  @apply bg-clip-text text-transparent bg-linear-to-r from-primary via-purple-500 to-accent;
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-500 to-accent;
 }
 
 .gradient-border {
@@ -281,6 +281,22 @@
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* Skip to content link for accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  padding: 8px 16px;
+  z-index: 100;
+  transition: top 0.3s;
+}
+
+.skip-link:focus {
+  top: 0;
 }
 
 /* Thin scrollbar for code blocks */

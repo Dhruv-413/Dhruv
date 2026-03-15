@@ -5,7 +5,6 @@ export { HeroCTA } from "./HeroCTA";
 export { HeroSocialLinks } from "./HeroSocialLinks";
 export { ProfileImage } from "./ProfileImage";
 export { HeroCodeSnippet } from "./HeroCodeSnippet";
-export { ScrollIndicator } from "./ScrollIndicator";
 export { StatsDashboard } from "./StatsDashboard";
 export { AboutCodeSnippet } from "./AboutCodeSnippet";
 export { HighlightsGrid } from "./HighlightsGrid";

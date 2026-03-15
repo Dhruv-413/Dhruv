@@ -3,10 +3,11 @@
 import { motion, useInView } from "framer-motion";
 import skillsData from "@/data/skills.json";
 import certificationsData from "@/data/certifications.json";
+import projectsData from "@/data/projects.json";
 import { useRef, useState } from "react";
 import TechIcon from "@/components/ui/TechIcon";
 import { CodeSnippetWindow } from "@/components/ui/CodeSnippetWindow";
-import { CategoryCard, CategoryCardFooter } from "@/components/ui/CategoryCard";
+import { SkillCard } from "./SkillCard";
 import { Badge, BadgeGroup } from "@/components/ui/Badge";
 import {
   Code,
@@ -20,12 +21,13 @@ import {
   Rocket,
   Award,
   ExternalLink,
+  Folder,
+  ArrowUpRight,
 } from "lucide-react";
 
-const categoryIcons: Record<
-  string,
-  React.ComponentType<{ className?: string }>
-> = {
+import type { LucideIcon } from "lucide-react";
+
+const categoryIcons: Record<string, LucideIcon> = {
   "AI/ML": Sparkles,
   Backend: Database,
   Frontend: Code,
@@ -33,6 +35,87 @@ const categoryIcons: Record<
   "Data Science": Database,
   DevOps: Cloud,
 };
+
+// Create a mapping of skills to projects that use them
+const skillToProjectsMap = (() => {
+  const map: Record<string, typeof projectsData> = {};
+  
+  projectsData.forEach((project) => {
+    project.technologies.forEach((tech) => {
+      if (!map[tech]) {
+        map[tech] = [];
+      }
+      map[tech].push(project);
+    });
+  });
+  
+  return map;
+})();
+
+// Component to show projects that use a specific skill
+function SkillProjectHoverCard({ skill, projects }: { skill: string; projects: typeof projectsData }) {
+  const [isHovered, setIsHovered] = useState(false);
+  
+  if (!projects || projects.length === 0) return null;
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Hover Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+        animate={{
+          opacity: isHovered ? 1 : 0,
+          y: isHovered ? 0 : 10,
+          scale: isHovered ? 1 : 0.95,
+        }}
+        transition={{ duration: 0.2 }}
+        className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 sm:w-80 p-3 sm:p-4 bg-card/95 backdrop-blur-md border border-border rounded-xl shadow-2xl"
+        style={{ pointerEvents: isHovered ? 'auto' : 'none' }}
+      >
+        {/* Arrow */}
+        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-card/95 border-r border-b border-border rotate-45" />
+        
+        {/* Header */}
+        <div className="flex items-center gap-2 mb-3">
+          <div className="p-1.5 rounded-lg bg-primary/10">
+            <TechIcon name={skill} className="h-4 w-4 text-primary" />
+          </div>
+          <div>
+            <p className="text-xs text-muted-foreground">Used in</p>
+            <p className="text-sm font-semibold">{projects.length} project{projects.length > 1 ? 's' : ''}</p>
+          </div>
+        </div>
+        
+        {/* Project List */}
+        <div className="space-y-2 max-h-40 overflow-y-auto">
+          {projects.slice(0, 3).map((project) => (
+            <a
+              key={project.id}
+              href={project.links?.github || '#'}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 p-2 rounded-lg bg-muted/50 hover:bg-muted transition-colors group"
+            >
+              <Folder className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+              <span className="text-xs sm:text-sm truncate flex-1">{project.title}</span>
+              <ArrowUpRight className="h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+            </a>
+          ))}
+        </div>
+        
+        {projects.length > 3 && (
+          <p className="text-[10px] text-muted-foreground mt-2 text-center">
+            +{projects.length - 3} more projects
+          </p>
+        )}
+      </motion.div>
+    </div>
+  );
+}
 
 // Skills code snippet matching Hero.tsx style
 const skillsCodeSnippet = `// My Technical Skills
@@ -154,7 +237,10 @@ export function SkillsSection() {
                 <span className="text-primary font-semibold">
                   production-ready
                 </span>{" "}
-                solutions with best practices.
+                solutions with best practices.{" "}
+                <span className="text-primary/70 text-xs block mt-1">
+                  (Hover over skills to see related projects)
+                </span>
               </motion.p>
 
               {/* Quick Stats */}
@@ -253,18 +339,21 @@ export function SkillsSection() {
             Skills Breakdown
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-base lg:text-lg">
-            Detailed overview of technologies and tools I work with
+            Detailed overview of technologies and tools I work with.{" "}
+            <span className="text-primary/70">
+              Hover over any skill to see related projects!
+            </span>
           </p>
         </motion.div>
 
-        {/* Skills Grid using CategoryCard */}
+        {/* Skills Grid using SkillCard */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 max-w-7xl mx-auto">
           {skillsData.map((skillCategory, index) => {
             const Icon = categoryIcons[skillCategory.category] || Code;
             const isActive = activeCategory === skillCategory.category;
 
             return (
-              <CategoryCard
+              <SkillCard
                 key={skillCategory.category}
                 title={skillCategory.category}
                 color={skillCategory.color}
@@ -275,29 +364,39 @@ export function SkillsSection() {
                 animationDelay={index * 0.1}
                 onMouseEnter={() => setActiveCategory(skillCategory.category)}
                 onMouseLeave={() => setActiveCategory(null)}
-                footer={<CategoryCardFooter />}
               >
                 {/* Skills Grid with Hover Effects */}
                 <BadgeGroup className="mb-3 sm:mb-4">
-                  {skillCategory.skills.map((skill, idx) => (
-                    <Badge
-                      key={idx}
-                      label={skill}
-                      icon={
-                        <TechIcon
-                          name={skill}
-                          className="h-3.5 w-3.5 sm:h-4 sm:w-4"
+                  {skillCategory.skills.map((skill, idx) => {
+                    const relatedProjects = skillToProjectsMap[skill] || [];
+                    return (
+                      <div key={idx} className="relative">
+                        <Badge
+                          label={skill}
+                          icon={
+                            <TechIcon
+                              name={skill}
+                              className="h-3.5 w-3.5 sm:h-4 sm:w-4"
+                            />
+                          }
+                          variant="tech"
+                          clickable
+                          isInView={isInView}
+                          animationDelay={index * 0.1 + idx * 0.05}
+                          color={skillCategory.color}
                         />
-                      }
-                      variant="tech"
-                      clickable
-                      isInView={isInView}
-                      animationDelay={index * 0.1 + idx * 0.05}
-                      color={skillCategory.color}
-                    />
-                  ))}
+                        {/* Show hover card if there are related projects */}
+                        {relatedProjects.length > 0 && (
+                          <SkillProjectHoverCard
+                            skill={skill}
+                            projects={relatedProjects}
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
                 </BadgeGroup>
-              </CategoryCard>
+              </SkillCard>
             );
           })}
         </div>

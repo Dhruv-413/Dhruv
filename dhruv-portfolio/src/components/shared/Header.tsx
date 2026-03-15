@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,11 +14,28 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const previousActiveElement = useRef<HTMLElement | null>(null);
   const siteConfig = useSiteConfig();
 
-  // FIXED: Added focus trap for mobile menu accessibility
+  // FIXED: Enhanced focus trap for mobile menu accessibility
+  // Store the element that had focus before opening the menu
+  const storeActiveElement = useCallback(() => {
+    previousActiveElement.current = document.activeElement as HTMLElement;
+  }, []);
+
+  // Restore focus to the element that had focus before menu opened
+  const restoreFocus = useCallback(() => {
+    if (previousActiveElement.current && previousActiveElement.current.focus) {
+      previousActiveElement.current.focus();
+      previousActiveElement.current = null;
+    }
+  }, []);
+
+  // Handle menu open/close with focus management
   useEffect(() => {
     if (isMobileMenuOpen) {
+      storeActiveElement();
       // Focus the close button when menu opens
       closeButtonRef.current?.focus();
       
@@ -30,9 +47,14 @@ export function Header() {
       };
       
       document.addEventListener("keydown", handleEscape);
-      return () => document.removeEventListener("keydown", handleEscape);
+      return () => {
+        document.removeEventListener("keydown", handleEscape);
+      };
+    } else {
+      // When menu closes, restore focus to the element that had focus before
+      restoreFocus();
     }
-  }, [isMobileMenuOpen]);
+  }, [isMobileMenuOpen, storeActiveElement, restoreFocus]);
 
   // Handle scroll detection
   useEffect(() => {
@@ -54,6 +76,36 @@ export function Header() {
   const handleNavClick = () => {
     setIsMobileMenuOpen(false);
   };
+
+  // FIXED: Handle Tab key to trap focus within mobile menu
+  const handleMenuKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (!menuRef.current) return;
+
+    const focusableElements = menuRef.current.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    );
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    if (e.key === "Tab") {
+      if (e.shiftKey) {
+        // Shift + Tab: go to previous element
+        if (document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement?.focus();
+        }
+      } else {
+        // Tab: go to next element
+        if (document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement?.focus();
+        }
+      }
+    } else if (e.key === "Escape") {
+      // Escape closes the menu
+      setIsMobileMenuOpen(false);
+    }
+  }, []);
 
   const isActive = (href: string) => {
     if (href === "/" && pathname === "/") return true;
@@ -129,7 +181,7 @@ export function Header() {
                     {active && (
                       <motion.span
                         className="absolute left-0.5 lg:left-1 top-1/2 -translate-y-1/2 text-primary font-mono text-xs"
-                        layoutId="terminalPrompt"
+                        layoutId={`nav-prompt-${item.href}`}
                         transition={{
                           type: "spring",
                           stiffness: 380,
@@ -145,7 +197,7 @@ export function Header() {
                     {/* Animated underline */}
                     {active && (
                       <motion.div
-                        className="absolute -bottom-1 left-0 right-0 h-0.5 bg-linear-to-r from-primary via-purple-400 to-accent rounded-full"
+                        className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-purple-400 to-accent rounded-full"
                         layoutId="activeNav"
                         transition={{
                           type: "spring",
@@ -166,10 +218,11 @@ export function Header() {
                 </motion.div>
               );
             })}
-          </div>
 
-          {/* Social Links & Mobile Menu */}
-          <div className="flex items-center gap-1.5 sm:gap-2">
+            </div>
+
+            {/* Social Links & Mobile Menu */}
+            <div className="flex items-center gap-1.5 sm:gap-2">
             {/* Social Links - Desktop Only */}
             <div className="hidden lg:flex items-center gap-1 mr-2">
               <Button
@@ -254,15 +307,20 @@ export function Header() {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation - FIXED: Added focus trap with ref and keyboard handler */}
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div
+              ref={menuRef}
               className="md:hidden overflow-hidden"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
+              onKeyDown={handleMenuKeyDown}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Mobile navigation menu"
             >
               <div className="px-2 pt-2 pb-3 sm:pb-4 space-y-1.5 sm:space-y-2 border-t border-border/50 mt-2">
                 {/* Navigation Links */}

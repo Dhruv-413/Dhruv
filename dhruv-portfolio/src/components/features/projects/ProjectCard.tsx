@@ -53,7 +53,7 @@ export function ProjectCard({ project, onClick, index = 0 }: ProjectCardProps) {
       onMouseLeave={() => setIsActive(false)}
       className="group relative h-full"
     >
-      {/* Card Container - Matching Skills Card Style */}
+      {/* Card Container - FIXED: Added keyboard accessibility */}
       <div
         className={`
           relative h-full bg-card rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 border transition-all duration-500 cursor-pointer touch-manipulation active:scale-[0.98]
@@ -64,6 +64,15 @@ export function ProjectCard({ project, onClick, index = 0 }: ProjectCardProps) {
           }
         `}
         onClick={onClick}
+        onKeyDown={(e: React.KeyboardEvent) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onClick();
+          }
+        }}
+        tabIndex={0}
+        role="button"
+        aria-label={`View details for ${project.title}`}
       >
         {/* Animated Background */}
         <div

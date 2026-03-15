@@ -91,7 +91,7 @@ export function Badge({
           ? { backgroundColor: `${color}20`, color }
           : undefined
       }
-      role={clickable ? "button" : undefined}
+      role={clickable ? "button" : "status"}
       aria-label={ariaLabel || label}
     >
       {icon && (

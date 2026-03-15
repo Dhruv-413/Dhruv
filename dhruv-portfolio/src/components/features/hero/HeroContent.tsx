@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Terminal } from "lucide-react";
 import { useState, useEffect } from "react";
 import { HeroStats } from "./HeroStats";
@@ -23,6 +23,8 @@ interface HeroContentProps {
 
 export function HeroContent({ stats }: HeroContentProps) {
   const [currentRole, setCurrentRole] = useState(0);
+  // FIXED: Check for reduced motion preference
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -45,8 +47,8 @@ export function HeroContent({ stats }: HeroContentProps) {
           ~/portfolio
         </span>
         <motion.span
-          animate={{ opacity: [1, 0, 1] }}
-          transition={{ duration: 1, repeat: Infinity }}
+          animate={{ opacity: shouldReduceMotion ? 1 : [1, 0, 1] }}
+          transition={{ duration: shouldReduceMotion ? 0 : 1, repeat: shouldReduceMotion ? 0 : Infinity }}
           className="text-primary font-mono text-xs sm:text-sm"
         >
           _

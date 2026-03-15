@@ -1,10 +1,13 @@
+// Site URL - defaults to localhost in development
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
 export const SITE_CONFIG = {
   name: "Dhruv Gupta",
   title: "Dhruv Gupta | Full Stack Developer & AI/ML Engineer",
   description:
     "Full Stack Developer & AI/ML Engineer with expertise in React, Next.js, Python, and enterprise software. B.Tech CS student at Manipal University Jaipur. Ex-ONGC Intern specializing in scalable web applications and intelligent systems.",
-  url: "https://dhruvgupta-nu.vercel.app/",
-  siteUrl: "https://dhruvgupta-nu.vercel.app/",
+  url: SITE_URL,
+  siteUrl: SITE_URL,
   ogImage: "/og-image.jpg",
   twitterImage: "/twitter-image.jpg",
   links: {

@@ -44,6 +44,7 @@ export function ContactSection() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [emailCopied, setEmailCopied] = useState(false);
   const [formSuccess, setFormSuccess] = useState(false);
+  const [messageLength, setMessageLength] = useState(0);
   
   const { sendEmail } = useEmail();
   const siteConfig = useSiteConfig();
@@ -89,7 +90,10 @@ export function ContactSection() {
         throw new Error("Failed to send email");
       }
     } catch (error) {
-      console.error("Email Error:", error);
+      // Log error in development only
+      if (process.env.NODE_ENV === "development") {
+        console.error("Email Error:", error);
+      }
       toast.error(
         "Failed to send message. Please try again or email me directly at " +
           siteConfig.contact.email,
@@ -220,6 +224,7 @@ export function ContactSection() {
                   </Label>
                   <Input
                     id="name"
+                    autoComplete="name"
                     placeholder="John Doe"
                     {...register("name")}
                     className={`transition-all duration-300 ${
@@ -258,6 +263,7 @@ export function ContactSection() {
                   </Label>
                   <Input
                     id="email"
+                    autoComplete="email"
                     type="email"
                     placeholder="john@example.com"
                     {...register("email")}
@@ -297,6 +303,7 @@ export function ContactSection() {
                   </Label>
                   <Input
                     id="subject"
+                    autoComplete="off"
                     placeholder="Project Inquiry / Collaboration"
                     {...register("subject")}
                     className={`transition-all duration-300 ${
@@ -339,7 +346,9 @@ export function ContactSection() {
                     id="message"
                     placeholder="Tell me about your project or inquiry..."
                     rows={5}
+                    maxLength={500}
                     {...register("message")}
+                    onChange={(e) => setMessageLength(e.target.value.length)}
                     className={`transition-all duration-300 ${
                       errors.message
                         ? "border-destructive focus:border-destructive"
@@ -350,6 +359,17 @@ export function ContactSection() {
                       errors.message ? "message-error" : undefined
                     }
                   />
+                  <div className="flex justify-end mt-1">
+                    <span className={`text-xs font-mono ${
+                      messageLength >= 450
+                        ? messageLength >= 500
+                          ? "text-destructive"
+                          : "text-yellow-500"
+                        : "text-muted-foreground"
+                    }`}>
+                      {messageLength}/500
+                    </span>
+                  </div>
                   {errors.message && (
                     <motion.p
                       initial={{ opacity: 0, x: -10 }}

@@ -71,7 +71,7 @@ export function Footer() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110 active:scale-95"
+                className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110 active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 asChild
               >
                 <a
@@ -86,7 +86,7 @@ export function Footer() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110 active:scale-95"
+                className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110 active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 asChild
               >
                 <a
@@ -101,7 +101,7 @@ export function Footer() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110 active:scale-95"
+                className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110 active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 asChild
               >
                 <a href={siteConfig.links.email} aria-label="Send Email">

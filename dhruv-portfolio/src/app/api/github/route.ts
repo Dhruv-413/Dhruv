@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
 
 // ============================================================================
-// Security: In-memory rate limiter
+// Security: In-memory rate limiter with cleanup
 // ============================================================================
 // Simple rate limiting: 10 requests per minute per IP address
 // Note: This is a basic in-memory implementation. For production with multiple
 // server instances, use a distributed rate limiter (Redis, etc.)
 const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
 const RATE_LIMIT_MAX_REQUESTS = 10;
+const CLEANUP_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
+const MAX_MAP_SIZE = 10000; // Prevent unbounded growth
 
 interface RateLimitEntry {
   count: number;
@@ -15,6 +17,25 @@ interface RateLimitEntry {
 }
 
 const rateLimitMap = new Map<string, RateLimitEntry>();
+
+// Cleanup old entries every 5 minutes to prevent memory leak
+if (typeof setInterval !== 'undefined') {
+  setInterval(() => {
+    const now = Date.now();
+    for (const [ip, entry] of rateLimitMap.entries()) {
+      if (now > entry.resetTime) {
+        rateLimitMap.delete(ip);
+      }
+    }
+    // If map is too large, clear oldest entries
+    if (rateLimitMap.size > MAX_MAP_SIZE) {
+      const entries = Array.from(rateLimitMap.entries());
+      entries.sort((a, b) => a[1].resetTime - b[1].resetTime);
+      const toDelete = entries.slice(0, Math.floor(MAX_MAP_SIZE * 0.2));
+      toDelete.forEach(([ip]) => rateLimitMap.delete(ip));
+    }
+  }, CLEANUP_INTERVAL_MS);
+}
 
 function getClientIP(request: Request): string {
   const forwarded = request.headers.get("x-forwarded-for");

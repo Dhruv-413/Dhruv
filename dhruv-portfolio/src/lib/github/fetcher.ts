@@ -3,8 +3,7 @@
  * Handles fetching data from the internal API route
  */
 
-import { GitHubGraphQLData } from "@/types/github/graphql";
-import { GraphQLContributionWeek } from "@/types/github/graphql";
+import { GitHubGraphQLData, GraphQLContributionWeek, GraphQLContributionDay } from "@/types/github/graphql";
 
 const API_ROUTE = "/api/github";
 
@@ -60,14 +59,6 @@ export async function fetchGitHubGraphQLData(): Promise<GitHubGraphQLData> {
   }
 
   return data;
-}
-
-/**
- * Contribution day type from GraphQL response
- */
-interface GraphQLContributionDay {
-  contributionCount: number;
-  date: string;
 }
 
 /**

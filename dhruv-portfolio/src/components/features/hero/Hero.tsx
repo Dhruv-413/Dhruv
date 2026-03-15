@@ -6,7 +6,7 @@ import { useGitHubUser, useGitHubStats } from "@/hooks/useGitHub";
 import { HeroContent } from "./HeroContent";
 import { ProfileImage } from "./ProfileImage";
 import { HeroCodeSnippet } from "./HeroCodeSnippet";
-import { ScrollIndicator } from "./ScrollIndicator";
+import { ScrollIndicator } from "@/components/ui/ScrollIndicator";
 import { StatsDashboard } from "./StatsDashboard";
 import { AboutCodeSnippet } from "./AboutCodeSnippet";
 import { HighlightsGrid } from "./HighlightsGrid";

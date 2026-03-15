@@ -3,23 +3,18 @@
 import { useState, useRef, useMemo } from "react";
 import { motion, useInView } from "framer-motion";
 import dynamic from "next/dynamic";
-import {
-  Code2,
-  Folder,
-  Star,
-  Sparkles,
-  ExternalLink,
-  Github,
-  Rocket,
-} from "lucide-react";
+import { Github, Rocket, ExternalLink, Star, Code2 } from "lucide-react";
 import { ProjectCard } from "./ProjectCard";
+import { CategoryFilters } from "./CategoryFilters";
+import { TechFilters } from "./TechFilters";
 import { Button } from "@/components/ui/button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { StatCard, StatCardGrid } from "@/components/ui/StatCard";
-import { FilterButton, FilterButtonGroup } from "@/components/ui/FilterButton";
 import { ScrollIndicator } from "@/components/ui/ScrollIndicator";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
-import { Project } from "@/types/project";
+import { useProjectsFilter, categoryFilters } from "@/hooks/useProjectsFilter";
+import { useProjectStats } from "@/hooks/useProjectStats";
+import type { Project } from "@/types/project";
 import projectsData from "@/data/projects.json";
 import Link from "next/link";
 
@@ -34,7 +29,8 @@ const ProjectModal = dynamic(
 export function ProjectsSection() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeFilter, setActiveFilter] = useState<string>("All");
+  const [activeCategory, setActiveCategory] = useState<string>("All");
+  const [activeTechFilter, setActiveTechFilter] = useState<string>("All");
   const [activeStatIndex, setActiveStatIndex] = useState<number | null>(null);
   
   const siteConfig = useSiteConfig();
@@ -60,67 +56,18 @@ export function ProjectsSection() {
     []
   );
 
-  // Get popular technologies for filter buttons (top 6)
-  const { filterOptions, technologyCounts } = useMemo(() => {
-    const counts = projects
-      .flatMap((p) => p.technologies)
-      .reduce((acc, tech) => {
-        acc[tech] = (acc[tech] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
+  // Use the filter hook
+  const {
+    techFilterOptions,
+    technologyCounts,
+    categoryCounts,
+    filteredProjects,
+    filteredFeatured,
+    filteredOther,
+  } = useProjectsFilter(projects, activeCategory, activeTechFilter);
 
-    const popular = Object.entries(counts)
-      .sort(([, a], [, b]) => b - a)
-      .slice(0, 6)
-      .map(([tech]) => tech);
-
-    return { filterOptions: ["All", ...popular], technologyCounts: counts };
-  }, [projects]);
-
-  // Filter projects based on active filter
-  const { filteredProjects, filteredFeatured, filteredOther } = useMemo(() => {
-    const filtered =
-      activeFilter === "All"
-        ? projects
-        : projects.filter((p) => p.technologies.includes(activeFilter));
-
-    return {
-      filteredProjects: filtered,
-      filteredFeatured: filtered.filter((p) => p.featured),
-      filteredOther: filtered.filter((p) => !p.featured),
-    };
-  }, [projects, activeFilter]);
-
-  // Calculate stats
-  const stats = useMemo(() => {
-    const totalProjects = projects.length;
-    const featuredCount = projects.filter((p) => p.featured).length;
-    const uniqueTechnologies = new Set(projects.flatMap((p) => p.technologies))
-      .size;
-
-    return [
-      {
-        icon: Folder,
-        value: totalProjects,
-        label: "Projects",
-        color: "#3b82f6",
-      },
-      {
-        icon: Code2,
-        value: `${uniqueTechnologies}+`,
-        label: "Technologies",
-        color: "#8b5cf6",
-      },
-      {
-        icon: Star,
-        value: featuredCount,
-        label: "Featured",
-        color: "#f59e0b",
-        fill: true,
-      },
-      { icon: Sparkles, value: "100%", label: "Production", color: "#10b981" },
-    ];
-  }, [projects]);
+  // Use the stats hook
+  const stats = useProjectStats(projects);
 
   const handleProjectClick = (project: Project) => {
     setSelectedProject(project);
@@ -144,6 +91,11 @@ export function ProjectsSection() {
     const previousIndex =
       (currentIndex - 1 + filteredProjects.length) % filteredProjects.length;
     setSelectedProject(filteredProjects[previousIndex]);
+  };
+
+  const handleCategoryChange = (category: string) => {
+    setActiveCategory(category);
+    setActiveTechFilter("All"); // Reset tech filter when category changes
   };
 
   return (
@@ -260,35 +212,26 @@ export function ProjectsSection() {
         ref={galleryRef}
       >
         <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
-          {/* Technology Filters using reusable component */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isGalleryInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5 }}
-            className="mb-6 sm:mb-8"
-          >
-            <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
-              <Code2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
-              <span className="text-xs sm:text-sm font-mono text-muted-foreground">
-                Filter by Technology:
-              </span>
-            </div>
-            <FilterButtonGroup>
-              {filterOptions.map((filter, index) => (
-                <FilterButton
-                  key={filter}
-                  label={filter}
-                  isActive={activeFilter === filter}
-                  count={
-                    filter !== "All" ? technologyCounts[filter] : undefined
-                  }
-                  onClick={() => setActiveFilter(filter)}
-                  animationDelay={0.1 + index * 0.05}
-                  isInView={isGalleryInView}
-                />
-              ))}
-            </FilterButtonGroup>
-          </motion.div>
+          {/* Category Filters */}
+          <CategoryFilters
+            categories={categoryFilters}
+            activeCategory={activeCategory}
+            onCategoryChange={handleCategoryChange}
+            categoryCounts={categoryCounts}
+            isInView={isGalleryInView}
+          />
+
+          {/* Technology Filters - only show if a category is selected */}
+          {activeCategory !== "All" && (
+            <TechFilters
+              filters={techFilterOptions}
+              activeFilter={activeTechFilter}
+              counts={technologyCounts}
+              onFilterChange={setActiveTechFilter}
+              onClear={() => setActiveTechFilter("All")}
+              isInView={isGalleryInView}
+            />
+          )}
 
           {/* Featured Projects Section */}
           {filteredFeatured.length > 0 && (
@@ -401,12 +344,15 @@ export function ProjectsSection() {
               </div>
               <h3 className="text-xl font-bold mb-2">No projects found</h3>
               <p className="text-muted-foreground mb-6">
-                No projects match the selected technology filter.
+                No projects match the selected filters.
               </p>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setActiveFilter("All")}
+                onClick={() => {
+                  setActiveCategory("All");
+                  setActiveTechFilter("All");
+                }}
                 className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-mono text-sm hover:shadow-lg hover:shadow-primary/30 transition-all"
               >
                 Show All Projects

@@ -124,14 +124,16 @@ export default function RootLayout({
         {/* DNS prefetch for faster external resource loading */}
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://api.github.com" />
+        <meta name="theme-color" content="#0a0a0a" />
       </head>
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} antialiased dark`}
       >
+        <a href="#main-content" className="skip-link">Skip to content</a>
         <Providers>
           <div className="flex flex-col min-h-screen">
             <Header />
-            <main className="flex-1">{children}</main>
+            <main id="main-content" className="flex-1">{children}</main>
             <Footer />
           </div>
           <Toaster
