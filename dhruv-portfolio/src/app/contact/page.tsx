@@ -1,6 +1,5 @@
 import dynamic from "next/dynamic";
 import type { Metadata } from "next";
-import { AnimatedBackground } from "@/components/ui/AnimatedBackground";
 import { Suspense } from "react";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { SITE_CONFIG } from "@/lib/constants";
@@ -15,6 +14,14 @@ const ContactSection = dynamic(
     loading: () => <LoadingSkeleton variant="contact" />,
     ssr: true,
   }
+);
+
+// Lazy load AnimatedBackground - heavy framer-motion animations, load client-side only
+const AnimatedBackground = dynamic(
+  () =>
+    import("@/components/ui/AnimatedBackground").then((mod) => ({
+      default: mod.AnimatedBackground,
+    }))
 );
 
 export const metadata: Metadata = {

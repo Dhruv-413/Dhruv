@@ -18,8 +18,8 @@ export function AboutCodeSnippet({ isInView }: AboutCodeSnippetProps) {
       className="min-w-0"
     >
       <div className="mb-4 sm:mb-5">
-        <div className="flex items-center gap-2 mb-2 sm:mb-3">
-          <Code2 className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+        <div className="flex items-center gap-2 mb-2 sm:mb-3 pl-2">
+          <Code2 className="h-4 w-4 sm:h-5 sm:w-5 text-primary pl-2" />
           <h3 className="text-base sm:text-lg md:text-xl font-bold font-mono">
             <span className="text-primary">{"// "}</span>Developer Profile
           </h3>
@@ -32,7 +32,7 @@ export function AboutCodeSnippet({ isInView }: AboutCodeSnippetProps) {
         language="TypeScript"
         animationDelay={0}
         maxHeight="500px"
-        className="order-0"
+        className="order-0 pl-2"
       />
     </motion.div>
   );

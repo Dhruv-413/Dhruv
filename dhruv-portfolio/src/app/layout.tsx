@@ -113,6 +113,32 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
+        {/* Initialize theme from localStorage before React hydrates - prevents flash */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  var html = document.documentElement;
+                  var body = document.body;
+
+                  if (theme === 'light') {
+                    html.classList.add('light');
+                    html.classList.remove('dark');
+                    body.classList.add('light');
+                    body.classList.remove('dark');
+                  } else if (theme === 'dark' || !theme) {
+                    html.classList.add('dark');
+                    html.classList.remove('light');
+                    body.classList.add('dark');
+                    body.classList.remove('light');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
         {/* Preconnect to external domains for performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -127,13 +153,17 @@ export default function RootLayout({
         <meta name="theme-color" content="#0a0a0a" />
       </head>
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} antialiased dark`}
+        className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <a href="#main-content" className="skip-link">Skip to content</a>
+        <a href="#main-content" className="skip-link">
+          Skip to content
+        </a>
         <Providers>
           <div className="flex flex-col min-h-screen">
             <Header />
-            <main id="main-content" className="flex-1">{children}</main>
+            <main id="main-content" className="flex-1">
+              {children}
+            </main>
             <Footer />
           </div>
           <Toaster

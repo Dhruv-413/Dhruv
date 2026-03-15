@@ -7,12 +7,7 @@ import { Play, Download, Mail } from "lucide-react";
 
 export function HeroCTA() {
   return (
-    <motion.div
-      className="cta-buttons-container flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start mb-6 sm:mb-8"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.7 }}
-    >
+    <div className="cta-buttons-container flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start pl-2 sm:mb-8">
       <motion.div
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -40,7 +35,7 @@ export function HeroCTA() {
           size="lg"
           variant="outline"
           asChild
-          className="cta-btn group hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all font-semibold w-full sm:w-auto"
+          className="cta-btn group dark:hover:bg-primary/90 dark:hover:text-primary-foreground dark:hover:border-primary/90 hover:bg-accent hover:text-accent-foreground hover:border-accent transition-all font-semibold w-full sm:w-auto"
         >
           <a href="/Dhruv_resume.pdf" download>
             <Download className="mr-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-y-1 transition-transform" />
@@ -68,6 +63,6 @@ export function HeroCTA() {
           </Link>
         </Button>
       </motion.div>
-    </motion.div>
+    </div>
   );
 }

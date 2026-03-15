@@ -1,11 +1,19 @@
 import dynamic from "next/dynamic";
 import type { Metadata } from "next";
-import { AnimatedBackground } from "@/components/ui/AnimatedBackground";
 import { Suspense } from "react";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { SITE_CONFIG } from "@/lib/constants";
 import { getProjectsListSchema, getBreadcrumbSchema } from "@/lib/schema";
 import projectsData from "@/data/projects.json";
+
+// Lazy load AnimatedBackground - heavy framer-motion animations, load client-side only
+// Note: ssr:false not needed - AnimatedBackground already has "use client"
+const AnimatedBackground = dynamic(
+  () =>
+    import("@/components/ui/AnimatedBackground").then((mod) => ({
+      default: mod.AnimatedBackground,
+    }))
+);
 
 // Lazy load ProjectsSection for better performance
 const ProjectsSection = dynamic(

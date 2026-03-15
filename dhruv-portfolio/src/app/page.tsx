@@ -1,10 +1,18 @@
 import dynamic from "next/dynamic";
 import type { Metadata } from "next";
-import { AnimatedBackground } from "@/components/ui/AnimatedBackground";
 import { Suspense } from "react";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { SITE_CONFIG } from "@/lib/constants";
 import { getPersonSchema, getWebsiteSchema } from "@/lib/schema";
+
+// Lazy load AnimatedBackground - heavy framer-motion animations, load client-side only
+// Note: ssr:false not needed - AnimatedBackground already has "use client"
+const AnimatedBackground = dynamic(
+  () =>
+    import("@/components/ui/AnimatedBackground").then((mod) => ({
+      default: mod.AnimatedBackground,
+    }))
+);
 
 // Lazy load Hero component for better initial page load
 const Hero = dynamic(

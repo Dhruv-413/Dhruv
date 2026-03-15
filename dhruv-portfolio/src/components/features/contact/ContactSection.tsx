@@ -60,11 +60,27 @@ export function ContactSection() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    watch,
+    formState: { errors, touchedFields },
     reset,
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
   });
+
+  // Watch all fields for real-time validation
+  const watchedFields = watch();
+
+  // Helper to check if field is valid and touched
+  const isFieldValid = (fieldName: keyof FormData) => {
+    const value = watchedFields[fieldName];
+    const trimmed = typeof value === 'string' ? value.trim() : value;
+    return trimmed && trimmed.length > 0 && !errors[fieldName] && touchedFields[fieldName];
+  };
+
+  // Helper to show hint (after first touch, no error yet)
+  const showFieldHint = (fieldName: keyof FormData) => {
+    return touchedFields[fieldName] && !errors[fieldName];
+  };
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
@@ -111,6 +127,25 @@ export function ContactSection() {
     setEmailCopied(true);
     toast.success("Email copied to clipboard!");
     setTimeout(() => setEmailCopied(false), 2000);
+  };
+
+  // Get message length color class
+  const getMessageLengthColor = () => {
+    if (messageLength >= 500) return "text-destructive";
+    if (messageLength >= 450) return "text-yellow-500";
+    return "text-muted-foreground";
+  };
+
+  // Get progress bar color
+  const getProgressBarColor = () => {
+    if (messageLength >= 500) return "bg-destructive";
+    if (messageLength >= 450) return "bg-yellow-500";
+    return "bg-primary";
+  };
+
+  // Calculate progress percentage
+  const getProgressPercentage = () => {
+    return Math.min((messageLength / 500) * 100, 100);
   };
 
   return (
@@ -222,19 +257,45 @@ export function ContactSection() {
                     <User className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
                     Name
                   </Label>
-                  <Input
-                    id="name"
-                    autoComplete="name"
-                    placeholder="John Doe"
-                    {...register("name")}
-                    className={`transition-all duration-300 ${
-                      errors.name
-                        ? "border-destructive focus:border-destructive"
-                        : "focus:border-primary"
-                    }`}
-                    aria-invalid={errors.name ? "true" : "false"}
-                    aria-describedby={errors.name ? "name-error" : undefined}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="name"
+                      autoComplete="name"
+                      placeholder="John Doe"
+                      {...register("name")}
+                      className={`transition-all duration-300 pr-10 ${
+                        errors.name
+                          ? "border-destructive focus:border-destructive"
+                          : isFieldValid("name")
+                          ? "border-green-500 focus:border-green-500"
+                          : "focus:border-primary"
+                      }`}
+                      aria-invalid={errors.name ? "true" : "false"}
+                      aria-describedby={errors.name ? "name-error" : touchedFields.name ? "name-hint" : undefined}
+                    />
+                    {/* Success indicator */}
+                    {isFieldValid("name") && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="absolute right-3 top-1/2 -translate-y-1/2"
+                      >
+                        <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      </motion.div>
+                    )}
+                  </div>
+                  {/* Hint - shows after touch if valid */}
+                  {showFieldHint("name") && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      id="name-hint"
+                      className="text-xs text-green-500 flex items-center gap-1"
+                    >
+                      <Check className="h-3 w-3" /> At least 2 characters
+                    </motion.p>
+                  )}
+                  {/* Error message */}
                   {errors.name && (
                     <motion.p
                       initial={{ opacity: 0, x: -10 }}
@@ -261,20 +322,46 @@ export function ContactSection() {
                     <AtSign className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
                     Email
                   </Label>
-                  <Input
-                    id="email"
-                    autoComplete="email"
-                    type="email"
-                    placeholder="john@example.com"
-                    {...register("email")}
-                    className={`transition-all duration-300 ${
-                      errors.email
-                        ? "border-destructive focus:border-destructive"
-                        : "focus:border-primary"
-                    }`}
-                    aria-invalid={errors.email ? "true" : "false"}
-                    aria-describedby={errors.email ? "email-error" : undefined}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="email"
+                      autoComplete="email"
+                      type="email"
+                      placeholder="john@example.com"
+                      {...register("email")}
+                      className={`transition-all duration-300 pr-10 ${
+                        errors.email
+                          ? "border-destructive focus:border-destructive"
+                          : isFieldValid("email")
+                          ? "border-green-500 focus:border-green-500"
+                          : "focus:border-primary"
+                      }`}
+                      aria-invalid={errors.email ? "true" : "false"}
+                      aria-describedby={errors.email ? "email-error" : touchedFields.email ? "email-hint" : undefined}
+                    />
+                    {/* Success indicator */}
+                    {isFieldValid("email") && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="absolute right-3 top-1/2 -translate-y-1/2"
+                      >
+                        <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      </motion.div>
+                    )}
+                  </div>
+                  {/* Hint - shows real-time if format is wrong */}
+                  {showFieldHint("email") && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      id="email-hint"
+                      className="text-xs text-green-500 flex items-center gap-1"
+                    >
+                      <Check className="h-3 w-3" /> Valid email format
+                    </motion.p>
+                  )}
+                  {/* Error message */}
                   {errors.email && (
                     <motion.p
                       initial={{ opacity: 0, x: -10 }}
@@ -300,22 +387,52 @@ export function ContactSection() {
                   >
                     <FileText className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
                     Subject
+                    <span className="text-muted-foreground font-normal ml-auto text-xs">
+                      {watchedFields.subject?.length || 0}/100
+                    </span>
                   </Label>
-                  <Input
-                    id="subject"
-                    autoComplete="off"
-                    placeholder="Project Inquiry / Collaboration"
-                    {...register("subject")}
-                    className={`transition-all duration-300 ${
-                      errors.subject
-                        ? "border-destructive focus:border-destructive"
-                        : "focus:border-primary"
-                    }`}
-                    aria-invalid={errors.subject ? "true" : "false"}
-                    aria-describedby={
-                      errors.subject ? "subject-error" : undefined
-                    }
-                  />
+                  <div className="relative">
+                    <Input
+                      id="subject"
+                      autoComplete="off"
+                      placeholder="Project Inquiry / Collaboration"
+                      maxLength={100}
+                      {...register("subject")}
+                      className={`transition-all duration-300 pr-10 ${
+                        errors.subject
+                          ? "border-destructive focus:border-destructive"
+                          : isFieldValid("subject")
+                          ? "border-green-500 focus:border-green-500"
+                          : "focus:border-primary"
+                      }`}
+                      aria-invalid={errors.subject ? "true" : "false"}
+                      aria-describedby={
+                        errors.subject ? "subject-error" : touchedFields.subject ? "subject-hint" : undefined
+                      }
+                    />
+                    {/* Success indicator */}
+                    {isFieldValid("subject") && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="absolute right-3 top-1/2 -translate-y-1/2"
+                      >
+                        <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      </motion.div>
+                    )}
+                  </div>
+                  {/* Hint - shows character count as they type */}
+                  {showFieldHint("subject") && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      id="subject-hint"
+                      className="text-xs text-green-500 flex items-center gap-1"
+                    >
+                      <Check className="h-3 w-3" /> At least 5 characters
+                    </motion.p>
+                  )}
+                  {/* Error message */}
                   {errors.subject && (
                     <motion.p
                       initial={{ opacity: 0, x: -10 }}
@@ -342,34 +459,80 @@ export function ContactSection() {
                     <MessageSquare className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
                     Message
                   </Label>
-                  <Textarea
-                    id="message"
-                    placeholder="Tell me about your project or inquiry..."
-                    rows={5}
-                    maxLength={500}
-                    {...register("message")}
-                    onChange={(e) => setMessageLength(e.target.value.length)}
-                    className={`transition-all duration-300 ${
-                      errors.message
-                        ? "border-destructive focus:border-destructive"
-                        : "focus:border-primary"
-                    }`}
-                    aria-invalid={errors.message ? "true" : "false"}
-                    aria-describedby={
-                      errors.message ? "message-error" : undefined
-                    }
-                  />
-                  <div className="flex justify-end mt-1">
-                    <span className={`text-xs font-mono ${
-                      messageLength >= 450
-                        ? messageLength >= 500
-                          ? "text-destructive"
-                          : "text-yellow-500"
-                        : "text-muted-foreground"
-                    }`}>
-                      {messageLength}/500
-                    </span>
+                  <div className="relative">
+                    <Textarea
+                      id="message"
+                      placeholder="Tell me about your project or inquiry..."
+                      rows={5}
+                      maxLength={500}
+                      {...register("message")}
+                      onChange={(e) => setMessageLength(e.target.value.length)}
+                      className={`transition-all duration-300 resize-none ${
+                        errors.message
+                          ? "border-destructive focus:border-destructive"
+                          : isFieldValid("message")
+                          ? "border-green-500 focus:border-green-500"
+                          : "focus:border-primary"
+                      }`}
+                      aria-invalid={errors.message ? "true" : "false"}
+                      aria-describedby={
+                        errors.message 
+                          ? "message-error" 
+                          : touchedFields.message 
+                          ? "message-hint message-counter" 
+                          : "message-counter"
+                      }
+                    />
+                    {/* Success indicator - positioned below textarea */}
+                    {isFieldValid("message") && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="absolute bottom-3 right-3"
+                      >
+                        <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      </motion.div>
+                    )}
                   </div>
+                  
+                  {/* Progress bar for message length */}
+                  <div className="mt-2 space-y-1">
+                    <div 
+                      className="h-1 w-full bg-muted rounded-full overflow-hidden"
+                      role="progressbar"
+                      aria-valuenow={messageLength}
+                      aria-valuemin={0}
+                      aria-valuemax={500}
+                      aria-label="Message length"
+                    >
+                      <motion.div
+                        className={`h-full rounded-full transition-colors duration-300 ${getProgressBarColor()}`}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${getProgressPercentage()}%` }}
+                        transition={{ duration: 0.2 }}
+                      />
+                    </div>
+                    
+                    {/* Character counter - more prominent */}
+                    <div className="flex justify-between items-center">
+                      {/* Hint - shows after touch if valid */}
+                      {showFieldHint("message") && (
+                        <motion.p
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          id="message-hint"
+                          className="text-xs text-green-500 flex items-center gap-1"
+                        >
+                          <Check className="h-3 w-3" /> At least 20 characters
+                        </motion.p>
+                      )}
+                      <span className={`text-xs font-mono font-semibold ml-auto ${getMessageLengthColor()}`}>
+                        {messageLength}/500
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {/* Error message */}
                   {errors.message && (
                     <motion.p
                       initial={{ opacity: 0, x: -10 }}

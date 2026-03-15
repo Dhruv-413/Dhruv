@@ -1,7 +1,7 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { GitHubSection } from "@/components/features/github/GitHubSection";
-import { AnimatedBackground } from "@/components/ui/AnimatedBackground";
 import { SITE_CONFIG } from "@/lib/constants";
 
 // JSON-LD structured data for GitHub page
@@ -23,6 +23,14 @@ const githubPageSchema = {
     "Open source contributions, repository statistics, and coding activity",
   url: `${SITE_CONFIG.siteUrl}/github`,
 };
+
+// Lazy load AnimatedBackground - heavy framer-motion animations, load client-side only
+const AnimatedBackground = dynamic(
+  () =>
+    import("@/components/ui/AnimatedBackground").then((mod) => ({
+      default: mod.AnimatedBackground,
+    }))
+);
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",

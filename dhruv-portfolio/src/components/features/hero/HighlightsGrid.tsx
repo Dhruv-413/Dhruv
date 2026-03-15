@@ -32,11 +32,11 @@ export function HighlightsGrid({ isInView }: HighlightsGridProps) {
         </h3>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+      <div className="grid grid-cols-1 gap-3 sm:gap-6 pr-2">
         {highlights.map((highlight, index) => {
           const colorKey =
             Object.keys(highlightColors).find((key) =>
-              highlight.color.includes(key)
+              highlight.color.includes(key),
             ) || "blue";
           const color = highlightColors[colorKey];
           const Icon = highlight.icon as LucideIcon;
@@ -57,8 +57,12 @@ export function HighlightsGrid({ isInView }: HighlightsGridProps) {
                     {Icon && <Icon className="h-4 w-4" style={{ color }} />}
                   </div>
                   <div>
-                    <h4 className="font-semibold text-sm mb-1">{highlight.title}</h4>
-                    <p className="text-xs text-muted-foreground">{highlight.description}</p>
+                    <h4 className="font-semibold text-sm mb-1">
+                      {highlight.title}
+                    </h4>
+                    <p className="text-xs text-muted-foreground">
+                      {highlight.description}
+                    </p>
                   </div>
                 </div>
               </Card>

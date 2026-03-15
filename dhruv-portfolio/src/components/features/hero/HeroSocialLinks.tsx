@@ -8,12 +8,7 @@ import { useSiteConfig } from "@/hooks/useSiteConfig";
 export function HeroSocialLinks() {
   const siteConfig = useSiteConfig();
   return (
-    <motion.div
-      className="flex justify-center lg:justify-start gap-3 sm:gap-4"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.8 }}
-    >
+    <div className="flex justify-center lg:justify-start gap-3 sm:gap-4 pl-2 pb-2">
       <motion.div
         whileHover={{ scale: 1.1, y: -2 }}
         whileTap={{ scale: 0.95 }}
@@ -51,6 +46,6 @@ export function HeroSocialLinks() {
           <ExternalLink className="h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
         </Link>
       </motion.div>
-    </motion.div>
+    </div>
   );
 }

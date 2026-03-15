@@ -8,6 +8,7 @@ import { Menu, X, Github, Linkedin, Mail, Braces } from "lucide-react";
 import { NAV_ITEMS } from "@/lib/constants";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -223,6 +224,10 @@ export function Header() {
 
             {/* Social Links & Mobile Menu */}
             <div className="flex items-center gap-1.5 sm:gap-2">
+              {/* Theme Toggle - Desktop Only */}
+              <div className="hidden lg:block">
+                <ThemeToggle />
+              </div>
             {/* Social Links - Desktop Only */}
             <div className="hidden lg:flex items-center gap-1 mr-2">
               <Button
@@ -357,6 +362,21 @@ export function Header() {
                     </motion.div>
                   );
                 })}
+
+                {/* Mobile Theme Toggle */}
+                <motion.div
+                  className="pt-3 sm:pt-4 border-t border-border/50 mt-3 sm:mt-4"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <p className="text-[10px] sm:text-xs text-muted-foreground font-mono mb-2 sm:mb-3 px-3 sm:px-4">
+                    {"// Theme"}
+                  </p>
+                  <div className="px-3 sm:px-4">
+                    <ThemeToggle />
+                  </div>
+                </motion.div>
 
                 {/* Mobile Social Links */}
                 <motion.div
