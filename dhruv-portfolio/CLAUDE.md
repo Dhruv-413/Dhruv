@@ -9,7 +9,7 @@ zustand · react-hook-form + zod · EmailJS · recharts · Vercel Analytics/Spee
   `sitemap.ts`, `robots.ts`. Every route has a `loading.tsx` skeleton and its own `metadata`.
 - `src/components/features/<area>/` — page sections (hero, projects, skills, timeline, github, contact, stats).
   `components/ui/` — primitives (shadcn `button/card/input/label/select/textarea` + custom visual pieces such as
-  `AnimatedBackground`, `ScanLineEffect`, `typewriter-effect`, `ThemeToggle`). `components/shared/` — Header, Footer, Providers.
+  `AnimatedBackground`, `typewriter-effect`, `ThemeToggle`). `components/shared/` — Header, Footer, Providers.
 - `src/data/*.json` — **all portfolio content** (projects, skills, timeline, certifications). Edit data, not components, to change content.
 - `src/hooks/` — barrel-exported hooks (`useGitHub`, `useEmail`, filters, UI state). `src/lib/` — `constants.ts` (`SITE_CONFIG`),
   `animations.ts` (shared framer-motion variants), `github/` (fetcher + transformers), `schema/` (JSON-LD builders), `utils.ts` (`cn`).

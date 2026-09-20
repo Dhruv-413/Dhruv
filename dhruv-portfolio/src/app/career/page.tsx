@@ -49,21 +49,12 @@ export const metadata: Metadata = {
       "From Computer Science education at Manipal University to enterprise impact at ONGC. Explore achievements, work experience, and professional growth.",
     url: `${SITE_CONFIG.siteUrl}/career`,
     type: "profile",
-    images: [
-      {
-        url: `${SITE_CONFIG.siteUrl}/og-career.jpg`,
-        width: 1200,
-        height: 630,
-        alt: "Career Journey - Professional Experience",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Career Journey | Dhruv Gupta",
     description:
       "From Computer Science education to enterprise impact. Explore achievements, work experience, and professional growth.",
-    images: [`${SITE_CONFIG.siteUrl}/twitter-career.jpg`],
   },
   alternates: {
     canonical: `${SITE_CONFIG.siteUrl}/career`,

@@ -40,7 +40,7 @@
     "links": {
       "github": "https://github.com/arjunsaxaena/CraveConnect"
     },
-    "images": ["/images/projects/crave-connect.jpg"],
+    "images": [],
     "date": "2025-08-01"
   },
   {
@@ -91,7 +91,7 @@
         "icon": "zap"
       }
     ],
-    "images": ["/images/projects/muj-portal.jpg"],
+    "images": [],
     "date": "2025-06-01"
   },
   {
@@ -135,7 +135,7 @@
     "links": {
       "github": "https://github.com/Dhruv-413/StockAnalysis"
     },
-    "images": ["/images/projects/stock-analysis.jpg"],
+    "images": [],
     "date": "2025-04-01"
   },
   {
@@ -179,7 +179,7 @@
     "links": {
       "github": "https://github.com/Dhruv-413/Eye-Gaze-Tracking-"
     },
-    "images": ["/images/projects/eye-gaze.jpg"],
+    "images": [],
     "date": "2025-02-01"
   },
   {
@@ -223,7 +223,7 @@
     "links": {
       "github": "https://github.com/Dhruv-413/EcoHive"
     },
-    "images": ["/images/projects/ecohive.jpg"],
+    "images": [],
     "date": "2024-07-01"
   }
 ]

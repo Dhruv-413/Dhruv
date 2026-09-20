@@ -8,8 +8,6 @@ export const SITE_CONFIG = {
     "Full Stack Developer & AI/ML Engineer with expertise in React, Next.js, Python, and enterprise software. B.Tech CS student at Manipal University Jaipur. Ex-ONGC Intern specializing in scalable web applications and intelligent systems.",
   url: SITE_URL,
   siteUrl: SITE_URL,
-  ogImage: "/og-image.jpg",
-  twitterImage: "/twitter-image.jpg",
   links: {
     github: "https://github.com/Dhruv-413",
     linkedin: "https://www.linkedin.com/in/dhruvgpta/",

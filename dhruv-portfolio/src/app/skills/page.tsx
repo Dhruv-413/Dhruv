@@ -56,21 +56,12 @@ export const metadata: Metadata = {
       "Comprehensive technical expertise across Full Stack Development, AI/ML, DevOps, and Enterprise Software. View detailed skill breakdown and proficiency levels.",
     url: `${SITE_CONFIG.siteUrl}/skills`,
     type: "website",
-    images: [
-      {
-        url: `${SITE_CONFIG.siteUrl}/og-skills.jpg`,
-        width: 1200,
-        height: 630,
-        alt: "Technical Skills - Full Stack Developer",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: `Technical Skills | ${totalTechnologies}+ Technologies`,
     description:
       "Comprehensive technical expertise across Full Stack Development, AI/ML, DevOps, and Enterprise Software.",
-    images: [`${SITE_CONFIG.siteUrl}/twitter-skills.jpg`],
   },
   alternates: {
     canonical: `${SITE_CONFIG.siteUrl}/skills`,

@@ -3,7 +3,7 @@ import { SITE_CONFIG } from "@/lib/constants";
 import { GitHubContent } from "./GitHubContent";
 
 export const metadata: Metadata = {
-  title: `GitHub Activity | ${SITE_CONFIG.name}`,
+  title: "GitHub Activity",
   description:
     "Explore my open source contributions, repository statistics, and coding activity on GitHub. View my projects, stars, and contribution graph.",
   keywords: [

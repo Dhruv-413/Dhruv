@@ -6,8 +6,8 @@ Every item lists its dependency/bundle cost, because performance is part of the 
 ## 0. Bugs / gaps to fix first (verified in code)
 | # | Issue | Evidence | Fix |
 |---|-------|----------|-----|
-| 1 | Social share previews are broken | `lib/constants.ts` → `/og-image.jpg`, `/twitter-image.jpg`; neither exists in `public/` | Generate per-route OG images with `app/opengraph-image.tsx` (`ImageResponse`), delete the dead paths |
-| 2 | Reduced motion is patchy | 49 files import framer-motion, 5 mention reduced motion | Wrap the app in `<MotionConfig reducedMotion="user">` (one line in `Providers.tsx`), then audit with `a11y-motion-reviewer` |
+| 1 | **Done (slice 0, 2026-09-20)** Social share previews are broken | `lib/constants.ts` → `/og-image.jpg`, `/twitter-image.jpg`; neither exists in `public/` | Generate per-route OG images with `app/opengraph-image.tsx` (`ImageResponse`), delete the dead paths |
+| 2 | **Partly done (slice 0: `MotionConfig` global default added; per-component loops still open)** Reduced motion is patchy | 49 files import framer-motion, 5 mention reduced motion | Wrap the app in `<MotionConfig reducedMotion="user">` (one line in `Providers.tsx`), then audit with `a11y-motion-reviewer` |
 | 3 | `.github` is gitignored, so CI can't be committed (the lockfile ignore was already removed in `9b6b85c`) | root `.gitignore` line 5 | Remove that line; add a CI workflow (lint + tsc + build) at repo root with `working-directory: dhruv-portfolio` |
 | 4 | Non-descriptive font variable names | `layout.tsx` maps Inter → `--font-geist-sans` | Rename when fonts are decided (touch `layout.tsx` + `@theme inline` together) |
 

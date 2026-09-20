@@ -46,21 +46,12 @@ export const metadata: Metadata = {
       "Ready to build something amazing? Get in touch for freelance projects, collaboration opportunities, or to discuss your next web application.",
     url: `${SITE_CONFIG.siteUrl}/contact`,
     type: "website",
-    images: [
-      {
-        url: `${SITE_CONFIG.siteUrl}/og-contact.jpg`,
-        width: 1200,
-        height: 630,
-        alt: "Contact Dhruv Gupta - Full Stack Developer",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Contact Dhruv Gupta | Full Stack Developer",
     description:
       "Ready to build something amazing? Get in touch for freelance projects and collaboration opportunities.",
-    images: [`${SITE_CONFIG.siteUrl}/twitter-contact.jpg`],
   },
   alternates: {
     canonical: `${SITE_CONFIG.siteUrl}/contact`,

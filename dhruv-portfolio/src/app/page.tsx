@@ -28,7 +28,8 @@ const Hero = dynamic(
 
 // Enhanced metadata for homepage
 export const metadata: Metadata = {
-  title: "Dhruv Gupta | Full Stack Developer & AI/ML Engineer Portfolio",
+  // absolute: the root title template would otherwise append the name a second time
+  title: { absolute: "Dhruv Gupta | Full Stack Developer & AI/ML Engineer Portfolio" },
   description:
     "Dhruv Gupta is a Full Stack Developer and AI/ML Engineer specializing in React, Next.js, Python, and enterprise software. View projects, skills, and professional experience. Ex-ONGC Intern, B.Tech CS at Manipal University.",
   keywords: [
@@ -53,21 +54,12 @@ export const metadata: Metadata = {
       "Full Stack Developer and AI/ML Engineer building production-ready web applications. Explore my projects, skills, and professional journey.",
     url: SITE_CONFIG.siteUrl,
     type: "profile",
-    images: [
-      {
-        url: `${SITE_CONFIG.siteUrl}/og-home.jpg`,
-        width: 1200,
-        height: 630,
-        alt: "Dhruv Gupta - Full Stack Developer Portfolio",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Dhruv Gupta | Full Stack Developer & AI/ML Engineer",
     description:
       "Full Stack Developer and AI/ML Engineer building production-ready web applications.",
-    images: [`${SITE_CONFIG.siteUrl}/twitter-home.jpg`],
   },
   alternates: {
     canonical: SITE_CONFIG.siteUrl,

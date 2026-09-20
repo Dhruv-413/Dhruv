@@ -50,21 +50,12 @@ export const metadata: Metadata = {
       "Explore production-ready projects including REST APIs, web applications, and AI/ML solutions. Each project demonstrates modern development practices and real-world impact.",
     url: `${SITE_CONFIG.siteUrl}/projects`,
     type: "website",
-    images: [
-      {
-        url: `${SITE_CONFIG.siteUrl}/og-projects.jpg`,
-        width: 1200,
-        height: 630,
-        alt: "Web Development Projects Portfolio",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Web Development & AI/ML Projects | Dhruv Gupta",
     description:
       "Explore production-ready projects including REST APIs, web applications, and AI/ML solutions.",
-    images: [`${SITE_CONFIG.siteUrl}/twitter-projects.jpg`],
   },
   alternates: {
     canonical: `${SITE_CONFIG.siteUrl}/projects`,
