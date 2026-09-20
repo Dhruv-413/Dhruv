@@ -1,36 +1,47 @@
 import skillsData from "@/data/skills.json";
-import { SectionHead } from "@/components/ui/page-primitives";
+import projectsData from "@/data/projects.json";
+import type { SkillGroup } from "@/types/skill";
+import { normaliseTech } from "@/lib/skills";
+import { SkillsBento, type BentoGroup, type BentoProject } from "./SkillsBento";
 
 /**
- * Skills as a matrix (DESIGN.md §4.9, slice 3): one hairline cell per category, skills as a plain list.
- * Server component. No proficiency numbers or bars: they are self-assessed and read as vanity data (§4.7).
+ * The stack section (DESIGN.md §5, 2026-09-21). The join between a skill and the projects that used it is made here,
+ * on the server, from the real `technologies` lists in projects.json: nothing on this page claims a use that the
+ * project data does not show. No proficiency numbers or bars (§4.7). Projects are listed oldest first, like /projects.
  */
 export function SkillsMatrix() {
-  return (
-    <section aria-labelledby="skills-title" className="page-shell py-(--section-pad)">
-      <SectionHead index="01" label="Stack" title="By area" id="skills-title" />
+  const projects = [...projectsData].sort((a, b) => a.date.localeCompare(b.date));
+  const bentoProjects: BentoProject[] = projects.map(({ id, title }) => ({ id, title }));
 
-      <ul role="list" className="hairline-grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
-        {skillsData.map((group, i) => (
-          <li key={group.category} data-reveal className="flex min-h-56 flex-col p-6 md:p-8">
-            <p className="t-label flex items-center justify-between text-muted-foreground">
-              <span aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
-              <span aria-hidden="true">{String(group.skills.length).padStart(2, "0")}</span>
-            </p>
-            <h3 className="t-h2 mt-6">{group.category}</h3>
-            <ul role="list" className="mt-auto pt-8">
-              {group.skills.map((skill) => (
-                <li
-                  key={skill}
-                  className="border-t border-border py-2.5 text-[1.0625rem] first:border-t-0 md:py-3"
-                >
-                  {skill}
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
+  const groups: BentoGroup[] = (skillsData as SkillGroup[]).map((group) => ({
+    category: group.category,
+    blurb: group.blurb,
+    note: group.note,
+    figure: group.figure,
+    skills: group.skills.map((name) => ({
+      name,
+      note: group.notes?.[name],
+      about: group.about?.[name],
+      projectIds: projects
+        .filter((project) => project.technologies.some((tech) => normaliseTech(tech) === normaliseTech(name)))
+        .map((project) => project.id),
+    })),
+  }));
+
+  return (
+    <section aria-labelledby="skills-title" className="page-shell pb-(--section-pad) pt-8 md:pt-10">
+      <h2 id="skills-title" className="sr-only">
+        What I work with, {groups.flatMap((g) => g.skills).length} skills in {groups.length} groups
+      </h2>
+      <p className="t-label mb-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground">
+        <span className="flex items-center gap-2">
+          <span className="mark-plus text-primary" aria-hidden="true" />
+          <span aria-hidden="true">[01]</span> Stack
+        </span>
+        <span aria-hidden="true">/</span>
+        <span className="text-foreground">Pick a skill: what it means, and where I used it</span>
+      </p>
+      <SkillsBento groups={groups} projects={bentoProjects} />
     </section>
   );
 }

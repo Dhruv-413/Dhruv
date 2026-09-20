@@ -12,37 +12,41 @@ const totalTechnologies = skillsData
   .filter((skill, index, self) => self.indexOf(skill) === index).length;
 
 export const metadata: Metadata = {
-  title: "Technical Skills | Full Stack & AI/ML Expertise",
-  description: `Comprehensive technical skills across ${totalTechnologies}+ technologies including React, Next.js, Python, TypeScript, FastAPI, PyTorch, TensorFlow, PostgreSQL, Docker, and SAP ABAP. Full Stack Development, AI/ML, and Enterprise Software expertise.`,
+  title: "Skills | Data Engineering, Cloud, Full Stack & AI/ML",
+  description: `${totalTechnologies} skills across data engineering (Databricks, Apache Spark), cloud (Azure), backend, frontend and AI/ML, with the projects that used each and the certifications behind them.`,
   keywords: [
     "technical skills",
+    "Azure",
+    "Databricks",
+    "Apache Spark",
+    "data lakehouse",
+    "data engineering",
+    "data migration",
+    "Python developer",
     "React skills",
     "Next.js developer",
-    "Python developer",
-    "TypeScript expertise",
+    "TypeScript",
     "AI/ML skills",
-    "machine learning",
     "computer vision",
     "FastAPI",
     "PostgreSQL",
     "Docker",
     "SAP ABAP",
-    "full stack development skills",
-    "web development expertise",
+    "Power BI",
     "Dhruv Gupta skills",
   ],
   openGraph: {
-    title: `Technical Skills | ${totalTechnologies}+ Technologies | Dhruv Gupta`,
+    title: `Skills | Data, Cloud, Full Stack and AI/ML | Dhruv Gupta`,
     description:
-      "Comprehensive technical expertise across Full Stack Development, AI/ML, DevOps, and Enterprise Software. View detailed skill breakdown and proficiency levels.",
+      "Data engineering, cloud, full stack and AI/ML: what I work with, which of my projects used it, and the certifications behind it.",
     url: `${SITE_CONFIG.siteUrl}/skills`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: `Technical Skills | ${totalTechnologies}+ Technologies`,
+    title: "Skills | Data, Cloud, Full Stack and AI/ML",
     description:
-      "Comprehensive technical expertise across Full Stack Development, AI/ML, DevOps, and Enterprise Software.",
+      "Data engineering, cloud, full stack and AI/ML: what I work with and the projects that used it.",
   },
   alternates: {
     canonical: `${SITE_CONFIG.siteUrl}/skills`,
@@ -55,7 +59,6 @@ export default function SkillsPage() {
     skillsData.map((cat) => ({
       category: cat.category,
       skills: cat.skills,
-      proficiency: cat.proficiency,
     }))
   );
 
@@ -81,7 +84,10 @@ export default function SkillsPage() {
       />
 
       <PageHeader index="03" label="Skills" title="Skills">
-        <p>Languages, frameworks and tools, grouped by area, with the courses behind them.</p>
+        <p>
+          What I work with, newest first: the cloud and data tools from my internship at Deloitte, then the stack I
+          have built projects with, and the certifications behind it.
+        </p>
       </PageHeader>
       <SkillsMatrix />
       <Certifications />

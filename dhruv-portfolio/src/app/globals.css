@@ -468,6 +468,7 @@ body::after {
 /* Global focus states for accessibility */
 a:focus-visible,
 button:focus-visible,
+input[type="range"]:focus-visible,
 [tabindex]:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
@@ -510,6 +511,11 @@ html,
 body {
   overflow-x: clip;
   scroll-behavior: smooth;
+}
+
+/* The header is fixed (65 px): keep focused controls and anchor targets from landing under it (WCAG 2.4.11). */
+html {
+  scroll-padding-top: 5rem;
 }
 
 /* Touch optimization for mobile */
@@ -1199,5 +1205,82 @@ body {
   .packet,
   .tape-track {
     animation: none !important;
+  }
+}
+
+/* ==========================================================================
+   SKILLS FIGURES (DESIGN.md §5, 2026-09-21): Azure (one slider) and Databricks (four ways to hold the same records).
+   Input-driven only, never an idle loop. transform / opacity only.
+   ========================================================================== */
+
+/* Azure: a machine, function or block switches on and off as the traffic slider moves */
+.az {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    opacity 240ms var(--ease-out),
+    transform 240ms var(--ease-out);
+  transition-delay: calc(var(--k, 0) * 18ms);
+}
+.az[data-on="false"] {
+  opacity: 0;
+  transform: scale(0.4);
+}
+/* Picking Azure VM Scale Sets / Functions / Storage dims the other two lanes */
+.lane {
+  transition: opacity 300ms var(--ease-out);
+}
+[data-focus="vm"] .lane:not(.lane-vm),
+[data-focus="fn"] .lane:not(.lane-fn),
+[data-focus="st"] .lane:not(.lane-st) {
+  opacity: 0.28;
+}
+
+/* Databricks: every record has four homes; the mode on the wrapper (`data-mode`) picks which one it sits in */
+.lk {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 800ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 20ms);
+}
+[data-mode="lake"] .lk {
+  transform: translate(var(--lx), var(--ly)) rotate(var(--lr));
+}
+[data-mode="warehouse"] .lk {
+  transform: translate(var(--wx), var(--wy)) rotate(0deg);
+}
+[data-mode="lakehouse"] .lk {
+  transform: translate(var(--hx), var(--hy)) rotate(var(--hr));
+}
+[data-mode="spark"] .lk {
+  transform: translate(var(--sx), var(--sy)) rotate(0deg);
+}
+/* Spark: the four workers finish a column at a time, together */
+.lk-done {
+  opacity: 0;
+  transition: opacity 400ms var(--ease-out);
+  transition-delay: calc(var(--c, 0) * 160ms + 500ms);
+}
+[data-mode="spark"] .lk-done {
+  opacity: 1;
+}
+.lk-fade {
+  opacity: 0;
+  transition: opacity 500ms var(--ease-out);
+}
+[data-mode="lake"] .m-lake,
+[data-mode="warehouse"] .m-warehouse,
+[data-mode="lakehouse"] .m-lakehouse,
+[data-mode="spark"] .m-spark {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .az,
+  .lane,
+  .lk,
+  .lk-done,
+  .lk-fade {
+    transition: none !important;
   }
 }

@@ -8,6 +8,6 @@ export default function Image() {
   return renderOgImage({
     path: "/skills",
     title: "Skills",
-    subtitle: "Full stack, AI/ML and enterprise software.",
+    subtitle: "Data engineering, cloud, full stack and AI/ML.",
   });
 }
