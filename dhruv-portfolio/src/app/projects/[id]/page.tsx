@@ -7,10 +7,12 @@ import { getProjectSchema } from "@/lib/schema/projects";
 import projectsData from "@/data/projects.json";
 import type { Project } from "@/types/project";
 import { ArrowLink, Tag } from "@/components/ui/page-primitives";
-import { ProjectCover } from "@/components/features/projects/ProjectCover";
+import { cn } from "@/lib/utils";
+import { ProjectArt } from "@/components/features/projects/ProjectArt";
 
 // The JSON literal types differ per entry (e.g. `links`), so read it through the shared Project type.
-const projects = projectsData as unknown as Project[];
+// Oldest first, same order as the index, so "build 03 of 05" and previous / next follow the story.
+const projects = [...(projectsData as unknown as Project[])].sort((a, b) => a.date.localeCompare(b.date));
 
 // Only the ids in projects.json exist; anything else is a 404 (no runtime rendering of unknown ids).
 export const dynamicParams = false;
@@ -43,6 +45,13 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   };
 }
 
+/** Short values keep the display size; longer words step down so they always fit a half-width cell ("Semantic", "Docker"). */
+function metricSize(value: string): string {
+  if (value.length <= 4) return "";
+  if (value.length <= 6) return "text-[clamp(1.75rem,3vw,2.5rem)]";
+  return "text-[clamp(1.4rem,2.4vw,2rem)]";
+}
+
 export default async function ProjectPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const index = projects.findIndex((p) => p.id === id);
@@ -57,6 +66,13 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
     project.links?.demo ? { label: "Demo", href: project.links.demo } : null,
     project.links?.github ? { label: "Source on GitHub", href: project.links.github } : null,
   ].filter((link): link is { label: string; href: string } => link !== null);
+
+  const facts = [
+    ["Kind", project.kind],
+    ["When", project.period],
+    ["With", project.team],
+    ["My part", project.role],
+  ].filter((fact): fact is [string, string] => Boolean(fact[1]));
 
   const projectSchema = getProjectSchema({
     id: project.id,
@@ -94,27 +110,68 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
           All projects
         </ArrowLink>
 
-        <p className="t-label mt-8 flex flex-wrap items-center gap-x-4 gap-y-1 text-muted-foreground">
+        <p className="t-label mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 text-muted-foreground">
           <span className="flex items-center gap-2">
             <span className="mark-plus text-primary" aria-hidden="true" />
             <span aria-hidden="true">[{String(index + 1).padStart(2, "0")}]</span> {project.category}
           </span>
           <time dateTime={project.date}>{year}</time>
+          {/* where this one sits in the five, oldest first */}
+          <span className="flex items-center gap-1" aria-hidden="true">
+            {projects.map((item, i) => (
+              <span key={item.id} className={cn("size-2.5", i === index ? "bg-primary" : "bg-foreground/20")} />
+            ))}
+          </span>
+          <span className="sr-only">
+            Project {index + 1} of {projects.length}
+          </span>
         </p>
 
-        <h1 className="t-h1 fade-up mt-4 text-[clamp(2.75rem,9vw,8rem)] leading-[0.88]">{project.title}</h1>
-        <p className="fade-up mt-6 max-w-[52ch] text-[1.0625rem] leading-relaxed text-muted-foreground md:text-lg">
-          {project.description}
-        </p>
+        <div className="mt-4 grid grid-cols-12 items-center gap-x-(--gutter) gap-y-10">
+          <div className="col-span-12 lg:col-span-7">
+            <h1 className="t-h1 fade-up text-[clamp(2.75rem,9vw,8rem)] leading-[0.88] lg:text-[clamp(3rem,6vw,6.25rem)]">
+              {project.title}
+            </h1>
+            <p className="fade-up mt-6 max-w-[52ch] text-[1.0625rem] leading-relaxed text-muted-foreground md:text-lg">
+              {project.description}
+            </p>
+
+            {facts.length ? (
+              <dl className="fade-up mt-8 flex flex-wrap gap-x-10 gap-y-5" style={{ "--d": "220ms" } as React.CSSProperties}>
+                {facts.map(([term, value]) => (
+                  <div key={term}>
+                    <dt className="t-label text-muted-foreground">{term}</dt>
+                    <dd className="mt-1 text-lg font-medium">{value}</dd>
+                  </div>
+                ))}
+              </dl>
+            ) : null}
+          </div>
+
+          <div className="col-span-12 lg:col-span-5">
+            <ProjectArt id={project.id} />
+          </div>
+        </div>
       </header>
 
-      <div className="page-shell mt-10 md:mt-14">
-        <ProjectCover id={project.id} className="aspect-[16/6] md:aspect-[16/4]" />
-      </div>
-
-      <div className="page-shell grid grid-cols-12 gap-x-(--gutter) gap-y-12 py-(--section-pad)">
+      <div className="page-shell grid grid-cols-12 gap-x-(--gutter) gap-y-12 pt-16 pb-(--section-pad) md:pt-24">
         {/* facts */}
         <aside className="col-span-12 space-y-10 md:col-span-4 md:sticky md:top-24 md:self-start">
+          {project.private ? (
+            <div className="border border-border p-4 md:p-5">
+              <h2 className="t-label flex items-center gap-2 text-foreground">
+                <span className="size-1.5 bg-primary" aria-hidden="true" />
+                Private repository
+              </h2>
+              <p className="mt-3 text-[1.0625rem] leading-relaxed text-muted-foreground">
+                This code is private, so I can&apos;t share it. Ask me about it and I will walk you through what I built.
+              </p>
+              <ArrowLink href="/contact" className="mt-2">
+                Ask me about it
+              </ArrowLink>
+            </div>
+          ) : null}
+
           {links.length ? (
             <div>
               <h2 className="t-label text-muted-foreground">Links</h2>
@@ -133,11 +190,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
           {project.metrics?.length ? (
             <div>
               <h2 className="t-label mb-3 text-muted-foreground">Numbers</h2>
-              <dl className="hairline-grid grid-cols-2">
+              <dl className="hairline-grid grid-cols-2 [&>*:last-child:nth-child(odd)]:col-span-2">
                 {project.metrics.map((metric) => (
-                  <div key={metric.label} className="p-4">
+                  <div key={metric.label} className="min-w-0 p-4">
                     <dt className="t-label text-muted-foreground">{metric.label}</dt>
-                    <dd className="t-h2 mt-2 text-primary">{metric.value}</dd>
+                    <dd className={cn("t-h2 mt-2 text-primary [overflow-wrap:anywhere]", metricSize(metric.value))}>{metric.value}</dd>
                   </div>
                 ))}
               </dl>
@@ -158,12 +215,33 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
 
         {/* narrative */}
         <div className="col-span-12 md:col-span-8">
-          <h2 className="t-label text-muted-foreground">Overview</h2>
-          <p className="mt-4 max-w-[62ch] text-[clamp(1.25rem,2vw,1.75rem)] leading-snug tracking-tight">
-            {project.longDescription || project.description}
-          </p>
+          {project.chapters?.length ? (
+            <ol role="list" className="border-t border-border">
+              {project.chapters.map((chapter, i) => (
+                <li
+                  key={chapter.title}
+                  data-reveal
+                  className="grid grid-cols-12 gap-x-(--gutter) gap-y-3 border-b border-border py-8 md:py-12"
+                >
+                  <h2 className="t-label col-span-12 text-muted-foreground lg:col-span-3">
+                    <span className="text-primary">{String(i + 1).padStart(2, "0")}</span> / {chapter.title}
+                  </h2>
+                  <p className="col-span-12 max-w-[34ch] text-[clamp(1.375rem,2.4vw,2.125rem)] font-medium leading-[1.18] tracking-tight lg:col-span-9">
+                    {chapter.body}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <>
+              <h2 className="t-label text-muted-foreground">Overview</h2>
+              <p className="mt-4 max-w-[62ch] text-[clamp(1.25rem,2vw,1.75rem)] leading-snug tracking-tight">
+                {project.longDescription || project.description}
+              </p>
+            </>
+          )}
 
-          {project.codeSnippet ? (
+          {project.codeSnippet && !project.private ? (
             <div className="mt-12">
               <h2 className="t-label mb-3 text-muted-foreground">Code</h2>
               <pre

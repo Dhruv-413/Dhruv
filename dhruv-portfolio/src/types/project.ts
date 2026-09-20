@@ -5,6 +5,18 @@ export interface Project {
   longDescription?: string;
   category: "AI/ML" | "Full-Stack" | "Computer Vision" | "Backend" | "Frontend" | "Enterprise";
   featured: boolean;
+  /** Short label for what sort of project it is, e.g. "Hackathon entry", "Production software". */
+  kind?: string;
+  /** When in my studies it happened, e.g. "3rd year". */
+  period?: string;
+  /** Who built it, e.g. "Team of 5", "With a friend". */
+  team?: string;
+  /** My part, when it was not the whole thing. */
+  role?: string;
+  /** Private repository: no source link, and no code excerpt is shown. */
+  private?: boolean;
+  /** The story in plain sentences, in order. Rendered as numbered chapters on the case-study page. */
+  chapters?: { title: string; body: string }[];
   technologies: string[];
   codeSnippet?: string;
   badges?: {

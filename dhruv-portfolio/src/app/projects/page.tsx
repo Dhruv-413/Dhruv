@@ -7,7 +7,7 @@ import { ProjectsIndex } from "@/components/features/projects/ProjectsIndex";
 
 export const metadata: Metadata = {
   title: "Projects | Web Development & AI/ML Portfolio",
-  description: `Explore ${projectsData.length}+ production-ready projects showcasing Full-Stack Development, AI/ML solutions, and enterprise applications. Built with React, Next.js, Python, FastAPI, and modern technologies.`,
+  description: `${projectsData.length} projects, oldest first: a hackathon entry, a college minor project, an AI-agent experiment, placement software built for a college, and a food app started with a friend. Built with React, Python, FastAPI, PostgreSQL and computer vision.`,
   keywords: [
     "web development projects",
     "React projects",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Web Development & AI/ML Projects | Dhruv Gupta Portfolio",
     description:
-      "Explore production-ready projects including REST APIs, web applications, and AI/ML solutions. Each project demonstrates modern development practices and real-world impact.",
+      "Five projects, oldest first: a hackathon entry, a minor project, an AI-agent experiment, placement software for a college, and a food app started with a friend.",
     url: `${SITE_CONFIG.siteUrl}/projects`,
     type: "website",
   },
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Web Development & AI/ML Projects | Dhruv Gupta",
     description:
-      "Explore production-ready projects including REST APIs, web applications, and AI/ML solutions.",
+      "Five projects, oldest first, from a first hackathon to software built for a college.",
   },
   alternates: {
     canonical: `${SITE_CONFIG.siteUrl}/projects`,
@@ -75,7 +75,10 @@ export default function ProjectsPage() {
       />
 
       <PageHeader index="02" label="Work" title="Projects">
-        <p>Backend, full-stack, computer vision and AI/ML work. Open one for the details.</p>
+        <p>
+          Five builds, oldest first: a hackathon entry, a college minor project, an experiment with AI agents,
+          software built for my college, and a food app I started with a friend.
+        </p>
       </PageHeader>
       <ProjectsIndex />
     </>
