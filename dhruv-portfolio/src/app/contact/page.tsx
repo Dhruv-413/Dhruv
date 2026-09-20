@@ -1,28 +1,8 @@
-import dynamic from "next/dynamic";
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { SITE_CONFIG } from "@/lib/constants";
 import { getContactPageSchema, getBreadcrumbSchema } from "@/lib/schema";
-
-const ContactSection = dynamic(
-  () =>
-    import("@/components/features/contact/ContactSection").then((mod) => ({
-      default: mod.ContactSection,
-    })),
-  {
-    loading: () => <LoadingSkeleton variant="contact" />,
-    ssr: true,
-  }
-);
-
-// Lazy load AnimatedBackground - heavy framer-motion animations, load client-side only
-const AnimatedBackground = dynamic(
-  () =>
-    import("@/components/ui/AnimatedBackground").then((mod) => ({
-      default: mod.AnimatedBackground,
-    }))
-);
+import { PageHeader } from "@/components/ui/page-primitives";
+import { ContactForm } from "@/components/features/contact/ContactForm";
 
 export const metadata: Metadata = {
   title: "Contact | Get in Touch for Collaborations & Opportunities",
@@ -83,12 +63,10 @@ export default function ContactPage() {
         }}
       />
 
-      <AnimatedBackground />
-      <div className="min-h-screen pt-16 sm:pt-20 relative">
-        <Suspense fallback={<LoadingSkeleton variant="contact" />}>
-          <ContactSection />
-        </Suspense>
-      </div>
+      <PageHeader index="06" label="Contact" title="Contact">
+        <p>Send a message here, or use the direct details beside the form.</p>
+      </PageHeader>
+      <ContactForm />
     </>
   );
 }

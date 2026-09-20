@@ -1,37 +1,18 @@
-import dynamic from "next/dynamic";
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { SITE_CONFIG } from "@/lib/constants";
 import { getCareerSchema, getBreadcrumbSchema } from "@/lib/schema";
 import timelineData from "@/data/timeline.json";
-
-const TimelineSection = dynamic(
-  () =>
-    import("@/components/features/timeline/TimelineSection").then((mod) => ({
-      default: mod.TimelineSection,
-    })),
-  {
-    loading: () => <LoadingSkeleton variant="timeline" />,
-    ssr: true,
-  }
-);
-
-// Lazy load AnimatedBackground - heavy framer-motion animations, load client-side only
-const AnimatedBackground = dynamic(
-  () =>
-    import("@/components/ui/AnimatedBackground").then((mod) => ({
-      default: mod.AnimatedBackground,
-    }))
-);
+import { PageHeader } from "@/components/ui/page-primitives";
+import { Timeline } from "@/components/features/timeline/Timeline";
 
 export const metadata: Metadata = {
   title: "Career Journey | Professional Experience & Education",
   description:
-    "Explore Dhruv Gupta's career journey including internship at ONGC (Oil and Natural Gas Corporation), B.Tech in Computer Science at Manipal University Jaipur, and achievements like SAP India Hackfest Top 50 and Adobe GenSolve qualifier.",
+    "Explore Dhruv Gupta's career journey: Data Modernization and Migration Intern at Deloitte, summer internship at ONGC (Oil and Natural Gas Corporation), B.Tech in Computer Science at Manipal University Jaipur, and achievements like SAP India Hackfest Top 50 and Adobe GenSolve qualifier.",
   keywords: [
     "career journey",
     "professional experience",
+    "Deloitte internship",
     "ONGC internship",
     "Manipal University Jaipur",
     "B.Tech Computer Science",
@@ -46,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Career Journey | Dhruv Gupta - Full Stack Developer",
     description:
-      "From Computer Science education at Manipal University to enterprise impact at ONGC. Explore achievements, work experience, and professional growth.",
+      "From a Computer Science degree at Manipal University Jaipur to ONGC and Deloitte. Explore achievements, work experience, and professional growth.",
     url: `${SITE_CONFIG.siteUrl}/career`,
     type: "profile",
   },
@@ -54,7 +35,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Career Journey | Dhruv Gupta",
     description:
-      "From Computer Science education to enterprise impact. Explore achievements, work experience, and professional growth.",
+      "From a Computer Science degree to ONGC and Deloitte. Explore achievements, work experience, and professional growth.",
   },
   alternates: {
     canonical: `${SITE_CONFIG.siteUrl}/career`,
@@ -97,12 +78,10 @@ export default function CareerPage() {
         }}
       />
 
-      <AnimatedBackground />
-      <div className="min-h-screen pt-16 sm:pt-20 relative">
-        <Suspense fallback={<LoadingSkeleton variant="timeline" />}>
-          <TimelineSection />
-        </Suspense>
-      </div>
+      <PageHeader index="04" label="Career" title="Career" rule={false}>
+        <p>Work, study and competitions, newest first.</p>
+      </PageHeader>
+      <Timeline />
     </>
   );
 }

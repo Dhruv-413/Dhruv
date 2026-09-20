@@ -1,168 +1,51 @@
-"use client";
+import { SITE_CONFIG } from "@/lib/constants";
 
-import { useState, useEffect } from "react";
-import { Github, Linkedin, Mail, ArrowUp, Terminal, Code2 } from "lucide-react";
-import { motion } from "framer-motion";
-import { useSiteConfig } from "@/hooks/useSiteConfig";
-import { Button } from "@/components/ui/button";
+const linkClass =
+  "t-label inline-flex items-center gap-2 py-2 transition-colors duration-(--dur-ui) ease-(--ease-out) hover:text-primary focus-visible:text-primary";
 
+/**
+ * Site footer (DESIGN.md §4.8): hairline rule, page grid, mono labels. Server component, no scroll listeners.
+ * "Back to top" is a plain in-page anchor, so it works without JavaScript.
+ */
 export function Footer() {
-  const [showScrollTop, setShowScrollTop] = useState(false);
-  const currentYear = new Date().getFullYear();
-  const siteConfig = useSiteConfig();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 300);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const year = new Date().getFullYear();
 
   return (
-    <footer
-      className="relative bg-card/30 backdrop-blur-sm border-t border-primary/10 overflow-hidden"
-      role="contentinfo"
-    >
-      {/* Subtle Background Pattern */}
-      <div
-        className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-size-[32px_32px] opacity-40"
-        aria-hidden="true"
-      />
+    <footer role="contentinfo" className="border-t border-border">
+      <div className="page-shell grid grid-cols-12 items-start gap-x-(--gutter) gap-y-6 py-10 md:py-14">
+        <div className="col-span-12 md:col-span-6">
+          <p className="t-label text-foreground">
+            © {year} {SITE_CONFIG.name}
+          </p>
+          <p className="t-label mt-2 text-muted-foreground">Built with Next.js</p>
+        </div>
 
-      <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 relative">
-        {/* Single Row Footer - Responsive height and layout */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 py-3 sm:py-0 sm:h-16 lg:h-20">
-          {/* Brand - Left Side */}
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <motion.div
-              animate={{
-                rotate: [0, 5, -5, 0],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            >
-              <Terminal
-                className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary"
-                aria-hidden="true"
-              />
-            </motion.div>
-            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1 sm:gap-2 text-xs sm:text-sm text-muted-foreground font-mono">
-              <span>© {currentYear}</span>
-              <span className="text-primary">•</span>
-              <span className="bg-linear-to-r from-primary to-purple-400 bg-clip-text text-transparent font-semibold">
-                {siteConfig.name}
-              </span>
-            </div>
-          </div>
+        <ul role="list" className="col-span-12 flex flex-wrap gap-x-6 md:col-span-4">
+          <li>
+            <a href={SITE_CONFIG.links.github} target="_blank" rel="noopener noreferrer" className={linkClass}>
+              GitHub <span aria-hidden="true">↗</span>
+              <span className="sr-only"> (opens in a new tab)</span>
+            </a>
+          </li>
+          <li>
+            <a href={SITE_CONFIG.links.linkedin} target="_blank" rel="noopener noreferrer" className={linkClass}>
+              LinkedIn <span aria-hidden="true">↗</span>
+              <span className="sr-only"> (opens in a new tab)</span>
+            </a>
+          </li>
+          <li>
+            <a href={SITE_CONFIG.links.email} className={linkClass}>
+              Email <span aria-hidden="true">↗</span>
+            </a>
+          </li>
+        </ul>
 
-          {/* Right Side - Social + Tech Badge */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* Social Links */}
-            <div className="hidden md:flex items-center gap-1">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110 active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                asChild
-              >
-                <a
-                  href={siteConfig.links.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="GitHub Profile"
-                >
-                  <Github className="h-3.5 w-3.5" aria-hidden="true" />
-                </a>
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110 active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                asChild
-              >
-                <a
-                  href={siteConfig.links.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="LinkedIn Profile"
-                >
-                  <Linkedin className="h-3.5 w-3.5" aria-hidden="true" />
-                </a>
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110 active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                asChild
-              >
-                <a href={siteConfig.links.email} aria-label="Send Email">
-                  <Mail className="h-3.5 w-3.5" aria-hidden="true" />
-                </a>
-              </Button>
-            </div>
-
-            {/* Tech Badge */}
-            <div className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 sm:py-1.5 bg-primary/5 border border-primary/20 rounded-md">
-              <Code2 className="h-3 w-3 text-primary" aria-hidden="true" />
-              <span className="text-[10px] sm:text-xs font-mono text-muted-foreground">
-                Next.js
-              </span>
-            </div>
-
-            {/* Scroll to Top - Desktop */}
-            {showScrollTop && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                className="hidden md:block"
-              >
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={scrollToTop}
-                  className="h-8 w-8 rounded-md hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all hover:scale-110 active:scale-95 group"
-                  aria-label="Scroll to top"
-                >
-                  <ArrowUp
-                    className="h-3.5 w-3.5 group-hover:-translate-y-0.5 transition-transform"
-                    aria-hidden="true"
-                  />
-                </Button>
-              </motion.div>
-            )}
-          </div>
+        <div className="col-span-12 md:col-span-2 md:text-right">
+          <a href="#main-content" className={linkClass}>
+            Top <span aria-hidden="true">↑</span>
+          </a>
         </div>
       </div>
-
-      {/* Floating Scroll to Top - Mobile & Tablet */}
-      {showScrollTop && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
-          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 md:hidden z-40"
-        >
-          <Button
-            variant="default"
-            size="icon"
-            onClick={scrollToTop}
-            className="h-11 w-11 sm:h-12 sm:w-12 rounded-full shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all hover:scale-110 active:scale-95"
-            aria-label="Scroll to top"
-          >
-            <ArrowUp className="h-4.5 w-4.5 sm:h-5 sm:w-5" aria-hidden="true" />
-          </Button>
-        </motion.div>
-      )}
     </footer>
   );
 }

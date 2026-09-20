@@ -1,8 +1,6 @@
-"use client";
-
-import dynamic from "next/dynamic";
-import { GitHubSection } from "@/components/features/github/GitHubSection";
 import { SITE_CONFIG } from "@/lib/constants";
+import { PageHeader } from "@/components/ui/page-primitives";
+import { GitHubView } from "@/components/features/github/GitHubView";
 
 // JSON-LD structured data for GitHub page
 const githubPageSchema = {
@@ -23,14 +21,6 @@ const githubPageSchema = {
     "Open source contributions, repository statistics, and coding activity",
   url: `${SITE_CONFIG.siteUrl}/github`,
 };
-
-// Lazy load AnimatedBackground - heavy framer-motion animations, load client-side only
-const AnimatedBackground = dynamic(
-  () =>
-    import("@/components/ui/AnimatedBackground").then((mod) => ({
-      default: mod.AnimatedBackground,
-    }))
-);
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
@@ -68,10 +58,15 @@ export function GitHubContent() {
         }}
       />
 
-      <AnimatedBackground />
-      <div className="min-h-screen pt-16 sm:pt-20 relative">
-        <GitHubSection />
-      </div>
+      <PageHeader index="05" label="Open source" title="GitHub">
+        <p>Activity and repositories, pulled live from the GitHub API.</p>
+      </PageHeader>
+      <GitHubView />
+      <noscript>
+        <p className="page-shell py-16 text-muted-foreground">
+          The live activity view needs JavaScript. The profile is at {SITE_CONFIG.links.github}.
+        </p>
+      </noscript>
     </>
   );
 }

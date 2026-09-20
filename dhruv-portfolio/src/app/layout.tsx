@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
@@ -7,18 +7,31 @@ import { Providers } from "@/components/shared/Providers";
 import { Header } from "@/components/shared/Header";
 import { Footer } from "@/components/shared/Footer";
 import { SITE_CONFIG } from "@/lib/constants";
-import { Toaster } from "react-hot-toast";
+import { LazyToaster } from "@/components/shared/LazyToaster";
 
-const inter = Inter({
-  variable: "--font-geist-sans",
+// Type system — DESIGN.md §4.2. Display + body share one variable family (weight/width/optical-size axes).
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
+  axes: ["opsz", "wdth"],
   display: "swap",
   preload: true,
   fallback: ["system-ui", "arial"],
 });
 
+// Editorial accent: one emphasised word per heading, never body copy. Italic only.
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument",
+  subsets: ["latin"],
+  weight: "400",
+  style: "italic",
+  display: "swap",
+  preload: false,
+  fallback: ["Georgia", "serif"],
+});
+
 const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-geist-mono",
+  variable: "--font-jetbrains",
   subsets: ["latin"],
   display: "swap",
   preload: true,
@@ -30,9 +43,10 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
+  // Browser-chrome colours must be literals: they mirror --background (light "bone" / dark "ink").
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+    { media: "(prefers-color-scheme: light)", color: "#f2f0e9" },
+    { media: "(prefers-color-scheme: dark)", color: "#0c0a08" },
   ],
 };
 
@@ -130,44 +144,25 @@ export default function RootLayout({
             `,
           }}
         />
-        {/* Preconnect to external domains for performance */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link rel="preconnect" href="https://api.github.com" />
-        {/* DNS prefetch for faster external resource loading */}
-        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        {/* next/font self-hosts the type, so no Google Fonts preconnects are needed */}
         <link rel="dns-prefetch" href="https://api.github.com" />
-        <meta name="theme-color" content="#0a0a0a" />
+        <meta name="theme-color" content="#0c0a08" />
       </head>
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${bricolage.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <a href="#main-content" className="skip-link">
           Skip to content
         </a>
         <Providers>
-          <div className="flex flex-col min-h-screen">
+          <div className="flex flex-col min-h-dvh">
             <Header />
             <main id="main-content" className="flex-1">
               {children}
             </main>
             <Footer />
           </div>
-          <Toaster
-            position="bottom-right"
-            toastOptions={{
-              duration: 4000,
-              style: {
-                background: "var(--color-card)",
-                color: "var(--color-card-foreground)",
-                border: "1px solid var(--color-border)",
-              },
-            }}
-          />
+          <LazyToaster />
         </Providers>
         <Analytics />
         <SpeedInsights />

@@ -45,15 +45,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Dynamic project pages
-  // FIXED: Added note about fragment URLs
-  // SEO RECOMMENDATION: For better indexing, create individual project pages at /projects/[id]
-  // Current implementation uses fragments which may not be indexed properly
+  // One case-study page per project
   const projectPages: MetadataRoute.Sitemap = projectsData.map((project) => ({
-    // NOTE: Fragment URLs (#project-id) are not ideal for SEO
-    // They work for single-page navigation but search engines may not index them
-    // For production, consider: url: `${baseUrl}/projects/${project.id}`
-    url: `${baseUrl}/projects#${project.id}`,
+    url: `${baseUrl}/projects/${project.id}`,
     lastModified: new Date(project.date),
     changeFrequency: "monthly" as const,
     priority: 0.7,

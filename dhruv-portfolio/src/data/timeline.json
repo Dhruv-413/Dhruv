@@ -37,7 +37,7 @@
     "startDate": "2022-09-01",
     "endDate": "2026-05-31",
     "description": [
-      "CGPA: 8.06",
+      "CGPA: 8.24",
       "Relevant Coursework: Data Structures & Algorithms, Object-Oriented Programming, Database Management Systems, Software Engineering, Machine Learning"
     ],
     "tags": ["Computer Science", "Engineering"]
@@ -85,10 +85,10 @@
   {
     "id": "Deloitte-2026",
     "type": "work",
-    "title": "Upcoming Virtual Intern",
+    "title": "Data Modernization and Migration Intern",
     "organization": "Deloitte",
     "location": "Delhi, India",
     "startDate": "2026-01-21",
-    "tags": ["SAP ABAP", "HANA DB"]
+    "tags": ["Data Modernization", "Data Migration"]
   }
 ]

@@ -5,7 +5,7 @@ export const SITE_CONFIG = {
   name: "Dhruv Gupta",
   title: "Dhruv Gupta | Full Stack Developer & AI/ML Engineer",
   description:
-    "Full Stack Developer & AI/ML Engineer with expertise in React, Next.js, Python, and enterprise software. B.Tech CS student at Manipal University Jaipur. Ex-ONGC Intern specializing in scalable web applications and intelligent systems.",
+    "Full Stack Developer & AI/ML Engineer with expertise in React, Next.js, Python, and enterprise software. B.Tech CS graduate of Manipal University Jaipur. Data Modernization and Migration Intern at Deloitte, and a weekend contributor to Beaumonde, a family B2B sourcing business.",
   url: SITE_URL,
   siteUrl: SITE_URL,
   links: {
@@ -16,7 +16,7 @@ export const SITE_CONFIG = {
   },
   contact: {
     email: "dhruvgupta6580@gmail.com",
-    location: "Jaipur, Rajasthan, India",
+    location: "Ghaziabad, Uttar Pradesh, India",
     // Phone number intentionally removed for privacy - use email for contact
   },
   // SEO Configuration
@@ -45,6 +45,9 @@ export const SITE_CONFIG = {
   person: {
     jobTitle: "Full Stack Developer & AI/ML Engineer",
     alumniOf: "Manipal University Jaipur",
+    // Current roles, stated by the owner (2026-09-20). Single source for the hero, About, and structured data.
+    currentRole: { title: "Data Modernization and Migration Intern", organization: "Deloitte" },
+    venture: { name: "Beaumonde", description: "family B2B sourcing business", schedule: "weekends" },
     knowsAbout: [
       "React",
       "Next.js",
@@ -123,10 +126,10 @@ export const INITIAL_ITEMS_TO_SHOW = 6 as const;
 // ============================================================================
 
 export const LOCATION = {
-  city: "Jaipur",
-  state: "Rajasthan",
+  city: "Ghaziabad",
+  state: "Uttar Pradesh",
   country: "IN",
-  fullAddress: "Jaipur, Rajasthan, India",
+  fullAddress: "Ghaziabad, Uttar Pradesh, India",
 } as const;
 
 export const UNIVERSITY = {

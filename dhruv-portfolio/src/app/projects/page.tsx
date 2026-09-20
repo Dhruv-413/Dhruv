@@ -1,31 +1,9 @@
-import dynamic from "next/dynamic";
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { SITE_CONFIG } from "@/lib/constants";
 import { getProjectsListSchema, getBreadcrumbSchema } from "@/lib/schema";
 import projectsData from "@/data/projects.json";
-
-// Lazy load AnimatedBackground - heavy framer-motion animations, load client-side only
-// Note: ssr:false not needed - AnimatedBackground already has "use client"
-const AnimatedBackground = dynamic(
-  () =>
-    import("@/components/ui/AnimatedBackground").then((mod) => ({
-      default: mod.AnimatedBackground,
-    }))
-);
-
-// Lazy load ProjectsSection for better performance
-const ProjectsSection = dynamic(
-  () =>
-    import("@/components/features/projects/ProjectsSection").then((mod) => ({
-      default: mod.ProjectsSection,
-    })),
-  {
-    loading: () => <LoadingSkeleton variant="projects" />,
-    ssr: true,
-  }
-);
+import { PageHeader } from "@/components/ui/page-primitives";
+import { ProjectsIndex } from "@/components/features/projects/ProjectsIndex";
 
 export const metadata: Metadata = {
   title: "Projects | Web Development & AI/ML Portfolio",
@@ -96,12 +74,10 @@ export default function ProjectsPage() {
         }}
       />
 
-      <AnimatedBackground />
-      <div className="min-h-screen pt-16 sm:pt-20 relative">
-        <Suspense fallback={<LoadingSkeleton variant="projects" />}>
-          <ProjectsSection />
-        </Suspense>
-      </div>
+      <PageHeader index="02" label="Work" title="Projects">
+        <p>Backend, full-stack, computer vision and AI/ML work. Open one for the details.</p>
+      </PageHeader>
+      <ProjectsIndex />
     </>
   );
 }

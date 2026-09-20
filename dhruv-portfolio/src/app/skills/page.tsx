@@ -1,29 +1,10 @@
-import dynamic from "next/dynamic";
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { SITE_CONFIG } from "@/lib/constants";
 import { getSkillsSchema, getBreadcrumbSchema } from "@/lib/schema";
 import skillsData from "@/data/skills.json";
-
-const SkillsSection = dynamic(
-  () =>
-    import("@/components/features/skills/SkillsSection").then((mod) => ({
-      default: mod.SkillsSection,
-    })),
-  {
-    loading: () => <LoadingSkeleton variant="skills" />,
-    ssr: true,
-  }
-);
-
-// Lazy load AnimatedBackground - heavy framer-motion animations, load client-side only
-const AnimatedBackground = dynamic(
-  () =>
-    import("@/components/ui/AnimatedBackground").then((mod) => ({
-      default: mod.AnimatedBackground,
-    }))
-);
+import { PageHeader } from "@/components/ui/page-primitives";
+import { SkillsMatrix } from "@/components/features/skills/SkillsMatrix";
+import { Certifications } from "@/components/features/skills/Certifications";
 
 // Calculate total technologies for metadata
 const totalTechnologies = skillsData
@@ -99,12 +80,11 @@ export default function SkillsPage() {
         }}
       />
 
-      <AnimatedBackground />
-      <div className="min-h-screen pt-16 sm:pt-20 relative">
-        <Suspense fallback={<LoadingSkeleton variant="skills" />}>
-          <SkillsSection />
-        </Suspense>
-      </div>
+      <PageHeader index="03" label="Skills" title="Skills">
+        <p>Languages, frameworks and tools, grouped by area, with the courses behind them.</p>
+      </PageHeader>
+      <SkillsMatrix />
+      <Certifications />
     </>
   );
 }

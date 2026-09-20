@@ -3,9 +3,6 @@
  * Central export point for all helper functions
  */
 
-// Animation utilities
-export * from "./animations";
-
 // Helper functions
 export * from "./helpers";
 

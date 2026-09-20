@@ -1,7 +1,6 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { MotionConfig } from "framer-motion";
 import { Component, ReactNode, useState } from "react";
 
 /**
@@ -79,11 +78,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   // FIXED: Wrapped with Error Boundary to prevent app crashes
   return (
     <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        {/* Global default: framer-motion transform/layout animation is skipped when the OS asks for reduced motion.
-            Opacity/colour transitions and hand-written CSS loops are not covered by this. */}
-        <MotionConfig reducedMotion="user">{children}</MotionConfig>
-      </QueryClientProvider>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </ErrorBoundary>
   );
 }

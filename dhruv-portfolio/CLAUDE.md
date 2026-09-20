@@ -36,3 +36,13 @@ zustand · react-hook-form + zod · EmailJS · recharts · Vercel Analytics/Spee
 - `NEXT_PUBLIC_EMAILJS_*` keys are public by design. `GITHUB_TOKEN` must never reach client code or logs.
 - Rate limiter in `api/github` is per-instance in-memory (resets on cold start) — fine for a portfolio, not a security boundary.
 - `removeConsole` strips `console.*` (except error/warn) in production builds.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

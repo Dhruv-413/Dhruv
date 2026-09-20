@@ -83,7 +83,7 @@ export function ThemeToggle() {
       <Button
         variant="ghost"
         size="icon"
-        className="h-9 w-9 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110 active:scale-95 touch-manipulation"
+        className="h-11 w-11 rounded-none border border-transparent hover:border-border hover:bg-transparent hover:text-primary transition-colors touch-manipulation"
         aria-label="Toggle theme"
       >
         <Sun className="h-4 w-4" aria-hidden="true" />
@@ -95,7 +95,7 @@ export function ThemeToggle() {
     <Button
       variant="ghost"
       size="icon"
-      className="h-9 w-9 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110 active:scale-95 touch-manipulation"
+      className="h-11 w-11 rounded-none border border-transparent hover:border-border hover:bg-transparent hover:text-primary transition-colors touch-manipulation"
       onClick={toggleTheme}
       aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
     >
