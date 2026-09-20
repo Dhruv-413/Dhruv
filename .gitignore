@@ -17,7 +17,7 @@
 coverage.*
 *.coverprofile
 profile.cov
-
+.playwright-mcp
 # Dependency directories
 vendor/
 # Go workspace file
@@ -210,3 +210,9 @@ temp/
 sqlite_mcp_server.db
 opencode
 .opencode
+
+# Claude Code - personal/local state (project settings, hooks, agents, skills ARE committed)
+.claude/settings.local.json
+.claude/agent-memory-local/
+CLAUDE.local.md
+.playwright-mcp/
