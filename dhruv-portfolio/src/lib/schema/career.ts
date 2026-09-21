@@ -32,14 +32,17 @@ export function getCareerSchema(
       "@type": "Person",
       name: SITE_CONFIG.name,
       jobTitle: SITE_CONFIG.person.jobTitle,
-      worksFor: workExperiences.map((exp) => ({
-        "@type": "Organization",
-        name: exp.organization,
-        address: {
-          "@type": "PostalAddress",
-          addressLocality: exp.location,
-        },
-      })),
+      // one Organization per employer, even when the person held several roles there
+      worksFor: workExperiences
+        .filter((exp, i, all) => all.findIndex((other) => other.organization === exp.organization) === i)
+        .map((exp) => ({
+          "@type": "Organization",
+          name: exp.organization,
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: exp.location,
+          },
+        })),
       alumniOf: education.map((edu) => ({
         "@type": "EducationalOrganization",
         name: edu.organization,

@@ -8,6 +8,6 @@ export default function Image() {
   return renderOgImage({
     path: "/career",
     title: "Career",
-    subtitle: "Experience, education and achievements.",
+    subtitle: "Deloitte, ONGC and a B.Tech, on one time line.",
   });
 }

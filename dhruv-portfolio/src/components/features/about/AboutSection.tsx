@@ -22,8 +22,8 @@ const BEFORE = [
   },
   {
     term: "2025 / ONGC",
-    value: "8M+",
-    detail: "data points preprocessed as a summer intern, plus an SAP ABAP dashboard on HANA DB.",
+    value: "SAP ABAP",
+    detail: "Summer intern: helped build a small part of an oil well management system, and worked with its data.",
   },
   {
     term: "2024 / SAP India Hackfest",
@@ -139,7 +139,7 @@ export function AboutSection() {
           href="/contact"
           className="group flex min-h-48 flex-col justify-between gap-10 p-5 transition-colors duration-(--dur-ui) ease-(--ease-out) hover:bg-primary hover:text-primary-foreground focus-visible:bg-primary focus-visible:text-primary-foreground md:p-8"
         >
-          <span className="t-label text-muted-foreground transition-colors duration-(--dur-ui) group-hover:text-primary-foreground/80 group-focus-visible:text-primary-foreground/80">
+          <span className="t-label text-muted-foreground transition-colors duration-(--dur-ui) group-hover:text-primary-foreground group-focus-visible:text-primary-foreground">
             Have a question or an idea
           </span>
           <span className="t-h1 flex items-end justify-between gap-4">

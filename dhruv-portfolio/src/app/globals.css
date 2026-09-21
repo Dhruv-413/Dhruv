@@ -1284,3 +1284,88 @@ html {
     transition: none !important;
   }
 }
+
+/* ==========================================================================
+   CAREER TRACK (DESIGN.md §5, 2026-09-21): a native range input laid over the plot, a cursor moved by transform only
+   ========================================================================== */
+.trk-slider {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  cursor: ew-resize;
+  touch-action: pan-y;
+}
+.trk-slider::-webkit-slider-runnable-track {
+  height: 100%;
+  background: transparent;
+}
+.trk-slider::-moz-range-track {
+  height: 100%;
+  background: transparent;
+}
+/* zero-width thumb: the pointer's x maps straight onto the month, so the cursor lands where you drag */
+.trk-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 0;
+  height: 0;
+  border: 0;
+}
+.trk-slider::-moz-range-thumb {
+  width: 0;
+  height: 0;
+  border: 0;
+}
+.trk-plot {
+  container-type: inline-size;
+}
+.trk-cursor {
+  transform: translate3d(calc(var(--p, 0) * 1cqw), 0, 0);
+  transition: transform 140ms var(--ease-out);
+}
+@keyframes trk-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@supports (animation-timeline: view()) {
+  .trk-bar {
+    transform-origin: left center;
+    animation: draw linear both;
+    animation-timeline: view();
+    animation-range: entry calc(var(--i, 0) * 6%) entry calc(45% + var(--i, 0) * 6%);
+  }
+  .trk-pop {
+    animation: trk-fade linear both;
+    animation-timeline: view();
+    animation-range: entry calc(var(--i, 0) * 3%) entry calc(40% + var(--i, 0) * 3%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .trk-cursor {
+    transition: none;
+  }
+  .trk-bar,
+  .trk-pop {
+    animation: none !important;
+  }
+}
+
+/* bars and marks are placed by date: the global 44 px touch minimum must not inflate them (below md they are inert anyway) */
+.trk-bar,
+.trk-pop {
+  min-width: 0;
+  min-height: 0;
+}
+/* keep the mark and cursor colours when the OS forces its own palette */
+@media (forced-colors: active) {
+  .trk-mark,
+  .trk-cur {
+    forced-color-adjust: none;
+  }
+}

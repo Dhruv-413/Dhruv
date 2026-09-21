@@ -5,7 +5,7 @@ const ITEMS = [
   "Full Stack",
   "Machine Learning",
   "SAP ABAP",
-  "HANA DB",
+  "Databricks",
   "Python",
   "Next.js",
   "B2B Sourcing",
