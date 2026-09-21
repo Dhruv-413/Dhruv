@@ -24,7 +24,7 @@ Lighthouse Performance ≥ 95 · LCP ≤ 2.0 s · CLS ≤ 0.05 · INP ≤ 150 ms
    - Fonts: two `next/font/google` families with `preload: true` — needed weights only? `display: swap`?
    - Images: `next/image` with sizes/priority on the LCP image; remote hosts (avatars, cdn.simpleicons.org) and the SVG CSP path.
    - Continuous animation cost (canvas/particles/scan-lines/backdrop-blur on large areas) — GPU/paint time in the trace.
-   - `/api/github` latency and caching; TanStack Query waterfall on `/github`.
+   - `/github` is server-rendered from the GraphQL API (`revalidate = 3600`): RSC payload size (packed per-period day arrays + `commitsByDay`), the `GitHubLedger` client island's re-render cost on hover/drag, and DOM size (heatmap + rhythm cells).
 5. Stop the server you started.
 
 ## Output

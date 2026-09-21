@@ -10,17 +10,6 @@ export { useExpandedItems } from "./useExpandedItems";
 export { useFilter } from "./useFilter";
 export { useShowMore } from "./useShowMore";
 
-// GitHub hooks
-export {
-  useGitHubGraphQL,
-  useGitHubUser,
-  useGitHubRepos,
-  useGitHubStats,
-  useGitHubContributions,
-  useGitHubContributedRepos,
-  useGitHubData,
-} from "./useGitHub";
-
 // Site config hooks
 export { useSiteConfig } from "./useSiteConfig";
 

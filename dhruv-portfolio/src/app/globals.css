@@ -1369,3 +1369,71 @@ html {
     forced-color-adjust: none;
   }
 }
+
+/* ==========================================================================
+   GITHUB LEDGER (DESIGN.md §5, 2026-09-21): a visible range input for stepping through days. Square vermilion thumb,
+   hairline track, no radius. The heatmap above it follows the pointer; this is the keyboard / touch path.
+   ========================================================================== */
+.gh-slider {
+  appearance: none;
+  -webkit-appearance: none;
+  display: block;
+  width: 100%;
+  height: 2.75rem;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.gh-slider::-webkit-slider-runnable-track {
+  height: 2px;
+  background: var(--input);
+}
+.gh-slider::-moz-range-track {
+  height: 2px;
+  background: var(--input);
+}
+.gh-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 24px;
+  margin-top: -11px;
+  border: 0;
+  border-radius: 0;
+  background: var(--primary);
+}
+.gh-slider::-moz-range-thumb {
+  width: 14px;
+  height: 24px;
+  border: 0;
+  border-radius: 0;
+  background: var(--primary);
+}
+.gh-slider:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 4px;
+}
+
+/* thin, token-coloured scrollbar for sideways-scrolling data grids (heatmap, rhythm) */
+.thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--input) transparent;
+}
+
+/* the heatmap and rhythm maps wipe in left to right as one element (clip-path only) */
+@keyframes cell-wipe {
+  from {
+    clip-path: inset(-6px calc(100% + 6px) -6px -6px);
+  }
+  to {
+    clip-path: inset(-6px);
+  }
+}
+.cell-wipe {
+  animation: cell-wipe 900ms var(--ease-out) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cell-wipe {
+    animation: none !important;
+  }
+}

@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { SITE_CONFIG } from "@/lib/constants";
+import { loadGitHub } from "@/lib/github";
 import { GitHubContent } from "./GitHubContent";
+
+// Server-rendered from the GitHub GraphQL API and cached for an hour (the token never leaves the server).
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "GitHub Activity",
@@ -34,6 +38,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default function GitHubPage() {
-  return <GitHubContent />;
+export default async function GitHubPage() {
+  return <GitHubContent data={await loadGitHub()} />;
 }
