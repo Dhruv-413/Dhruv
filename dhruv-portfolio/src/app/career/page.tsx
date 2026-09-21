@@ -1,69 +1,44 @@
-import dynamic from "next/dynamic";
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { SITE_CONFIG } from "@/lib/constants";
 import { getCareerSchema, getBreadcrumbSchema } from "@/lib/schema";
+import { getTrackModel } from "@/lib/career";
 import timelineData from "@/data/timeline.json";
+import { PageHeader } from "@/components/ui/page-primitives";
+import { CareerTrack } from "@/components/features/career/CareerTrack";
+import { CareerChapters } from "@/components/features/career/CareerChapters";
 
-const TimelineSection = dynamic(
-  () =>
-    import("@/components/features/timeline/TimelineSection").then((mod) => ({
-      default: mod.TimelineSection,
-    })),
-  {
-    loading: () => <LoadingSkeleton variant="timeline" />,
-    ssr: true,
-  }
-);
-
-// Lazy load AnimatedBackground - heavy framer-motion animations, load client-side only
-const AnimatedBackground = dynamic(
-  () =>
-    import("@/components/ui/AnimatedBackground").then((mod) => ({
-      default: mod.AnimatedBackground,
-    }))
-);
+// The time line ends at the current month, so refresh the static page once a day.
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: "Career Journey | Professional Experience & Education",
+  title: "Career | Deloitte, ONGC and a B.Tech in Computer Science",
   description:
-    "Explore Dhruv Gupta's career journey including internship at ONGC (Oil and Natural Gas Corporation), B.Tech in Computer Science at Manipal University Jaipur, and achievements like SAP India Hackfest Top 50 and Adobe GenSolve qualifier.",
+    "Dhruv Gupta's career on one time line: Deloitte (SAP analyst intern, then Data Modernization and Migration intern), an SAP ABAP summer internship at ONGC, a B.Tech in Computer Science at Manipal University Jaipur, three coding competitions, and the projects and certificates in between.",
   keywords: [
     "career journey",
     "professional experience",
+    "Deloitte internship",
+    "Data Modernization and Migration",
+    "SAP analyst intern",
     "ONGC internship",
+    "SAP ABAP",
     "Manipal University Jaipur",
     "B.Tech Computer Science",
     "SAP India Hackfest",
     "Adobe GenSolve",
-    "software engineer career",
-    "developer experience",
-    "work experience",
-    "education background",
     "Dhruv Gupta career",
   ],
   openGraph: {
-    title: "Career Journey | Dhruv Gupta - Full Stack Developer",
+    title: "Career | Dhruv Gupta",
     description:
-      "From Computer Science education at Manipal University to enterprise impact at ONGC. Explore achievements, work experience, and professional growth.",
+      "Deloitte, ONGC and a B.Tech in Computer Science on one time line, with the contests, projects and certificates in between.",
     url: `${SITE_CONFIG.siteUrl}/career`,
     type: "profile",
-    images: [
-      {
-        url: `${SITE_CONFIG.siteUrl}/og-career.jpg`,
-        width: 1200,
-        height: 630,
-        alt: "Career Journey - Professional Experience",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Career Journey | Dhruv Gupta",
-    description:
-      "From Computer Science education to enterprise impact. Explore achievements, work experience, and professional growth.",
-    images: [`${SITE_CONFIG.siteUrl}/twitter-career.jpg`],
+    title: "Career | Dhruv Gupta",
+    description: "Deloitte, ONGC and a B.Tech in Computer Science on one time line, with the contests, projects and certificates in between.",
   },
   alternates: {
     canonical: `${SITE_CONFIG.siteUrl}/career`,
@@ -71,6 +46,9 @@ export const metadata: Metadata = {
 };
 
 export default function CareerPage() {
+  const model = getTrackModel();
+  const years = Math.floor(model.steps / 12);
+
   // Generate JSON-LD structured data
   const careerSchema = getCareerSchema(
     timelineData.map((item) => ({
@@ -80,7 +58,7 @@ export default function CareerPage() {
       organization: item.organization,
       location: item.location,
       startDate: item.startDate,
-      endDate: item.endDate,
+      endDate: "endDate" in item ? item.endDate : undefined,
       description: item.description ?? [],
     }))
   );
@@ -106,12 +84,13 @@ export default function CareerPage() {
         }}
       />
 
-      <AnimatedBackground />
-      <div className="min-h-screen pt-16 sm:pt-20 relative">
-        <Suspense fallback={<LoadingSkeleton variant="timeline" />}>
-          <TimelineSection />
-        </Suspense>
-      </div>
+      <PageHeader index="04" label="Career" title="Career" rule={false}>
+        <p>
+          {years} years on one time line: study, work, contests, projects and certificates. Then each place in full.
+        </p>
+      </PageHeader>
+      <CareerTrack model={model} />
+      <CareerChapters />
     </>
   );
 }

@@ -40,12 +40,12 @@ export function getProjectsListSchema(
       position: index + 1,
       item: {
         "@type": "SoftwareApplication",
-        "@id": `${SITE_CONFIG.siteUrl}/projects#${project.id}`,
+        "@id": `${SITE_CONFIG.siteUrl}/projects/${project.id}`,
         name: project.title,
         description: project.description,
         url:
           project.links?.live ||
-          `${SITE_CONFIG.siteUrl}/projects#${project.id}`,
+          `${SITE_CONFIG.siteUrl}/projects/${project.id}`,
         applicationCategory: "WebApplication",
         operatingSystem: "Web Browser",
         author: {
@@ -74,8 +74,8 @@ export function getProjectSchema(project: ProjectSchemaInput) {
     "@type": "SoftwareApplication",
     name: project.title,
     description: project.longDescription || project.description,
-    image: project.images?.[0] || SITE_CONFIG.ogImage,
-    url: project.links?.live || `${SITE_CONFIG.siteUrl}/projects#${project.id}`,
+    image: project.images?.[0] || `${SITE_CONFIG.siteUrl}/opengraph-image`,
+    url: project.links?.live || `${SITE_CONFIG.siteUrl}/projects/${project.id}`,
     applicationCategory: "WebApplication",
     operatingSystem: "Web Browser",
     author: {

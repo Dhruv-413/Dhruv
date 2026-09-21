@@ -3,437 +3,190 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Github, Linkedin, Mail, Braces } from "lucide-react";
 import { NAV_ITEMS } from "@/lib/constants";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
-import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { cn } from "@/lib/utils";
 
+/**
+ * Site header — DESIGN.md §4.8. Solid bar + hairline (no blur/shadow), numbered mono nav.
+ * Menu open-state is keyed to the pathname, so it closes on navigation without an effect.
+ */
 export function Header() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const previousActiveElement = useRef<HTMLElement | null>(null);
   const siteConfig = useSiteConfig();
+  const [openAt, setOpenAt] = useState<string | null>(null);
+  const isMenuOpen = openAt === pathname;
 
-  // FIXED: Enhanced focus trap for mobile menu accessibility
-  // Store the element that had focus before opening the menu
-  const storeActiveElement = useCallback(() => {
-    previousActiveElement.current = document.activeElement as HTMLElement;
+  const menuRef = useRef<HTMLDivElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+
+  // Navigating from the menu should not steal focus back to the toggle; Esc / the toggle should.
+  const returnFocusRef = useRef(true);
+  const closeMenuAfterNavigation = useCallback(() => {
+    returnFocusRef.current = false;
+    setOpenAt(null);
   }, []);
 
-  // Restore focus to the element that had focus before menu opened
-  const restoreFocus = useCallback(() => {
-    if (previousActiveElement.current && previousActiveElement.current.focus) {
-      previousActiveElement.current.focus();
-      previousActiveElement.current = null;
-    }
-  }, []);
-
-  // Handle menu open/close with focus management
+  // Esc closes; body scroll locked while open; closes if the viewport grows past the mobile breakpoint.
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      storeActiveElement();
-      // Focus the close button when menu opens
-      closeButtonRef.current?.focus();
-      
-      // Handle escape key to close menu
-      const handleEscape = (e: KeyboardEvent) => {
-        if (e.key === "Escape") {
-          setIsMobileMenuOpen(false);
-        }
-      };
-      
-      document.addEventListener("keydown", handleEscape);
-      return () => {
-        document.removeEventListener("keydown", handleEscape);
-      };
-    } else {
-      // When menu closes, restore focus to the element that had focus before
-      restoreFocus();
-    }
-  }, [isMobileMenuOpen, storeActiveElement, restoreFocus]);
+    if (!isMenuOpen) return;
+    const toggle = toggleRef.current;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    menuRef.current?.querySelector<HTMLElement>("a[href]")?.focus();
 
-  // Handle scroll detection
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpenAt(null);
     };
+    const desktop = window.matchMedia("(min-width: 768px)");
+    const onBreakpoint = (e: MediaQueryListEvent) => {
+      if (e.matches) setOpenAt(null);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    desktop.addEventListener("change", onBreakpoint);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      desktop.removeEventListener("change", onBreakpoint);
+      document.body.style.overflow = previousOverflow;
+      if (returnFocusRef.current) toggle?.focus();
+      returnFocusRef.current = true;
+    };
+  }, [isMenuOpen]);
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Close mobile menu on route change - intentional sync with router
-  /* eslint-disable react-hooks/set-state-in-effect */
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [pathname]);
-  /* eslint-enable react-hooks/set-state-in-effect */
-
-  const handleNavClick = () => {
-    setIsMobileMenuOpen(false);
-  };
-
-  // FIXED: Handle Tab key to trap focus within mobile menu
-  const handleMenuKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (!menuRef.current) return;
-
-    const focusableElements = menuRef.current.querySelectorAll<HTMLElement>(
-      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-    );
-    const firstElement = focusableElements[0];
-    const lastElement = focusableElements[focusableElements.length - 1];
-
-    if (e.key === "Tab") {
-      if (e.shiftKey) {
-        // Shift + Tab: go to previous element
-        if (document.activeElement === firstElement) {
-          e.preventDefault();
-          lastElement?.focus();
-        }
-      } else {
-        // Tab: go to next element
-        if (document.activeElement === lastElement) {
-          e.preventDefault();
-          firstElement?.focus();
-        }
+  // Focus trap: Tab cycles through the toggle and the open menu (the sheet is a disclosure, not aria-modal,
+  // so the toggle stays reachable and can close it).
+  const onHeaderKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key !== "Tab" || !isMenuOpen || !menuRef.current) return;
+      const focusable = [
+        toggleRef.current,
+        ...menuRef.current.querySelectorAll<HTMLElement>("a[href], button:not([disabled])"),
+      ].filter((el): el is HTMLElement => el !== null);
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last?.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first?.focus();
       }
-    } else if (e.key === "Escape") {
-      // Escape closes the menu
-      setIsMobileMenuOpen(false);
-    }
-  }, []);
+    },
+    [isMenuOpen],
+  );
 
-  const isActive = (href: string) => {
-    if (href === "/" && pathname === "/") return true;
-    if (href !== "/" && pathname.startsWith(href)) return true;
-    return false;
-  };
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <motion.header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-background/95 backdrop-blur-xl border-b border-primary/20 shadow-lg shadow-primary/5"
-          : "bg-background/60 backdrop-blur-md border-b border-border/50"
-      }`}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
-    >
-      {/* Animated top border */}
-      <motion.div
-        className="absolute top-0 left-0 h-0.5 bg-linear-to-r from-transparent via-primary to-transparent"
-        initial={{ width: "0%", left: "50%" }}
-        animate={{
-          width: isScrolled ? "100%" : "0%",
-          left: isScrolled ? "0%" : "50%",
-        }}
-        transition={{ duration: 0.6 }}
-      />
+    <header onKeyDown={onHeaderKeyDown} className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background">
+      <div className="page-shell flex h-14 items-stretch justify-between md:h-16">
+        <Link
+          href="/"
+          className="t-label flex items-center gap-3 font-bold"
+          aria-label="Dhruv Gupta, home"
+        >
+          <span>DG</span>
+          <span className="hidden whitespace-nowrap font-normal text-muted-foreground lg:inline">
+            Portfolio / 2026
+          </span>
+        </Link>
 
-      <nav
-        className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8"
-        role="navigation"
-        aria-label="Main navigation"
-      >
-        <div className="flex items-center justify-between h-14 sm:h-16 lg:h-20">
-          {/* Logo*/}
-          <Link
-            href="/"
-            className="flex items-center gap-1.5 sm:gap-2 group touch-manipulation"
-            aria-label="Home - Dhruv Gupta Portfolio"
-          >
-            <div className="flex flex-col">
-              <span className="text-base sm:text-lg lg:text-xl font-bold font-mono bg-linear-to-r from-primary via-purple-400 to-accent bg-clip-text text-transparent group-hover:opacity-80 transition-opacity pl-3 sm:pl-4">
-                {"<DG />"}
-              </span>
-              <span className="text-[9px] sm:text-[10px] text-muted-foreground font-mono hidden xs:block sm:block pl-3 sm:pl-4">
-                {"> Learner"}
-              </span>
-            </div>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
+        {/* Desktop navigation */}
+        <nav aria-label="Main" className="hidden items-stretch md:flex">
+          <ul className="flex items-stretch">
             {NAV_ITEMS.map((item, index) => {
               const active = isActive(item.href);
               return (
-                <motion.div
-                  key={item.href}
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
+                <li key={item.href} className="flex">
                   <Link
                     href={item.href}
-                    className={`relative px-3 lg:px-4 py-2 text-sm font-medium font-mono transition-all duration-300 rounded-md group touch-manipulation ${
-                      active
-                        ? "text-primary"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
                     aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "t-label group relative flex items-center gap-2 px-3 transition-colors duration-(--dur-ui) ease-(--ease-out) lg:px-4",
+                      active ? "text-primary" : "text-muted-foreground hover:text-foreground",
+                    )}
                   >
-                    {/* Terminal prompt indicator for active */}
-                    {active && (
-                      <motion.span
-                        className="absolute left-0.5 lg:left-1 top-1/2 -translate-y-1/2 text-primary font-mono text-xs"
-                        layoutId={`nav-prompt-${item.href}`}
-                        transition={{
-                          type: "spring",
-                          stiffness: 380,
-                          damping: 30,
-                        }}
-                      >
-                        {">"}
-                      </motion.span>
-                    )}
-
-                    <span className={active ? "pl-2" : ""}>{item.label}</span>
-
-                    {/* Animated underline */}
-                    {active && (
-                      <motion.div
-                        className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-purple-400 to-accent rounded-full"
-                        layoutId="activeNav"
-                        transition={{
-                          type: "spring",
-                          stiffness: 380,
-                          damping: 30,
-                        }}
-                      />
-                    )}
-
-                    {/* Hover effect */}
-                    {!active && (
-                      <motion.div
-                        className="absolute inset-0 bg-primary/5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity -z-10"
-                        whileHover={{ scale: 1.05 }}
-                      />
-                    )}
+                    <span className="text-xs" aria-hidden="true">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    {item.label}
+                    <span
+                      aria-hidden="true"
+                      className={cn(
+                        "absolute inset-x-3 bottom-0 h-0.5 origin-left bg-primary transition-transform duration-(--dur-ui) ease-(--ease-out) lg:inset-x-4",
+                        active ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100 group-hover:bg-foreground",
+                      )}
+                    />
                   </Link>
-                </motion.div>
+                </li>
               );
             })}
+          </ul>
+        </nav>
 
-            </div>
-
-            {/* Social Links & Mobile Menu */}
-            <div className="flex items-center gap-1.5 sm:gap-2">
-              {/* Theme Toggle - Desktop Only */}
-              <div className="hidden lg:block">
-                <ThemeToggle />
-              </div>
-            {/* Social Links - Desktop Only */}
-            <div className="hidden lg:flex items-center gap-1 mr-2">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-9 w-9 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110 active:scale-95 touch-manipulation"
-                asChild
-              >
-                <a
-                  href={siteConfig.links.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="GitHub Profile"
-                >
-                  <Github className="h-4 w-4" aria-hidden="true" />
-                </a>
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-9 w-9 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110 active:scale-95 touch-manipulation"
-                asChild
-              >
-                <a
-                  href={siteConfig.links.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="LinkedIn Profile"
-                >
-                  <Linkedin className="h-4 w-4" aria-hidden="true" />
-                </a>
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-9 w-9 rounded-md hover:bg-primary/10 hover:text-primary transition-all hover:scale-110 active:scale-95 touch-manipulation"
-                asChild
-              >
-                <a href={siteConfig.links.email} aria-label="Send Email">
-                  <Mail className="h-4 w-4" aria-hidden="true" />
-                </a>
-              </Button>
-            </div>
-
-            {/* Mobile Menu Button - FIXED: Added ref for focus trap */}
-            <Button
-              variant="ghost"
-              size="icon"
-              ref={closeButtonRef}
-              className="md:hidden h-9 w-9 sm:h-10 sm:w-10 rounded-md hover:bg-primary/10 hover:text-primary transition-all active:scale-95 touch-manipulation"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-              aria-expanded={isMobileMenuOpen}
-            >
-              <AnimatePresence mode="wait">
-                {isMobileMenuOpen ? (
-                  <motion.div
-                    key="close"
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <X className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="menu"
-                    initial={{ rotate: 90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: -90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Menu
-                      className="h-5 w-5 sm:h-6 sm:w-6"
-                      aria-hidden="true"
-                    />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </Button>
-          </div>
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+          <button
+            ref={toggleRef}
+            type="button"
+            className="t-label h-full border-l border-border px-4 md:hidden"
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
+            onClick={() => setOpenAt(isMenuOpen ? null : pathname)}
+          >
+            {isMenuOpen ? "Close" : "Menu"}
+          </button>
         </div>
+      </div>
 
-        {/* Mobile Navigation - FIXED: Added focus trap with ref and keyboard handler */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              ref={menuRef}
-              className="md:hidden overflow-hidden"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              onKeyDown={handleMenuKeyDown}
-              role="dialog"
-              aria-modal="true"
-              aria-label="Mobile navigation menu"
-            >
-              <div className="px-2 pt-2 pb-3 sm:pb-4 space-y-1.5 sm:space-y-2 border-t border-border/50 mt-2">
-                {/* Navigation Links */}
-                {NAV_ITEMS.map((item, index) => {
-                  const active = isActive(item.href);
-                  return (
-                    <motion.div
-                      key={item.href}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                    >
-                      <Link
-                        href={item.href}
-                        onClick={handleNavClick}
-                        className={`flex items-center gap-2 w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-md text-sm sm:text-base font-medium font-mono transition-all touch-manipulation active:scale-[0.98] ${
-                          active
-                            ? "bg-primary/10 text-primary border border-primary/20"
-                            : "text-muted-foreground hover:bg-accent hover:text-foreground"
-                        }`}
-                        aria-current={active ? "page" : undefined}
-                      >
-                        {active && (
-                          <Braces
-                            className="h-3.5 w-3.5 sm:h-4 sm:w-4"
-                            aria-hidden="true"
-                          />
-                        )}
-                        <span>
-                          {active ? "> " : ""}
-                          {item.label}
-                        </span>
-                      </Link>
-                    </motion.div>
-                  );
-                })}
-
-                {/* Mobile Theme Toggle */}
-                <motion.div
-                  className="pt-3 sm:pt-4 border-t border-border/50 mt-3 sm:mt-4"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.5 }}
-                >
-                  <p className="text-[10px] sm:text-xs text-muted-foreground font-mono mb-2 sm:mb-3 px-3 sm:px-4">
-                    {"// Theme"}
-                  </p>
-                  <div className="px-3 sm:px-4">
-                    <ThemeToggle />
-                  </div>
-                </motion.div>
-
-                {/* Mobile Social Links */}
-                <motion.div
-                  className="pt-3 sm:pt-4 border-t border-border/50 mt-3 sm:mt-4"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.6 }}
-                >
-                  <p className="text-[10px] sm:text-xs text-muted-foreground font-mono mb-2 sm:mb-3 px-3 sm:px-4">
-                    {"// Connect"}
-                  </p>
-                  <div className="flex gap-2 px-3 sm:px-4">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1 font-mono hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all touch-manipulation active:scale-95 text-xs sm:text-sm"
-                      asChild
-                    >
-                      <a
-                        href={siteConfig.links.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="GitHub Profile"
-                      >
-                        <Github
-                          className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2"
-                          aria-hidden="true"
-                        />
-                        GitHub
-                      </a>
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1 font-mono hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all touch-manipulation active:scale-95 text-xs sm:text-sm"
-                      asChild
-                    >
-                      <a
-                        href={siteConfig.links.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="LinkedIn Profile"
-                      >
-                        <Linkedin
-                          className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2"
-                          aria-hidden="true"
-                        />
-                        LinkedIn
-                      </a>
-                    </Button>
-                  </div>
-                </motion.div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </nav>
-    </motion.header>
+      {/* Mobile menu — full-screen sheet below the bar */}
+      <div
+        id="mobile-menu"
+        ref={menuRef}
+        hidden={!isMenuOpen}
+        className="fixed inset-x-0 bottom-0 top-14 flex flex-col overflow-y-auto border-t border-border bg-background md:hidden"
+      >
+        <nav aria-label="Mobile" className="page-shell flex-1 py-6">
+          <ul className="border-t border-border">
+            {NAV_ITEMS.map((item, index) => {
+              const active = isActive(item.href);
+              return (
+                <li key={item.href} className="border-b border-border">
+                  <Link
+                    href={item.href}
+                    onClick={closeMenuAfterNavigation}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "flex items-baseline gap-4 py-4",
+                      active ? "text-primary" : "text-foreground",
+                    )}
+                  >
+                    <span className="t-label w-6 text-muted-foreground" aria-hidden="true">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="t-h2">{item.label}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+        <div className="page-shell t-label flex flex-wrap gap-x-6 gap-y-2 border-t border-border py-5 text-muted-foreground">
+          <a href={siteConfig.links.github} target="_blank" rel="noopener noreferrer" className="hover:text-foreground">
+            GitHub <span aria-hidden="true">↗</span>
+            <span className="sr-only"> (opens in a new tab)</span>
+          </a>
+          <a href={siteConfig.links.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-foreground">
+            LinkedIn <span aria-hidden="true">↗</span>
+            <span className="sr-only"> (opens in a new tab)</span>
+          </a>
+          <a href={siteConfig.links.email} className="hover:text-foreground">
+            Email <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </header>
   );
 }

@@ -2,28 +2,45 @@
   {
     "id": "crave-connect",
     "title": "Crave Connect",
-    "description": "REST API with semantic search using pgvector for intelligent food service discovery",
-    "longDescription": "Built a comprehensive REST API architecture featuring semantic search capabilities powered by pgvector embeddings. The system enables intelligent querying across 20+ data models with advanced PostgreSQL optimization.",
+    "description": "A Zomato-style food app with an intelligent recommendation system. A friend and I both worked on the backend before we dropped it.",
+    "longDescription": "Crave Connect was meant to be a Zomato-style food app with an intelligent food recommendation system. A friend and I both worked on its backend before we dropped the project. The backend is a FastAPI service over PostgreSQL with 19 tables covering restaurants, menus, orders, delivery, payments and reviews. Menu items get pgvector embeddings, and a plain-language query is resolved with Google's generative AI and LangChain into a ranked list of dishes.",
     "category": "Backend",
     "featured": true,
-    "technologies": ["Python", "PostgreSQL", "FastAPI", "Docker", "pgvector"],
-    "codeSnippet": "@app.get(\"/search\")\nasync def semantic_search(\n    query: str,\n    db: Session = Depends(get_db)\n):\n    # Generate embedding for query\n    embedding = get_embedding(query)\n    \n    # Semantic search using pgvector\n    results = db.execute(\n        text(\"\"\"\n            SELECT * FROM restaurants\n            ORDER BY embedding <-> :embedding\n            LIMIT 10\n        \"\"\"),\n        {\"embedding\": embedding}\n    )\n    return results.fetchall()",
-    "badges": [
+    "kind": "Side project, dropped",
+    "team": "With a friend",
+    "chapters": [
       {
-        "type": "performance",
-        "label": "Response Time",
-        "value": "<100ms"
+        "title": "The idea",
+        "body": "A food app in the style of Zomato, with an intelligent way to recommend what to eat."
       },
       {
-        "type": "build",
-        "label": "Docker",
-        "value": "Production Ready"
+        "title": "What we built",
+        "body": "The backend. A FastAPI service over a PostgreSQL database of 19 tables: restaurants, menus, orders, delivery, payments, reviews and more."
+      },
+      {
+        "title": "The smart part",
+        "body": "Every menu item gets an embedding stored with pgvector. A craving typed in plain words is turned into a search over those embeddings, and the best matches come back as recommendations."
+      },
+      {
+        "title": "What happened",
+        "body": "My friend and I both worked on the backend. We dropped the project. The last commit is from August 2025."
       }
     ],
+    "technologies": [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "pgvector",
+      "LangChain",
+      "Google Generative AI",
+      "Docker"
+    ],
+    "codeSnippet": "# backend/app/api/queries/queries.py\n@router.post(\"/resolve\", response_model=MenuItemListResponse)\ndef resolve_query(query: QueryCreate, db: Session = Depends(get_db)):\n    query_obj = queries_repo.create(db, obj_in=query)\n\n    # embed the query and find the closest menu items\n    menu_item_ids, context = resolve_query_gemini_top_k(\n        db, user_id=query.user_id, query_text=query.query_text\n    )\n    menu_items = [menu_item_repo.get(db, id=mid) for mid in menu_item_ids]\n\n    for mid in menu_item_ids:\n        recommendation_repo.create(db, obj_in=RecommendationCreate(\n            query_id=query_obj.id,\n            menu_item_id=mid,\n            confidence_score=context['confidences'].get(mid, 1.0),\n            meta={},\n        ))\n    return MenuItemListResponse(data=menu_items)",
+    "badges": [],
     "metrics": [
       {
-        "label": "Data Models",
-        "value": "20+",
+        "label": "Database Tables",
+        "value": "19",
         "icon": "database"
       },
       {
@@ -32,7 +49,7 @@
         "icon": "search"
       },
       {
-        "label": "Deployment",
+        "label": "Runs On",
         "value": "Docker",
         "icon": "container"
       }
@@ -40,17 +57,56 @@
     "links": {
       "github": "https://github.com/arjunsaxaena/CraveConnect"
     },
-    "images": ["/images/projects/crave-connect.jpg"],
-    "date": "2025-08-01"
+    "images": [],
+    "date": "2025-08-01",
+    "period": "May to August 2025",
+    "role": "Backend, with my friend"
   },
   {
     "id": "muj-placement-portal",
     "title": "MUJ Placement Portal",
-    "description": "Full-stack placement management system with JWT authentication serving 100+ active users",
-    "longDescription": "Developed a comprehensive placement portal featuring role-based access control, bulk processing capabilities, and real-time updates. Deployed on university intranet serving 100+ active users. Achieved 100% login success rate and reduced manual data entry by 80%.",
+    "description": "Placement tracking software built with a friend for our college's Training and Placement cell. First prototype in June 2025, rebuilt from scratch in January 2026, then handed to our juniors.",
+    "longDescription": "Production software built with a friend for our college, at the request of the Training and Placement (TnP) cell. It replaced their manual placement tracking with one central database, with JWT authentication, role-based access control, bulk processing and real-time updates. We started in June 2025 with an unoptimised prototype, kept maintaining it, then rebuilt everything from scratch in 3 months from January 2026 with better performance, design and features, and handed it over to our juniors. It runs on the university intranet for 100+ active users. I worked on the frontend.",
     "category": "Frontend",
     "featured": true,
-    "technologies": ["React.js", "PostgreSQL", "JWT", "REST API", "Node.js"],
+    "kind": "Production software",
+    "period": "June 2025 to 2026",
+    "team": "Built with a friend",
+    "role": "Frontend",
+    "private": true,
+    "chapters": [
+      {
+        "title": "The problem",
+        "body": "The Training and Placement (TnP) cell at our college tracked placements by hand."
+      },
+      {
+        "title": "The request",
+        "body": "They asked us to build software to fix that and to bring all of their data into one central database. It runs on the university intranet."
+      },
+      {
+        "title": "My part",
+        "body": "A friend and I built it together. I worked on the frontend."
+      },
+      {
+        "title": "The first version",
+        "body": "We started in June 2025 and built a first prototype, not yet optimised. We handed it over and kept maintaining it ourselves."
+      },
+      {
+        "title": "The rebuild",
+        "body": "In January 2026 we spent 3 months rebuilding everything from scratch, with better performance, a new design and more features."
+      },
+      {
+        "title": "The handover",
+        "body": "Two months into the rebuild we started working with our juniors. When it was done we handed the portal over to them to maintain."
+      }
+    ],
+    "technologies": [
+      "React.js",
+      "PostgreSQL",
+      "JWT",
+      "REST API",
+      "Node.js"
+    ],
     "codeSnippet": "// JWT Authentication Middleware\nconst authMiddleware = async (req, res, next) => {\n  try {\n    const token = req.headers.authorization?.split(' ')[1];\n    \n    if (!token) {\n      return res.status(401).json({ error: 'Unauthorized' });\n    }\n    \n    const decoded = jwt.verify(token, process.env.JWT_SECRET);\n    req.user = decoded;\n    \n    // Role-based access control\n    if (req.user.role !== 'admin' && req.path.includes('/admin')) {\n      return res.status(403).json({ error: 'Forbidden' });\n    }\n    \n    next();\n  } catch (error) {\n    res.status(401).json({ error: 'Invalid token' });\n  }\n};",
     "badges": [
       {
@@ -76,77 +132,115 @@
         "icon": "users"
       },
       {
-        "label": "Login Success",
-        "value": "100%",
-        "icon": "shield-check"
-      },
-      {
-        "label": "Time Saved",
+        "label": "Less Manual Data Entry",
         "value": "80%",
         "icon": "clock"
       },
       {
         "label": "Status",
-        "value": "Live",
+        "value": "Handed over",
         "icon": "zap"
       }
     ],
-    "images": ["/images/projects/muj-portal.jpg"],
+    "images": [],
     "date": "2025-06-01"
   },
   {
     "id": "stock-analysis",
     "title": "Stock Analysis System",
-    "description": "Multi-agent NLP system for stock market analysis with 87% query accuracy",
-    "longDescription": "Engineered a sophisticated multi-agent NLP system integrating 5 data providers (Yahoo Finance, Alpha Vantage, CNBC, MarketWatch, and The Motley Fool) to deliver comprehensive stock analysis with 60% faster query response times.",
+    "description": "An experiment with Google's Agent Development Kit: five agents that answer plain-English questions about a stock. Built solo.",
+    "longDescription": "An experiment with Google's Agent Development Kit (ADK), built solo. You ask about a stock in plain English, like \"Why did Tesla stock drop today?\", and five agents identify the ticker, fetch the price and the news, work out the price change and analyse it with Google Gemini. Data comes from Finnhub, Alpha Vantage, Twelve Data, Marketaux and Yahoo Finance, and the system falls back to another source when one fails or hits its rate limit. It runs as a FastAPI service and plugs into the ADK web interface.",
     "category": "AI/ML",
     "featured": false,
-    "technologies": ["Python", "Google ADK", "FastAPI", "NLP", "BeautifulSoup"],
-    "codeSnippet": "# Multi-Agent Stock Analysis\nclass StockAnalysisAgent:\n    def __init__(self):\n        self.agents = [\n            YahooFinanceAgent(),\n            AlphaVantageAgent(),\n            NewsScraperAgent()\n        ]\n    \n    async def analyze(self, ticker: str):\n        # Parallel data collection\n        tasks = [\n            agent.fetch_data(ticker) \n            for agent in self.agents\n        ]\n        results = await asyncio.gather(*tasks)\n        \n        # Aggregate and analyze\n        return self.synthesize_analysis(results)",
-    "badges": [
+    "kind": "Experiment",
+    "chapters": [
       {
-        "type": "performance",
-        "label": "Accuracy",
-        "value": "87%"
+        "title": "The experiment",
+        "body": "This was my experiment with Google's new Agent Development Kit (ADK), built on my own. It runs as a FastAPI service and also plugs into the ADK web interface."
       },
       {
-        "type": "performance",
-        "label": "Speed",
-        "value": "60% Faster"
+        "title": "Five agents",
+        "body": "Each agent does one job: identify the ticker, get the price, gather the news, work out the price change, and analyse it all with Google Gemini."
+      },
+      {
+        "title": "The data",
+        "body": "Finnhub, Alpha Vantage, Twelve Data, Marketaux and Yahoo Finance. If one source fails or hits its rate limit, the system tries another."
+      },
+      {
+        "title": "Ask it anything",
+        "body": "You ask in plain English, for example: Why did Tesla stock drop today?"
       }
     ],
+    "technologies": [
+      "Python",
+      "Google ADK",
+      "Gemini",
+      "FastAPI",
+      "Finnhub",
+      "Alpha Vantage"
+    ],
+    "codeSnippet": "# adk_agents/ticker_price.py\nasync def fetch_price(ticker: str) -> Dict[str, Any]:\n    \"\"\"Fetch the current price data for a stock ticker.\"\"\"\n    if not ticker:\n        return {\"error\": \"No ticker provided\"}\n\n    response = await ticker_price_agent_impl.execute({\"ticker\": ticker})\n    if response.success and response.data:\n        return response.data\n    return {\n        \"ticker\": ticker,\n        \"error\": response.error_message or f\"Failed to fetch price data for {ticker}\",\n    }\n\nfetch_price_tool = FunctionTool(fetch_price)\n\nticker_price_agent = Agent(\n    name=\"TickerPriceAgent\",\n    tools=[fetch_price_tool],\n    description=\"Fetches the current price and related data for a stock\",\n)",
+    "badges": [],
     "metrics": [
       {
-        "label": "Query Accuracy",
-        "value": "87%",
-        "icon": "target"
-      },
-      {
-        "label": "Speed Improvement",
-        "value": "60%",
-        "icon": "zap"
+        "label": "Agents",
+        "value": "5",
+        "icon": "bot"
       },
       {
         "label": "Data Sources",
         "value": "5",
         "icon": "database"
+      },
+      {
+        "label": "Built On",
+        "value": "Google ADK",
+        "icon": "zap"
       }
     ],
     "links": {
       "github": "https://github.com/Dhruv-413/StockAnalysis"
     },
-    "images": ["/images/projects/stock-analysis.jpg"],
-    "date": "2025-04-01"
+    "images": [],
+    "date": "2025-05-23",
+    "team": "Solo"
   },
   {
     "id": "eye-gaze-tracking",
     "title": "Eye Gaze Tracking",
-    "description": "Real-time computer vision system for eye gaze estimation with 80%+ accuracy",
-    "longDescription": "Developed a real-time eye gaze tracking system using MediaPipe and ResNet50, achieving 80%+ accuracy at 30 FPS with 5.3° mean error. Implements advanced computer vision techniques for facial landmark detection and gaze estimation.",
+    "description": "Real-time eye gaze estimation that can move your cursor. My minor project, built by a team of 3 and trained on the GazeCapture dataset.",
+    "longDescription": "A real-time eye gaze tracking system. MediaPipe finds the face and the eyes, and a hybrid deep-learning model reads the face, both eyes, the head pose and some metadata (ResNet50 for the face, EfficientNetB3 for the eyes) to estimate where you are looking. It was trained on the GazeCapture dataset, reaches 80%+ accuracy at 30 FPS with a 5.3° mean error, and can move the mouse cursor from your gaze. A team of 3 built it as our minor project, and I did most of the work.",
     "category": "Computer Vision",
     "featured": false,
-    "technologies": ["Python", "MediaPipe", "OpenCV", "ResNet50", "TensorFlow"],
-    "codeSnippet": "import mediapipe as mp\nimport cv2\n\nclass GazeTracker:\n    def __init__(self):\n        self.face_mesh = mp.solutions.face_mesh.FaceMesh(\n            max_num_faces=1,\n            refine_landmarks=True,\n            min_detection_confidence=0.5\n        )\n    \n    def estimate_gaze(self, frame):\n        results = self.face_mesh.process(frame)\n        \n        if results.multi_face_landmarks:\n            landmarks = results.multi_face_landmarks[0]\n            # Extract eye landmarks and estimate gaze\n            gaze_vector = self.calculate_gaze(landmarks)\n            return gaze_vector",
+    "kind": "Minor project",
+    "period": "3rd year",
+    "chapters": [
+      {
+        "title": "What it does",
+        "body": "It watches a face through a camera in real time and works out where the person is looking. It can even move the mouse cursor to that spot."
+      },
+      {
+        "title": "How it works",
+        "body": "MediaPipe finds the face and the eyes. A hybrid model then reads the face, both eyes, the head pose and some metadata: ResNet50 looks at the face and EfficientNetB3 looks at the eyes."
+      },
+      {
+        "title": "The results",
+        "body": "It was trained on the GazeCapture dataset. It reaches 80%+ accuracy at 30 FPS, with a mean error of 5.3°."
+      },
+      {
+        "title": "Where it came from",
+        "body": "It was our minor project in the third year of college. We were a team of 3 and I did most of the work."
+      }
+    ],
+    "technologies": [
+      "Python",
+      "TensorFlow",
+      "MediaPipe",
+      "OpenCV",
+      "ResNet50",
+      "EfficientNetB3"
+    ],
+    "codeSnippet": "# src/model/hybrid_model.py\ndef create_hybrid_model(\n    input_shape=(224, 224, 3),\n    metadata_shape=15,\n    dropout_rate=0.4,\n    dense_units=(512, 256),\n    include_pose_estimation=True,\n    use_attention=True,\n) -> Model:\n    \"\"\"ResNet50 for facial features, EfficientNetB3 (GazeNet)\n    for eye features and pose estimation.\"\"\"\n    face_input = Input(shape=input_shape, name='face_input')\n    left_eye_input = Input(shape=input_shape, name='left_eye_input')\n    right_eye_input = Input(shape=input_shape, name='right_eye_input')\n    metadata_input = Input(shape=(metadata_shape,), name='metadata_input')\n\n    resnet_model = ResNet50(weights='imagenet', include_top=False,\n                            pooling='avg', input_shape=input_shape)\n    face_features_resnet = resnet_model(face_input)\n    # ...",
     "badges": [
       {
         "type": "performance",
@@ -179,18 +273,43 @@
     "links": {
       "github": "https://github.com/Dhruv-413/Eye-Gaze-Tracking-"
     },
-    "images": ["/images/projects/eye-gaze.jpg"],
-    "date": "2025-02-01"
+    "images": [],
+    "date": "2025-02-01",
+    "team": "Team of 3",
+    "role": "Most of the work"
   },
   {
     "id": "ecohive",
     "title": "EcoHive",
-    "description": "Sustainable credit trading platform - SAP India Hackfest Top 50 from 2000+ entries",
-    "longDescription": "Created an innovative sustainable credit trading platform that secured Top 50 position at SAP India's National Hackfest from over 2000 nationwide entries. Built with React.js and Tailwind CSS featuring real-time trading and analytics.",
+    "description": "A green credit trading platform for a sustainable future, built around trees, water, air and mangroves. My first project, made by a team of 5 for SAP Hackfest 2024.",
+    "longDescription": "EcoHive is a green credit trading platform. Its mission is planting trees, conserving water, purifying the air and nurturing mangroves. Individuals and organisations sign up, see a live credit balance and send credits to each other. A team of 5 built it for SAP India's Hackfest 2024, where it reached the Top 50 out of 2000+ entries nationwide. It is live on the web.",
     "category": "Full-Stack",
     "featured": true,
-    "technologies": ["React.js", "Tailwind CSS", "JavaScript", "REST API"],
-    "codeSnippet": "// Real-time Trading Component\nconst TradingDashboard = () => {\n  const [credits, setCredits] = useState([]);\n  const [trades, setTrades] = useState([]);\n  \n  useEffect(() => {\n    const ws = new WebSocket('ws://api.ecohive.com/trades');\n    \n    ws.onmessage = (event) => {\n      const trade = JSON.parse(event.data);\n      setTrades(prev => [trade, ...prev].slice(0, 50));\n    };\n    \n    return () => ws.close();\n  }, []);\n  \n  return (\n    <div className=\"grid grid-cols-2 gap-4\">\n      <CreditsList credits={credits} />\n      <TradeHistory trades={trades} />\n    </div>\n  );\n};",
+    "kind": "Hackathon entry",
+    "period": "2nd year, 2024",
+    "team": "Team of 5",
+    "chapters": [
+      {
+        "title": "The idea",
+        "body": "EcoHive is built on green credit. Its mission is planting trees, conserving water, purifying the air and nurturing mangroves. The platform is where green credit can be held and traded."
+      },
+      {
+        "title": "What you can do",
+        "body": "Individuals and organisations each sign up, see a live credit balance, and send credits to each other by email."
+      },
+      {
+        "title": "How it went",
+        "body": "It was my first project. I built it with a team of 5 for SAP Hackfest 2024, in my second year. It reached the Top 50 out of 2000+ entries nationwide."
+      }
+    ],
+    "technologies": [
+      "React",
+      "Vite",
+      "Tailwind CSS",
+      "Firebase",
+      "JavaScript"
+    ],
+    "codeSnippet": "// src/Components/Credits.jsx\nexport const Credits = ({ entity }) => {\n  const firebase = useFirebase();\n  const [totalCreds, setTotalCreds] = useState(0);\n\n  const getCredits = async (userId) => {\n    const totalCredits = await firebase.getLiveData(\n      `${entity}/${userId}/totalCredits`\n    );\n    // the balance updates live whenever it changes\n    onValue(totalCredits, (snapshot) => {\n      if (snapshot.exists()) setTotalCreds(snapshot.val());\n    });\n  };\n\n  useEffect(() => {\n    const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {\n      if (user) getCredits(user.uid);\n    });\n    return () => unsubscribe();\n  }, []);\n  // ...renders \"Your Credits\" and {totalCreds}\n};",
     "badges": [
       {
         "type": "performance",
@@ -221,9 +340,10 @@
       }
     ],
     "links": {
-      "github": "https://github.com/Dhruv-413/EcoHive"
+      "github": "https://github.com/Dhruv-413/EcoHive",
+      "live": "https://eco-hive.vercel.app"
     },
-    "images": ["/images/projects/ecohive.jpg"],
+    "images": [],
     "date": "2024-07-01"
   }
 ]

@@ -1,29 +1,10 @@
-import dynamic from "next/dynamic";
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { SITE_CONFIG } from "@/lib/constants";
 import { getSkillsSchema, getBreadcrumbSchema } from "@/lib/schema";
 import skillsData from "@/data/skills.json";
-
-const SkillsSection = dynamic(
-  () =>
-    import("@/components/features/skills/SkillsSection").then((mod) => ({
-      default: mod.SkillsSection,
-    })),
-  {
-    loading: () => <LoadingSkeleton variant="skills" />,
-    ssr: true,
-  }
-);
-
-// Lazy load AnimatedBackground - heavy framer-motion animations, load client-side only
-const AnimatedBackground = dynamic(
-  () =>
-    import("@/components/ui/AnimatedBackground").then((mod) => ({
-      default: mod.AnimatedBackground,
-    }))
-);
+import { PageHeader } from "@/components/ui/page-primitives";
+import { SkillsMatrix } from "@/components/features/skills/SkillsMatrix";
+import { Certifications } from "@/components/features/skills/Certifications";
 
 // Calculate total technologies for metadata
 const totalTechnologies = skillsData
@@ -31,46 +12,41 @@ const totalTechnologies = skillsData
   .filter((skill, index, self) => self.indexOf(skill) === index).length;
 
 export const metadata: Metadata = {
-  title: "Technical Skills | Full Stack & AI/ML Expertise",
-  description: `Comprehensive technical skills across ${totalTechnologies}+ technologies including React, Next.js, Python, TypeScript, FastAPI, PyTorch, TensorFlow, PostgreSQL, Docker, and SAP ABAP. Full Stack Development, AI/ML, and Enterprise Software expertise.`,
+  title: "Skills | Data Engineering, Cloud, Full Stack & AI/ML",
+  description: `${totalTechnologies} skills across data engineering (Databricks, Apache Spark), cloud (Azure), backend, frontend and AI/ML, with the projects that used each and the certifications behind them.`,
   keywords: [
     "technical skills",
+    "Azure",
+    "Databricks",
+    "Apache Spark",
+    "data lakehouse",
+    "data engineering",
+    "data migration",
+    "Python developer",
     "React skills",
     "Next.js developer",
-    "Python developer",
-    "TypeScript expertise",
+    "TypeScript",
     "AI/ML skills",
-    "machine learning",
     "computer vision",
     "FastAPI",
     "PostgreSQL",
     "Docker",
     "SAP ABAP",
-    "full stack development skills",
-    "web development expertise",
+    "Power BI",
     "Dhruv Gupta skills",
   ],
   openGraph: {
-    title: `Technical Skills | ${totalTechnologies}+ Technologies | Dhruv Gupta`,
+    title: `Skills | Data, Cloud, Full Stack and AI/ML | Dhruv Gupta`,
     description:
-      "Comprehensive technical expertise across Full Stack Development, AI/ML, DevOps, and Enterprise Software. View detailed skill breakdown and proficiency levels.",
+      "Data engineering, cloud, full stack and AI/ML: what I work with, which of my projects used it, and the certifications behind it.",
     url: `${SITE_CONFIG.siteUrl}/skills`,
     type: "website",
-    images: [
-      {
-        url: `${SITE_CONFIG.siteUrl}/og-skills.jpg`,
-        width: 1200,
-        height: 630,
-        alt: "Technical Skills - Full Stack Developer",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: `Technical Skills | ${totalTechnologies}+ Technologies`,
+    title: "Skills | Data, Cloud, Full Stack and AI/ML",
     description:
-      "Comprehensive technical expertise across Full Stack Development, AI/ML, DevOps, and Enterprise Software.",
-    images: [`${SITE_CONFIG.siteUrl}/twitter-skills.jpg`],
+      "Data engineering, cloud, full stack and AI/ML: what I work with and the projects that used it.",
   },
   alternates: {
     canonical: `${SITE_CONFIG.siteUrl}/skills`,
@@ -83,7 +59,6 @@ export default function SkillsPage() {
     skillsData.map((cat) => ({
       category: cat.category,
       skills: cat.skills,
-      proficiency: cat.proficiency,
     }))
   );
 
@@ -108,12 +83,14 @@ export default function SkillsPage() {
         }}
       />
 
-      <AnimatedBackground />
-      <div className="min-h-screen pt-16 sm:pt-20 relative">
-        <Suspense fallback={<LoadingSkeleton variant="skills" />}>
-          <SkillsSection />
-        </Suspense>
-      </div>
+      <PageHeader index="03" label="Skills" title="Skills">
+        <p>
+          What I work with, newest first: the cloud and data tools from my internship at Deloitte, then the stack I
+          have built projects with, and the certifications behind it.
+        </p>
+      </PageHeader>
+      <SkillsMatrix />
+      <Certifications />
     </>
   );
 }

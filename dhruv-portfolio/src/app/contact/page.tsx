@@ -1,28 +1,10 @@
-import dynamic from "next/dynamic";
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { SITE_CONFIG } from "@/lib/constants";
 import { getContactPageSchema, getBreadcrumbSchema } from "@/lib/schema";
-
-const ContactSection = dynamic(
-  () =>
-    import("@/components/features/contact/ContactSection").then((mod) => ({
-      default: mod.ContactSection,
-    })),
-  {
-    loading: () => <LoadingSkeleton variant="contact" />,
-    ssr: true,
-  }
-);
-
-// Lazy load AnimatedBackground - heavy framer-motion animations, load client-side only
-const AnimatedBackground = dynamic(
-  () =>
-    import("@/components/ui/AnimatedBackground").then((mod) => ({
-      default: mod.AnimatedBackground,
-    }))
-);
+import { PageHeader } from "@/components/ui/page-primitives";
+import { ContactForm } from "@/components/features/contact/ContactForm";
+import { ContactStatus } from "@/components/features/contact/ContactStatus";
+import { ContactDetails } from "@/components/features/contact/ContactDetails";
 
 export const metadata: Metadata = {
   title: "Contact | Get in Touch for Collaborations & Opportunities",
@@ -46,21 +28,12 @@ export const metadata: Metadata = {
       "Ready to build something amazing? Get in touch for freelance projects, collaboration opportunities, or to discuss your next web application.",
     url: `${SITE_CONFIG.siteUrl}/contact`,
     type: "website",
-    images: [
-      {
-        url: `${SITE_CONFIG.siteUrl}/og-contact.jpg`,
-        width: 1200,
-        height: 630,
-        alt: "Contact Dhruv Gupta - Full Stack Developer",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Contact Dhruv Gupta | Full Stack Developer",
     description:
       "Ready to build something amazing? Get in touch for freelance projects and collaboration opportunities.",
-    images: [`${SITE_CONFIG.siteUrl}/twitter-contact.jpg`],
   },
   alternates: {
     canonical: `${SITE_CONFIG.siteUrl}/contact`,
@@ -92,12 +65,16 @@ export default function ContactPage() {
         }}
       />
 
-      <AnimatedBackground />
-      <div className="min-h-screen pt-16 sm:pt-20 relative">
-        <Suspense fallback={<LoadingSkeleton variant="contact" />}>
-          <ContactSection />
-        </Suspense>
-      </div>
+      <PageHeader index="06" label="Contact" title="Contact" rule={false}>
+        <p>A role, a project or a hello: write here, or use the direct details beside the form.</p>
+      </PageHeader>
+      <ContactStatus />
+      <section id="contact" aria-label="Contact" className="page-shell pt-14 pb-(--section-pad) md:pt-20">
+        <div className="grid grid-cols-12 gap-x-(--gutter) gap-y-16">
+          <ContactForm />
+          <ContactDetails />
+        </div>
+      </section>
     </>
   );
 }

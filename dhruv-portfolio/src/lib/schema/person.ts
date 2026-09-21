@@ -33,9 +33,9 @@ export function getPersonSchema() {
       SITE_CONFIG.links.linkedin,
       SITE_CONFIG.links.twitter,
     ],
-    worksFor: {
-      "@type": "Organization",
-      name: "Freelance / Open to Opportunities",
-    },
+    worksFor: [
+      { "@type": "Organization", name: SITE_CONFIG.person.currentRole.organization },
+      { "@type": "Organization", name: SITE_CONFIG.person.venture.name },
+    ],
   };
 }

@@ -3,9 +3,6 @@
  * Re-exports all utilities from separate modules
  */
 
-// Re-export color utilities
-export * from "./colors";
-
 // Re-export date and text utilities
 export * from "./dates";
 

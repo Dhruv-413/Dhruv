@@ -1,7 +1,6 @@
 "use client";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Component, ReactNode, useState } from "react";
+import { Component, ReactNode } from "react";
 
 /**
  * Error Boundary Component
@@ -63,22 +62,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 }
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            staleTime: 60 * 1000, // 1 minute
-            refetchOnWindowFocus: false,
-          },
-        },
-      })
-  );
-
-  // FIXED: Wrapped with Error Boundary to prevent app crashes
-  return (
-    <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </ErrorBoundary>
-  );
+  // Error boundary so a render error shows a fallback instead of a blank app. (The React Query provider that used to
+  // live here served only the old client-side GitHub fetch; /github is now server-rendered.)
+  return <ErrorBoundary>{children}</ErrorBoundary>;
 }

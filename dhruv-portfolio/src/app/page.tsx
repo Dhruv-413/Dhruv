@@ -1,36 +1,16 @@
-import dynamic from "next/dynamic";
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { SITE_CONFIG } from "@/lib/constants";
 import { getPersonSchema, getWebsiteSchema } from "@/lib/schema";
-
-// Lazy load AnimatedBackground - heavy framer-motion animations, load client-side only
-// Note: ssr:false not needed - AnimatedBackground already has "use client"
-const AnimatedBackground = dynamic(
-  () =>
-    import("@/components/ui/AnimatedBackground").then((mod) => ({
-      default: mod.AnimatedBackground,
-    }))
-);
-
-// Lazy load Hero component for better initial page load
-const Hero = dynamic(
-  () =>
-    import("@/components/features/hero/Hero").then((mod) => ({
-      default: mod.Hero,
-    })),
-  {
-    loading: () => <LoadingSkeleton variant="page" />,
-    ssr: true,
-  }
-);
+import { HeroSection } from "@/components/features/hero/HeroSection";
+import { Ticker } from "@/components/features/about/Ticker";
+import { AboutSection } from "@/components/features/about/AboutSection";
 
 // Enhanced metadata for homepage
 export const metadata: Metadata = {
-  title: "Dhruv Gupta | Full Stack Developer & AI/ML Engineer Portfolio",
+  // absolute: the root title template would otherwise append the name a second time
+  title: { absolute: "Dhruv Gupta | Full Stack Developer & AI/ML Engineer Portfolio" },
   description:
-    "Dhruv Gupta is a Full Stack Developer and AI/ML Engineer specializing in React, Next.js, Python, and enterprise software. View projects, skills, and professional experience. Ex-ONGC Intern, B.Tech CS at Manipal University.",
+    "Dhruv Gupta is a Full Stack Developer and AI/ML Engineer specializing in React, Next.js, Python, and enterprise software. Data Modernization and Migration Intern at Deloitte, B.Tech CS graduate of Manipal University Jaipur, and weekend contributor to the family B2B sourcing business Beaumonde.",
   keywords: [
     "Dhruv Gupta",
     "Full Stack Developer",
@@ -40,8 +20,10 @@ export const metadata: Metadata = {
     "Python Developer",
     "Web Developer Portfolio",
     "Software Engineer India",
-    "Manipal University Student",
-    "ONGC Intern",
+    "Manipal University Jaipur",
+    "Deloitte Intern",
+    "Data Modernization",
+    "Data Migration",
     "TypeScript",
     "FastAPI",
     "Machine Learning",
@@ -50,24 +32,15 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Dhruv Gupta | Full Stack Developer & AI/ML Engineer",
     description:
-      "Full Stack Developer and AI/ML Engineer building production-ready web applications. Explore my projects, skills, and professional journey.",
+      "Full Stack Developer and AI/ML Engineer. Data Modernization and Migration Intern at Deloitte. Explore my projects, skills, and career.",
     url: SITE_CONFIG.siteUrl,
     type: "profile",
-    images: [
-      {
-        url: `${SITE_CONFIG.siteUrl}/og-home.jpg`,
-        width: 1200,
-        height: 630,
-        alt: "Dhruv Gupta - Full Stack Developer Portfolio",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Dhruv Gupta | Full Stack Developer & AI/ML Engineer",
     description:
       "Full Stack Developer and AI/ML Engineer building production-ready web applications.",
-    images: [`${SITE_CONFIG.siteUrl}/twitter-home.jpg`],
   },
   alternates: {
     canonical: SITE_CONFIG.siteUrl,
@@ -95,10 +68,9 @@ export default function Home() {
         }}
       />
 
-      <AnimatedBackground />
-      <Suspense fallback={<LoadingSkeleton variant="page" />}>
-        <Hero />
-      </Suspense>
+      <HeroSection />
+      <Ticker />
+      <AboutSection />
     </>
   );
 }

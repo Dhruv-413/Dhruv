@@ -1,35 +1,13 @@
-import dynamic from "next/dynamic";
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { SITE_CONFIG } from "@/lib/constants";
 import { getProjectsListSchema, getBreadcrumbSchema } from "@/lib/schema";
 import projectsData from "@/data/projects.json";
-
-// Lazy load AnimatedBackground - heavy framer-motion animations, load client-side only
-// Note: ssr:false not needed - AnimatedBackground already has "use client"
-const AnimatedBackground = dynamic(
-  () =>
-    import("@/components/ui/AnimatedBackground").then((mod) => ({
-      default: mod.AnimatedBackground,
-    }))
-);
-
-// Lazy load ProjectsSection for better performance
-const ProjectsSection = dynamic(
-  () =>
-    import("@/components/features/projects/ProjectsSection").then((mod) => ({
-      default: mod.ProjectsSection,
-    })),
-  {
-    loading: () => <LoadingSkeleton variant="projects" />,
-    ssr: true,
-  }
-);
+import { PageHeader } from "@/components/ui/page-primitives";
+import { ProjectsIndex } from "@/components/features/projects/ProjectsIndex";
 
 export const metadata: Metadata = {
   title: "Projects | Web Development & AI/ML Portfolio",
-  description: `Explore ${projectsData.length}+ production-ready projects showcasing Full-Stack Development, AI/ML solutions, and enterprise applications. Built with React, Next.js, Python, FastAPI, and modern technologies.`,
+  description: `${projectsData.length} projects, oldest first: a hackathon entry, a college minor project, an AI-agent experiment, placement software built for a college, and a food app started with a friend. Built with React, Python, FastAPI, PostgreSQL and computer vision.`,
   keywords: [
     "web development projects",
     "React projects",
@@ -47,24 +25,15 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Web Development & AI/ML Projects | Dhruv Gupta Portfolio",
     description:
-      "Explore production-ready projects including REST APIs, web applications, and AI/ML solutions. Each project demonstrates modern development practices and real-world impact.",
+      "Five projects, oldest first: a hackathon entry, a minor project, an AI-agent experiment, placement software for a college, and a food app started with a friend.",
     url: `${SITE_CONFIG.siteUrl}/projects`,
     type: "website",
-    images: [
-      {
-        url: `${SITE_CONFIG.siteUrl}/og-projects.jpg`,
-        width: 1200,
-        height: 630,
-        alt: "Web Development Projects Portfolio",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Web Development & AI/ML Projects | Dhruv Gupta",
     description:
-      "Explore production-ready projects including REST APIs, web applications, and AI/ML solutions.",
-    images: [`${SITE_CONFIG.siteUrl}/twitter-projects.jpg`],
+      "Five projects, oldest first, from a first hackathon to software built for a college.",
   },
   alternates: {
     canonical: `${SITE_CONFIG.siteUrl}/projects`,
@@ -105,12 +74,13 @@ export default function ProjectsPage() {
         }}
       />
 
-      <AnimatedBackground />
-      <div className="min-h-screen pt-16 sm:pt-20 relative">
-        <Suspense fallback={<LoadingSkeleton variant="projects" />}>
-          <ProjectsSection />
-        </Suspense>
-      </div>
+      <PageHeader index="02" label="Work" title="Projects">
+        <p>
+          Five builds, oldest first: a hackathon entry, a college minor project, an experiment with AI agents,
+          software built for my college, and a food app I started with a friend.
+        </p>
+      </PageHeader>
+      <ProjectsIndex />
     </>
   );
 }

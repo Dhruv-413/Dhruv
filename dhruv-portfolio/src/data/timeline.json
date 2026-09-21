@@ -1,52 +1,74 @@
 [
   {
+    "id": "deloitte-2026",
+    "type": "work",
+    "title": "Data Modernization and Migration Intern",
+    "organization": "Deloitte",
+    "short": "Deloitte",
+    "location": "Delhi, India",
+    "mode": "Onsite",
+    "startDate": "2026-07-01",
+    "description": [
+      "Went onsite in July, and my role became Data Modernization and Migration Intern.",
+      "Learned Deloitte's newer technologies and its cloud-based systems, including Azure and Databricks."
+    ],
+    "tags": ["Data Modernization", "Data Migration"]
+  },
+  {
+    "id": "deloitte-sap-2026",
+    "type": "work",
+    "title": "SAP Analyst Intern",
+    "organization": "Deloitte",
+    "short": "Deloitte",
+    "location": "Virtual",
+    "mode": "Virtual",
+    "startDate": "2026-01-21",
+    "endDate": "2026-06-30",
+    "description": [
+      "Joined Deloitte as an SAP Analyst intern, working virtually from January to June."
+    ],
+    "tags": ["SAP"]
+  },
+  {
     "id": "ongc-2025",
     "type": "work",
     "title": "Summer Intern",
     "organization": "Oil and Natural Gas Corporation (ONGC)",
+    "short": "ONGC",
     "location": "Delhi, India",
     "startDate": "2025-06-01",
     "endDate": "2025-08-31",
     "description": [
-      "Built centralized SAP ABAP dashboard with HANA DB for oil well management",
-      "Automated maintenance logs, reducing manual reporting time by 40%",
-      "Preprocessed 8M+ data points using Python, FAISS, transformers (PyTorch)"
+      "Helped build a small part of an oil well management system in SAP ABAP, using its T-codes (the short codes that open SAP screens) and GUI features.",
+      "Worked with the data and preprocessed it."
     ],
-    "tags": ["SAP ABAP", "HANA DB", "Python", "FAISS", "PyTorch"],
-    "metrics": [
-      {
-        "label": "Data Points Processed",
-        "value": "8M+"
-      },
-      {
-        "label": "Time Saved",
-        "value": "40%"
-      },
-      {
-        "label": "Departments Served",
-        "value": "5+"
-      }
-    ]
+    "tags": ["SAP ABAP", "Data Preprocessing"]
   },
   {
     "id": "manipal-2022",
     "type": "education",
     "title": "B.Tech in Computer Science",
     "organization": "Manipal University Jaipur",
+    "short": "Manipal",
     "location": "Jaipur, India",
     "startDate": "2022-09-01",
     "endDate": "2026-05-31",
-    "description": [
-      "CGPA: 8.06",
-      "Relevant Coursework: Data Structures & Algorithms, Object-Oriented Programming, Database Management Systems, Software Engineering, Machine Learning"
+    "description": [],
+    "tags": [
+      "Data Structures & Algorithms",
+      "Object-Oriented Programming",
+      "Database Management Systems",
+      "Software Engineering",
+      "Machine Learning"
     ],
-    "tags": ["Computer Science", "Engineering"]
+    "metrics": [{ "label": "CGPA", "value": "8.24" }]
   },
   {
     "id": "sap-hackfest",
     "type": "achievement",
     "title": "National Finalist - SAP India's Hackfest",
     "organization": "SAP India",
+    "short": "SAP Hackfest",
     "location": "Remote",
     "startDate": "2024-07-01",
     "description": [
@@ -61,6 +83,7 @@
     "type": "achievement",
     "title": "Adobe GenSolve - Round 2 Qualifier",
     "organization": "Adobe",
+    "short": "Adobe GenSolve",
     "location": "Remote",
     "startDate": "2024-05-01",
     "description": [
@@ -74,6 +97,7 @@
     "type": "achievement",
     "title": "Mettl CodeRush - Round 2 Qualifier",
     "organization": "Mettl",
+    "short": "Mettl CodeRush",
     "location": "Remote",
     "startDate": "2024-03-01",
     "description": [
@@ -81,14 +105,5 @@
       "Competed against thousands of participants nationwide"
     ],
     "tags": ["Competitive Programming", "Problem Solving"]
-  },
-  {
-    "id": "Deloitte-2026",
-    "type": "work",
-    "title": "Upcoming Virtual Intern",
-    "organization": "Deloitte",
-    "location": "Delhi, India",
-    "startDate": "2026-01-21",
-    "tags": ["SAP ABAP", "HANA DB"]
   }
 ]

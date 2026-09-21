@@ -1,20 +1,44 @@
 [
   {
-    "category": "AI/ML",
-    "proficiency": 85,
-    "color": "#8b5cf6",
-    "skills": ["PyTorch", "TensorFlow", "Scikit-learn", "OpenCV"]
+    "category": "Data Engineering",
+    "blurb": "Storing, moving and processing data at scale.",
+    "note": "Learned during the Deloitte internship",
+    "figure": "lakehouse",
+    "skills": [
+      "Databricks",
+      "Apache Spark",
+      "Data Lake",
+      "Lakehouse",
+      "Data Warehouse"
+    ],
+    "about": {
+      "Databricks": "One place to store big data, clean it and query it, built on Apache Spark.",
+      "Apache Spark": "The engine that splits one big job into parts and runs them on many machines at once.",
+      "Data Lake": "Raw files of any shape, kept cheaply as they arrive. Flexible, but messy.",
+      "Lakehouse": "Both in one system: raw files underneath, tidy tables on top, so reports and models read the same data.",
+      "Data Warehouse": "Tidy tables built for reports. Fast, but strict about shape."
+    }
+  },
+  {
+    "category": "Cloud",
+    "blurb": "Running code and keeping data on Microsoft Azure.",
+    "note": "Learned during the Deloitte internship",
+    "figure": "azure",
+    "skills": ["Azure VM Scale Sets", "Azure Functions", "Azure Storage"],
+    "about": {
+      "Azure VM Scale Sets": "A group of identical virtual machines. Add more when traffic rises, remove them when it falls.",
+      "Azure Functions": "Small pieces of code that run only when something triggers them, like a request or a new file. No server to look after.",
+      "Azure Storage": "Where the data lives: blobs for files, queues for messages, tables for simple records."
+    }
   },
   {
     "category": "Backend",
-    "proficiency": 90,
-    "color": "#3b82f6",
+    "blurb": "The server side: APIs and databases.",
     "skills": ["Python", "FastAPI", "PostgreSQL", "Go"]
   },
   {
     "category": "Frontend",
-    "proficiency": 85,
-    "color": "#10b981",
+    "blurb": "Everything that runs in the browser.",
     "skills": [
       "React.js",
       "Next.js",
@@ -24,21 +48,27 @@
     ]
   },
   {
-    "category": "Enterprise",
-    "proficiency": 75,
-    "color": "#f59e0b",
-    "skills": ["SAP ABAP"]
+    "category": "AI/ML",
+    "blurb": "Models that learn from data, and computer vision.",
+    "skills": ["PyTorch", "TensorFlow", "Scikit-learn", "OpenCV"]
   },
   {
     "category": "Data Science",
-    "proficiency": 80,
-    "color": "#ef4444",
-    "skills": ["Pandas", "NumPy"]
+    "blurb": "Cleaning, exploring and reporting on data.",
+    "skills": ["Pandas", "NumPy", "Power BI"],
+    "about": {
+      "Power BI": "Microsoft's tool for turning data into interactive dashboards and reports."
+    }
   },
   {
     "category": "DevOps",
-    "proficiency": 70,
-    "color": "#06b6d4",
+    "blurb": "Packaging and shipping code.",
     "skills": ["Docker", "Git", "GitHub Actions"]
+  },
+  {
+    "category": "Enterprise",
+    "blurb": "Business software from SAP.",
+    "skills": ["SAP ABAP"],
+    "notes": { "SAP ABAP": "Learned during the ONGC internship" }
   }
 ]

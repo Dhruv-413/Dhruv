@@ -8,7 +8,6 @@ import { SITE_CONFIG } from "../constants";
 export interface SkillCategoryInput {
   category: string;
   skills: string[];
-  proficiency: number;
 }
 
 /**
@@ -23,7 +22,7 @@ export function getSkillsSchema(
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: `${SITE_CONFIG.name}'s Technical Skills`,
-    description: `Technical expertise across ${allSkills.length}+ technologies including AI/ML, Full-Stack Development, and Enterprise Software`,
+    description: `Technical skills across ${allSkills.length} technologies in data engineering, cloud, full-stack development and AI/ML`,
     numberOfItems: allSkills.length,
     itemListElement: allSkills.map((skill, index) => ({
       "@type": "ListItem",
@@ -31,7 +30,6 @@ export function getSkillsSchema(
       item: {
         "@type": "DefinedTerm",
         name: skill,
-        description: `Professional proficiency in ${skill}`,
       },
     })),
   };
