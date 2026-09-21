@@ -91,13 +91,7 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "48x48" },
-      { url: "/icon.svg", type: "image/svg+xml" },
-    ],
-    apple: [{ url: "/icon.svg", type: "image/svg+xml" }],
-  },
+  // Icons come from the file conventions in this folder (icon.svg, favicon.ico, apple-icon.png); no `icons` field needed.
   manifest: "/manifest.json",
   alternates: {
     canonical: SITE_CONFIG.siteUrl,
