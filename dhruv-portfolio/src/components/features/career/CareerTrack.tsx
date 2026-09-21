@@ -81,8 +81,10 @@ export function CareerTrack({ model }: { model: TrackModel }) {
   const isMd = useSyncExternalStore(subscribeMd, getMd, () => false);
   const frame = useRef<HTMLDivElement>(null);
   const started = useRef(false);
+  const plot = useRef<HTMLDivElement>(null);
+  const gesture = useRef<{ id: number; x: number; scrubbing: boolean } | null>(null);
 
-  // The first sweep waits until the chart is mostly on screen; skipped under reduced motion.
+  // The first sweep waits until the chart itself (not the taller frame with the board) is mostly on screen; skipped under reduced motion.
   useEffect(() => {
     const node = frame.current;
     if (!node || typeof IntersectionObserver === "undefined") return;
@@ -100,7 +102,7 @@ export function CareerTrack({ model }: { model: TrackModel }) {
           io.disconnect();
         }
       },
-      { threshold: 0.6 },
+      { threshold: 0.4 },
     );
     io.observe(node);
     return () => io.disconnect();
@@ -113,13 +115,13 @@ export function CareerTrack({ model }: { model: TrackModel }) {
     const tick = (now: number) => {
       const t = Math.min(1, (now - from) / DURATION);
       const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-      setCursor(Math.round(eased * peak));
+      setCursor(Math.round(eased * last));
       if (t < 1) raf = requestAnimationFrame(tick);
       else setPlaying(false);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [playing, peak]);
+  }, [playing, last]);
 
   /** Pick an item for its detail. From the chart the cursor jumps to it; from the board it stays on its month. */
   const pick = (item: TrackItem, moveCursor = true) => {
@@ -134,6 +136,19 @@ export function CareerTrack({ model }: { model: TrackModel }) {
     setPicked(null);
     setCursor(0);
     setPlaying(true);
+  };
+
+  /** The month under a pointer x, on the same scale as the marks (a month is 1/steps of the plot). */
+  const monthAt = (clientX: number) => {
+    const box = plot.current?.getBoundingClientRect();
+    if (!box) return cursor;
+    return Math.max(0, Math.min(last, Math.round(((clientX - box.left) / box.width) * steps)));
+  };
+
+  const scrub = (clientX: number) => {
+    setPlaying(false);
+    setPicked(null);
+    setCursor(monthAt(clientX));
   };
 
   const goNow = () => {
@@ -176,9 +191,41 @@ export function CareerTrack({ model }: { model: TrackModel }) {
         </span>
       </p>
 
-      <div ref={frame} className="border border-border bg-card">
+      <div className="border border-border bg-card">
         {/* the chart: every lane shares the plot's left and right edges (mx-4 / md:ml-32 md:mr-6) */}
-        <div role="group" aria-label={`Time line, ${monthNames[0]} to ${monthNames[last]}`} className="relative pt-1">
+        <div
+          ref={frame}
+          role="group"
+          aria-label={`Time line, ${monthNames[0]} to ${monthNames[last]}`}
+          className="relative touch-pan-y pt-1"
+          onPointerDown={(event) => {
+            if (event.pointerType === "mouse" && event.button !== 0) return;
+            const box = plot.current?.getBoundingClientRect();
+            if (!box || event.clientX < box.left || event.clientX > box.right) return;
+            const onItem = (event.target as HTMLElement).closest("button") !== null;
+            gesture.current = { id: event.pointerId, x: event.clientX, scrubbing: !onItem };
+            if (!onItem) {
+              event.currentTarget.setPointerCapture(event.pointerId);
+              scrub(event.clientX);
+            }
+          }}
+          onPointerMove={(event) => {
+            const g = gesture.current;
+            if (!g || g.id !== event.pointerId) return;
+            if (!g.scrubbing) {
+              if (Math.abs(event.clientX - g.x) < 4) return;
+              g.scrubbing = true;
+              event.currentTarget.setPointerCapture(event.pointerId);
+            }
+            scrub(event.clientX);
+          }}
+          onPointerUp={(event) => {
+            if (gesture.current?.id === event.pointerId) gesture.current = null;
+          }}
+          onPointerCancel={(event) => {
+            if (gesture.current?.id === event.pointerId) gesture.current = null;
+          }}
+        >
           {/* year lines and the hidden range input, both exactly over the plot */}
           <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-4 right-4 md:left-32 md:right-6">
             {years.map((year) => (
@@ -186,7 +233,7 @@ export function CareerTrack({ model }: { model: TrackModel }) {
             ))}
           </div>
 
-          <div className="absolute inset-y-0 left-4 right-4 z-10 md:left-32 md:right-6">
+          <div ref={plot} className="absolute inset-y-0 left-4 right-4 z-10 md:left-32 md:right-6">
             <input
               type="range"
               min={0}
@@ -195,10 +242,9 @@ export function CareerTrack({ model }: { model: TrackModel }) {
               value={cursor}
               aria-label="Month on the time line"
               aria-valuetext={`${monthNames[cursor]}: ${spoken}`}
-              className="trk-slider block h-full"
+              className="trk-slider pointer-events-none block h-full"
               style={{ width: pct(last, steps) }}
               onFocus={() => setPlaying(false)}
-              onPointerDown={() => setPlaying(false)}
               onKeyDown={() => setPlaying(false)}
               onChange={(event) => {
                 setPlaying(false);
@@ -419,6 +465,12 @@ export function CareerTrack({ model }: { model: TrackModel }) {
           <dl className="hairline-grid grid-cols-1 border-x-0 border-b-0 lg:grid-cols-5">
             {LANES.map((lane) => {
               const inLane = here.filter((item) => item.lane === lane.key);
+              // an empty cell says what came last in its lane, so it is never a bare dash
+              const before = inLane.length
+                ? undefined
+                : items
+                    .filter((item) => item.lane === lane.key && Math.floor(item.to !== undefined ? item.to - 0.001 : item.from) < cursor)
+                    .sort((a, b) => (b.to ?? b.from) - (a.to ?? a.from))[0];
               return (
                 <div key={lane.key} className="grid min-h-14 grid-cols-[6.5rem_minmax(0,1fr)] gap-3 p-4 lg:block lg:min-h-28 lg:p-5">
                   <dt className="t-label text-muted-foreground">{lane.label}</dt>
@@ -444,9 +496,19 @@ export function CareerTrack({ model }: { model: TrackModel }) {
                         ))}
                       </ul>
                     ) : (
-                      <span className="text-muted-foreground">
-                        <span aria-hidden="true">-</span>
-                        <span className="sr-only">Nothing dated this month</span>
+                      <span className="block text-[0.9375rem] leading-snug text-muted-foreground">
+                        {before ? (
+                          <>
+                            <span className="t-label block">Nothing this month. Last:</span>
+                            <span className="mt-1 block">{before.title}</span>
+                            <span className="t-label mt-1 block">{before.dateText}</span>
+                          </>
+                        ) : (
+                          <>
+                            <span aria-hidden="true">-</span>
+                            <span className="sr-only">Nothing dated yet</span>
+                          </>
+                        )}
                       </span>
                     )}
                   </dd>
