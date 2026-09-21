@@ -106,10 +106,12 @@ export function HeroSection() {
               </Magnetic>
               <a
                 href="/Dhruv_resume.pdf"
-                download
+                target="_blank"
+                rel="noopener noreferrer"
                 className={cn(button, "border-input hover:border-foreground")}
               >
-                Resume <span aria-hidden="true">↓</span>
+                Resume <span aria-hidden="true">↗</span>
+                <span className="sr-only"> (PDF, opens in a new tab)</span>
               </a>
               <Link
                 href="/contact"

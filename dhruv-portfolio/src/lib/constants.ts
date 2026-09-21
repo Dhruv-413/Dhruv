@@ -18,6 +18,15 @@ export const SITE_CONFIG = {
     email: "dhruvgupta6580@gmail.com",
     location: "Ghaziabad, Uttar Pradesh, India",
     // Phone number intentionally removed for privacy - use email for contact
+    // Owner-stated (2026-09-21). One place to edit when it changes; `asOf` is shown on the contact page so it never reads as evergreen.
+    availability: {
+      status: "Open to opportunities",
+      detail: "Full-time roles, freelance projects, collaboration",
+      replyWithinDays: 2,
+      asOf: "Sep 2026",
+      timeZone: "Asia/Kolkata",
+      timeZoneLabel: "IST",
+    },
   },
   // SEO Configuration
   seo: {

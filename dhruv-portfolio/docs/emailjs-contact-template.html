@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark">
+<title>New message from {{name}}</title>
+<!-- Optional fonts for clients that load web fonts (Apple Mail, iOS Mail); everything else falls back to the stacks below. -->
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@800&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+  :root { color-scheme: light dark; supported-color-schemes: light dark; }
+  body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+  table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+  a { text-decoration: none; }
+
+  /* dark theme = "telemetry": warm ink, phosphor-bone text, the one vermilion accent */
+  @media (prefers-color-scheme: dark) {
+    .bg-outer { background-color: #0c0a08 !important; }
+    .bg-card  { background-color: #141210 !important; border-color: #38352f !important; }
+    .bg-well  { background-color: #1b1815 !important; }
+    .bg-bar   { background-color: #000000 !important; }
+    .bd       { border-color: #38352f !important; }
+    .tx       { color: #efece7 !important; }
+    .mu       { color: #b3aea6 !important; }
+    .acc      { color: #ff582d !important; }
+    .acc-bg   { background-color: #ff582d !important; border-color: #ff582d !important; }
+    .acc-bd   { border-color: #ff582d !important; }
+    .btn-tx   { color: #0c0a08 !important; }
+    .c0 { background-color: #1f1c19 !important; }
+    .c1 { background-color: #726f6b !important; }
+    .c2 { background-color: #989590 !important; }
+    .c3 { background-color: #c1beb8 !important; }
+    .c4 { background-color: #ff582d !important; }
+  }
+
+  @media only screen and (max-width: 620px) {
+    .pad   { padding-left: 22px !important; padding-right: 22px !important; }
+    .title { font-size: 26px !important; }
+    .col   { display: block !important; width: 100% !important; }
+    .col-gap { padding-left: 0 !important; }
+    .right { text-align: left !important; }
+  }
+</style>
+</head>
+<body class="bg-outer" style="margin:0; padding:0; background-color:#f2f0e9;">
+
+<!-- inbox preview text -->
+<div style="display:none; max-height:0; overflow:hidden; mso-hide:all; font-size:1px; line-height:1px; color:#f2f0e9;">
+  {{name}} wrote: {{subject}}
+</div>
+
+<table role="presentation" class="bg-outer" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f2f0e9;">
+  <tr>
+    <td align="center" style="padding:32px 16px;">
+
+      <!-- card -->
+      <table role="presentation" class="bg-card" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%; max-width:600px; background-color:#fbfaf6; border:1px solid #cbc8c0;">
+
+        <!-- top bar: the site header, in mono -->
+        <tr>
+          <td class="bg-bar pad" style="background-color:#0c0a08; padding:14px 36px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td style="font-family:'JetBrains Mono','SFMono-Regular',Menlo,Consolas,'Courier New',monospace; font-size:11px; line-height:16px; letter-spacing:0.08em; text-transform:uppercase; color:#b3aea6;">
+                  <span style="color:#efece7; font-weight:700;">DG</span>&nbsp;&nbsp;Portfolio / Contact
+                </td>
+                <td align="right" style="font-family:'JetBrains Mono','SFMono-Regular',Menlo,Consolas,'Courier New',monospace; font-size:11px; line-height:16px; letter-spacing:0.08em; text-transform:uppercase; color:#ff582d;">
+                  [06] Inbox
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <!-- accent rule -->
+        <tr><td class="acc-bg" height="3" style="height:3px; font-size:0; line-height:0; background-color:#d60400;">&nbsp;</td></tr>
+
+        <!-- title -->
+        <tr>
+          <td class="pad" style="padding:36px 36px 0 36px;">
+            <p style="margin:0 0 16px 0; font-family:'JetBrains Mono','SFMono-Regular',Menlo,Consolas,'Courier New',monospace; font-size:12px; line-height:16px; letter-spacing:0.08em; text-transform:uppercase; color:#5c574f;" class="mu">
+              <span class="acc" style="color:#d60400; font-weight:700;">+</span>&nbsp; New message
+            </p>
+            <h1 class="title tx" style="margin:0; font-family:'Bricolage Grotesque','Helvetica Neue',Helvetica,Arial,sans-serif; font-weight:800; font-size:32px; line-height:1.04; letter-spacing:-0.02em; text-transform:uppercase; color:#0e0c0a; word-break:break-word;">
+              {{subject}}
+            </h1>
+          </td>
+        </tr>
+
+        <!-- cell strip: the site's square cell, one accent cell for the new message -->
+        <tr>
+          <td class="pad" style="padding:24px 36px 0 36px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" aria-hidden="true">
+              <tr>
+                <td class="c0" width="10" height="10" style="width:10px; height:10px; font-size:0; line-height:0; background-color:#e3e0d8;">&nbsp;</td><td width="2" style="width:2px; font-size:0; line-height:0;">&nbsp;</td>
+                <td class="c1" width="10" height="10" style="width:10px; height:10px; font-size:0; line-height:0; background-color:#8b8881;">&nbsp;</td><td width="2" style="width:2px; font-size:0; line-height:0;">&nbsp;</td>
+                <td class="c0" width="10" height="10" style="width:10px; height:10px; font-size:0; line-height:0; background-color:#e3e0d8;">&nbsp;</td><td width="2" style="width:2px; font-size:0; line-height:0;">&nbsp;</td>
+                <td class="c2" width="10" height="10" style="width:10px; height:10px; font-size:0; line-height:0; background-color:#6b6963;">&nbsp;</td><td width="2" style="width:2px; font-size:0; line-height:0;">&nbsp;</td>
+                <td class="c1" width="10" height="10" style="width:10px; height:10px; font-size:0; line-height:0; background-color:#8b8881;">&nbsp;</td><td width="2" style="width:2px; font-size:0; line-height:0;">&nbsp;</td>
+                <td class="c0" width="10" height="10" style="width:10px; height:10px; font-size:0; line-height:0; background-color:#e3e0d8;">&nbsp;</td><td width="2" style="width:2px; font-size:0; line-height:0;">&nbsp;</td>
+                <td class="c0" width="10" height="10" style="width:10px; height:10px; font-size:0; line-height:0; background-color:#e3e0d8;">&nbsp;</td><td width="2" style="width:2px; font-size:0; line-height:0;">&nbsp;</td>
+                <td class="c3" width="10" height="10" style="width:10px; height:10px; font-size:0; line-height:0; background-color:#3d3b37;">&nbsp;</td><td width="2" style="width:2px; font-size:0; line-height:0;">&nbsp;</td>
+                <td class="c1" width="10" height="10" style="width:10px; height:10px; font-size:0; line-height:0; background-color:#8b8881;">&nbsp;</td><td width="2" style="width:2px; font-size:0; line-height:0;">&nbsp;</td>
+                <td class="c2" width="10" height="10" style="width:10px; height:10px; font-size:0; line-height:0; background-color:#6b6963;">&nbsp;</td><td width="2" style="width:2px; font-size:0; line-height:0;">&nbsp;</td>
+                <td class="c0" width="10" height="10" style="width:10px; height:10px; font-size:0; line-height:0; background-color:#e3e0d8;">&nbsp;</td><td width="2" style="width:2px; font-size:0; line-height:0;">&nbsp;</td>
+                <td class="c1" width="10" height="10" style="width:10px; height:10px; font-size:0; line-height:0; background-color:#8b8881;">&nbsp;</td><td width="2" style="width:2px; font-size:0; line-height:0;">&nbsp;</td>
+                <td class="c4" width="10" height="10" style="width:10px; height:10px; font-size:0; line-height:0; background-color:#d60400;">&nbsp;</td><td width="2" style="width:2px; font-size:0; line-height:0;">&nbsp;</td>
+                <td class="c2" width="10" height="10" style="width:10px; height:10px; font-size:0; line-height:0; background-color:#6b6963;">&nbsp;</td><td width="2" style="width:2px; font-size:0; line-height:0;">&nbsp;</td>
+                <td class="c0" width="10" height="10" style="width:10px; height:10px; font-size:0; line-height:0; background-color:#e3e0d8;">&nbsp;</td><td width="2" style="width:2px; font-size:0; line-height:0;">&nbsp;</td>
+                <td class="c1" width="10" height="10" style="width:10px; height:10px; font-size:0; line-height:0; background-color:#8b8881;">&nbsp;</td><td width="2" style="width:2px; font-size:0; line-height:0;">&nbsp;</td>
+                <td class="c0" width="10" height="10" style="width:10px; height:10px; font-size:0; line-height:0; background-color:#e3e0d8;">&nbsp;</td><td width="2" style="width:2px; font-size:0; line-height:0;">&nbsp;</td>
+                <td class="c3" width="10" height="10" style="width:10px; height:10px; font-size:0; line-height:0; background-color:#3d3b37;">&nbsp;</td><td width="2" style="width:2px; font-size:0; line-height:0;">&nbsp;</td>
+                <td class="c1" width="10" height="10" style="width:10px; height:10px; font-size:0; line-height:0; background-color:#8b8881;">&nbsp;</td><td width="2" style="width:2px; font-size:0; line-height:0;">&nbsp;</td>
+                <td class="c0" width="10" height="10" style="width:10px; height:10px; font-size:0; line-height:0; background-color:#e3e0d8;">&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- who: name and reply address, in a hairline row -->
+        <tr>
+          <td class="pad" style="padding:28px 36px 0 36px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td class="col bd" width="38%" valign="top" style="width:38%; border-top:1px solid #cbc8c0; padding:18px 16px 18px 0;">
+                  <p class="mu" style="margin:0 0 8px 0; font-family:'JetBrains Mono','SFMono-Regular',Menlo,Consolas,'Courier New',monospace; font-size:11px; line-height:16px; letter-spacing:0.08em; text-transform:uppercase; color:#5c574f;">From</p>
+                  <p class="tx" style="margin:0; font-family:'Bricolage Grotesque','Helvetica Neue',Helvetica,Arial,sans-serif; font-size:20px; line-height:1.25; font-weight:700; color:#0e0c0a; word-break:break-word;">{{name}}</p>
+                </td>
+                <td class="col col-gap bd" width="62%" valign="top" style="width:62%; border-top:1px solid #cbc8c0; padding:18px 0 18px 16px;">
+                  <p class="mu" style="margin:0 0 8px 0; font-family:'JetBrains Mono','SFMono-Regular',Menlo,Consolas,'Courier New',monospace; font-size:11px; line-height:16px; letter-spacing:0.08em; text-transform:uppercase; color:#5c574f;">Reply address</p>
+                  <p style="margin:0; font-family:'JetBrains Mono','SFMono-Regular',Menlo,Consolas,'Courier New',monospace; font-size:14px; line-height:1.4; word-break:break-all;">
+                    <a class="tx" href="mailto:{{email}}" style="color:#0e0c0a; text-decoration:underline; text-decoration-color:#d60400; text-underline-offset:4px;">{{email}}</a>
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- message -->
+        <tr>
+          <td class="pad" style="padding:8px 36px 0 36px;">
+            <p class="mu bd" style="margin:0 0 12px 0; padding-top:18px; border-top:1px solid #cbc8c0; font-family:'JetBrains Mono','SFMono-Regular',Menlo,Consolas,'Courier New',monospace; font-size:11px; line-height:16px; letter-spacing:0.08em; text-transform:uppercase; color:#5c574f;">Message</p>
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td class="acc-bg" width="3" style="width:3px; background-color:#d60400; font-size:0; line-height:0;">&nbsp;</td>
+                <td class="bg-well" style="background-color:#f2f0e9; padding:20px 22px;">
+                  <div class="tx" style="margin:0; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:16px; line-height:1.7; color:#0e0c0a; white-space:pre-wrap; word-break:break-word;">{{message}}</div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- reply button -->
+        <tr>
+          <td class="pad" style="padding:28px 36px 36px 36px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td class="acc-bg" bgcolor="#d60400" style="background-color:#d60400; border:2px solid #d60400;">
+                  <a class="btn-tx" href="mailto:{{email}}?subject=Re:%20{{subject}}" style="display:inline-block; padding:14px 26px; font-family:'JetBrains Mono','SFMono-Regular',Menlo,Consolas,'Courier New',monospace; font-size:12px; line-height:16px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#f8f6f0; text-decoration:none;">Reply by email &rarr;</a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- footer -->
+        <tr>
+          <td class="pad bd" style="padding:18px 36px 22px 36px; border-top:1px solid #cbc8c0;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td class="col mu" style="font-family:'JetBrains Mono','SFMono-Regular',Menlo,Consolas,'Courier New',monospace; font-size:11px; line-height:18px; letter-spacing:0.08em; text-transform:uppercase; color:#5c574f;">
+                  Sent from your portfolio contact form
+                </td>
+                <td class="col right" align="right" style="font-family:'JetBrains Mono','SFMono-Regular',Menlo,Consolas,'Courier New',monospace; font-size:11px; line-height:18px; letter-spacing:0.08em; text-transform:uppercase;">
+                  <a class="tx" href="https://dhruvgupta-nu.vercel.app/contact" style="color:#0e0c0a; text-decoration:underline; text-decoration-color:#d60400; text-underline-offset:4px;">Open site &nearr;</a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+</table>
+</body>
+</html>

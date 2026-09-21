@@ -6,7 +6,6 @@
  * in one place, following DIP - the service depends on the abstraction.
  */
 
-import emailjs from "@emailjs/browser";
 import type {
   EmailService,
   EmailServiceConfig,
@@ -57,6 +56,8 @@ export class EmailJsService implements EmailService {
       message: payload.message,
     };
 
+    // loaded on the first send, not with the page: the library is only needed when someone submits the form
+    const { default: emailjs } = await import("@emailjs/browser");
     const response = await emailjs.send(
       this.config.serviceId,
       this.config.templateId,

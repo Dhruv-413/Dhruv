@@ -3,6 +3,8 @@ import { SITE_CONFIG } from "@/lib/constants";
 import { getContactPageSchema, getBreadcrumbSchema } from "@/lib/schema";
 import { PageHeader } from "@/components/ui/page-primitives";
 import { ContactForm } from "@/components/features/contact/ContactForm";
+import { ContactStatus } from "@/components/features/contact/ContactStatus";
+import { ContactDetails } from "@/components/features/contact/ContactDetails";
 
 export const metadata: Metadata = {
   title: "Contact | Get in Touch for Collaborations & Opportunities",
@@ -63,10 +65,16 @@ export default function ContactPage() {
         }}
       />
 
-      <PageHeader index="06" label="Contact" title="Contact">
-        <p>Send a message here, or use the direct details beside the form.</p>
+      <PageHeader index="06" label="Contact" title="Contact" rule={false}>
+        <p>A role, a project or a hello: write here, or use the direct details beside the form.</p>
       </PageHeader>
-      <ContactForm />
+      <ContactStatus />
+      <section id="contact" aria-label="Contact" className="page-shell pt-14 pb-(--section-pad) md:pt-20">
+        <div className="grid grid-cols-12 gap-x-(--gutter) gap-y-16">
+          <ContactForm />
+          <ContactDetails />
+        </div>
+      </section>
     </>
   );
 }
