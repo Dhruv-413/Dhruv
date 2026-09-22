@@ -10,10 +10,12 @@ import { ArrowLink, Tag } from "@/components/ui/page-primitives";
 import { cn } from "@/lib/utils";
 import { ProjectArt } from "@/components/features/projects/ProjectArt";
 import { PlacementDashboardSketch } from "@/components/features/projects/PlacementDashboardSketch";
+import { MenuExtractionSketch } from "@/components/features/projects/MenuExtractionSketch";
 
 // Labelled reconstructions for projects whose real screens can't be shown (private code, real personal data).
 const RECONSTRUCTIONS: Record<string, React.ReactNode> = {
   "muj-placement-portal": <PlacementDashboardSketch />,
+  "crave-connect": <MenuExtractionSketch />,
 };
 
 // The JSON literal types differ per entry (e.g. `links`), so read it through the shared Project type.
@@ -222,6 +224,30 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
 
         {/* narrative */}
         <div className="col-span-12 md:col-span-8">
+          {project.credits?.length ? (
+            <div className="mb-12">
+              <table className="w-full border-collapse text-left">
+                <caption className="t-label mb-3 text-left text-muted-foreground">Who built what</caption>
+                <thead className="sr-only">
+                  <tr>
+                    <th scope="col">Who</th>
+                    <th scope="col">What they built</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {project.credits.map((credit) => (
+                    <tr key={credit.who} className="border-t border-border last:border-b">
+                      <th scope="row" className="w-[28%] py-4 pr-4 align-top text-lg font-medium">
+                        {credit.who}
+                      </th>
+                      <td className="py-4 align-top text-[1.0625rem] leading-relaxed text-muted-foreground">{credit.what}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : null}
+
           {project.chapters?.length ? (
             <ol role="list" className="border-t border-border">
               {project.chapters.map((chapter, i) => (
@@ -250,29 +276,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
 
           {RECONSTRUCTIONS[project.id] ? <div className="mt-12">{RECONSTRUCTIONS[project.id]}</div> : null}
 
-          {project.credits?.length ? (
-            <div className="mt-12">
-              <table className="w-full border-collapse text-left">
-                <caption className="t-label mb-3 text-left text-muted-foreground">Who built what</caption>
-                <thead className="sr-only">
-                  <tr>
-                    <th scope="col">Who</th>
-                    <th scope="col">What they built</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {project.credits.map((credit) => (
-                    <tr key={credit.who} className="border-t border-border last:border-b">
-                      <th scope="row" className="w-[28%] py-4 pr-4 align-top text-lg font-medium">
-                        {credit.who}
-                      </th>
-                      <td className="py-4 align-top text-[1.0625rem] leading-relaxed text-muted-foreground">{credit.what}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : null}
 
           {project.codeSnippet && !project.private ? (
             <div className="mt-12">
@@ -284,6 +287,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
               >
                 <code>{project.codeSnippet}</code>
               </pre>
+              {project.codeSource ? (
+                <ArrowLink href={project.codeSource.href} external className="mt-2">
+                  {project.codeSource.label}
+                </ArrowLink>
+              ) : null}
             </div>
           ) : null}
         </div>

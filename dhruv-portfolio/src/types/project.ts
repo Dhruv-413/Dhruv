@@ -21,6 +21,8 @@ export interface Project {
   credits?: { who: string; what: string }[];
   technologies: string[];
   codeSnippet?: string;
+  /** Where the excerpt comes from (a permalink), so the claim can be checked. */
+  codeSource?: { label: string; href: string };
   badges?: {
     type: "live" | "deployed" | "performance" | "build";
     label: string;

@@ -1,3 +1,4 @@
+import { FlagshipPair } from "@/components/features/projects/FlagshipPair";
 import type { Metadata } from "next";
 import { SITE_CONFIG } from "@/lib/constants";
 import { getProjectsListSchema, getBreadcrumbSchema } from "@/lib/schema";
@@ -80,6 +81,7 @@ export default function ProjectsPage() {
           software built for my college, and a food app I started with a friend.
         </p>
       </PageHeader>
+      <FlagshipPair />
       <ProjectsIndex />
     </>
   );

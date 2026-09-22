@@ -2,65 +2,73 @@
   {
     "id": "crave-connect",
     "title": "Crave Connect",
-    "description": "A Zomato-style food app with an intelligent recommendation system. A friend and I both worked on the backend before we dropped it.",
-    "longDescription": "Crave Connect was meant to be a Zomato-style food app with an intelligent food recommendation system. A friend and I both worked on its backend before we dropped the project. The backend is a FastAPI service over PostgreSQL with 19 tables covering restaurants, menus, orders, delivery, payments and reviews. Menu items get pgvector embeddings, and a plain-language query is resolved with Google's generative AI and LangChain into a ranked list of dishes.",
+    "description": "A food app for when you can't say what you want: describe a craving, get dishes back, and share a cart your friends can add to and split. I built the first pipeline that turned menu photos into menu items. We stopped when research showed Zomato and Blinkit were already close.",
+    "longDescription": "A food-app startup idea, built with a friend in 2025: find dishes from a craving described in your own words, and share a cart friends can add to and split. I built the first menu pipeline (menu photo, OCR, an LLM, then structured items with sizes, add-ons and categories) and early Go services for menus and restaurants; my friend rebuilt the backend in Python with FastAPI and built the semantic recommendations. We dropped it after research showed Zomato and Blinkit were already close.",
     "category": "Backend",
     "featured": true,
-    "kind": "Side project, dropped",
+    "kind": "Startup idea, dropped",
+    "period": "May to August 2025",
     "team": "With a friend",
+    "role": "The menu pipeline",
     "chapters": [
       {
         "title": "The idea",
-        "body": "A food app in the style of Zomato, with an intelligent way to recommend what to eat."
+        "body": "A food app for when you can't say what you want. Describe a craving in your own words and get dishes back, then share a cart friends add to and split, like Splitwise."
       },
       {
-        "title": "What we built",
-        "body": "The backend. A FastAPI service over a PostgreSQL database of 19 tables: restaurants, menus, orders, delivery, payments, reviews and more."
+        "title": "Who built what",
+        "body": "I built the first pipeline that turned a restaurant's menu photos into menu items, and early Go services for menus and restaurants. My friend built the rest, then rebuilt the backend."
       },
       {
-        "title": "The smart part",
-        "body": "Every menu item gets an embedding stored with pgvector. A craving typed in plain words is turned into a search over those embeddings, and the best matches come back as recommendations."
+        "title": "What arrived",
+        "body": "Photos came in blurry or angled. Sizes and variants shared one line, and add-ons and section headers landed in the wrong place."
       },
       {
-        "title": "What happened",
-        "body": "My friend and I both worked on the backend. We dropped the project. The last commit is from August 2025."
+        "title": "Go or Python",
+        "body": "We started with Go services, but the OCR, LLM and embedding libraries all live in Python. So the backend moved to one Python service with FastAPI."
+      },
+      {
+        "title": "A made-up price",
+        "body": "When a menu had no price, my prompt let the model estimate one. A guessed price is worse than a blank: it should have been left empty and flagged."
+      },
+      {
+        "title": "How it ended",
+        "body": "We meant it as a startup. Research showed Zomato and Blinkit were already close to it, so we dropped it in August 2025."
+      },
+      {
+        "title": "Next time",
+        "body": "Research the market before the first commit, not after the build."
+      }
+    ],
+    "credits": [
+      {
+        "who": "Me",
+        "what": "The first menu pipeline (menu photos to OCR to an LLM to structured items, in batches) and early Go services for menus and restaurants"
+      },
+      {
+        "who": "My friend",
+        "what": "User and file services, then the Python rebuild with FastAPI (19 tables), its OCR, the semantic search and recommendations, and Docker"
       }
     ],
     "technologies": [
       "Python",
-      "FastAPI",
+      "Go",
       "PostgreSQL",
-      "pgvector",
       "LangChain",
-      "Google Generative AI",
-      "Docker"
+      "Google Generative AI"
     ],
-    "codeSnippet": "# backend/app/api/queries/queries.py\n@router.post(\"/resolve\", response_model=MenuItemListResponse)\ndef resolve_query(query: QueryCreate, db: Session = Depends(get_db)):\n    query_obj = queries_repo.create(db, obj_in=query)\n\n    # embed the query and find the closest menu items\n    menu_item_ids, context = resolve_query_gemini_top_k(\n        db, user_id=query.user_id, query_text=query.query_text\n    )\n    menu_items = [menu_item_repo.get(db, id=mid) for mid in menu_item_ids]\n\n    for mid in menu_item_ids:\n        recommendation_repo.create(db, obj_in=RecommendationCreate(\n            query_id=query_obj.id,\n            menu_item_id=mid,\n            confidence_score=context['confidences'].get(mid, 1.0),\n            meta={},\n        ))\n    return MenuItemListResponse(data=menu_items)",
+    "codeSnippet": "# backend/embedding_service/app/menu_extractor.py (my code, 6 June 2025)\nasync def extract_and_create(self, menu_text: str, restaurant_id: str) -> List[Dict[str, Any]]:\n    \"\"\"Extract categories/items, create categories, then create menu items with correct category_id.\"\"\"\n    if not self.model or not menu_text.strip():\n        return []\n    try:\n        # Step 1: Extract categories and items using LLM\n        categories_and_items = await self._extract_categories_and_items(menu_text)\n        categories = categories_and_items.get(\"categories\", [])\n        menu_items = categories_and_items.get(\"menu_items\", [])\n        if not menu_items:\n            logger.error(\"No menu items extracted from LLM response\")\n            return []\n        # Step 2: Create categories and get their IDs\n        category_map = await self._create_categories(categories, restaurant_id)\n        # Step 3: For each menu item, build request body and POST\n        created_items = await self._create_menu_items(menu_items, restaurant_id, category_map)\n        return created_items\n    except Exception as e:\n        logger.error(f\"Error in menu extraction pipeline: {str(e)}\")\n        return []",
+    "codeSource": {
+      "label": "This file at my last commit",
+      "href": "https://github.com/arjunsaxaena/CraveConnect/blob/0afebe65767b81dfc9e9530cd8ca9444b97bf3dc/backend/embedding_service/app/menu_extractor.py"
+    },
     "badges": [],
-    "metrics": [
-      {
-        "label": "Database Tables",
-        "value": "19",
-        "icon": "database"
-      },
-      {
-        "label": "Search Type",
-        "value": "Semantic",
-        "icon": "search"
-      },
-      {
-        "label": "Runs On",
-        "value": "Docker",
-        "icon": "container"
-      }
-    ],
+    "metrics": [],
     "links": {
       "github": "https://github.com/arjunsaxaena/CraveConnect"
     },
     "images": [],
-    "date": "2025-08-01",
-    "period": "May to August 2025",
-    "role": "Backend, with my friend"
+    "date": "2025-08-01"
   },
   {
     "id": "muj-placement-portal",
@@ -183,6 +191,12 @@
       {
         "title": "Ask it anything",
         "body": "You ask in plain English, for example: Why did Tesla stock drop today?"
+      }
+    ],
+    "credits": [
+      {
+        "who": "Me",
+        "what": "All of it: built solo"
       }
     ],
     "technologies": [

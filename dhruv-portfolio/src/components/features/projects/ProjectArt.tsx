@@ -42,7 +42,7 @@ const ARTS: Record<string, ArtEntry> = {
   },
   "crave-connect": {
     node: <CraveMapArt />,
-    caption: "Fig. Semantic search, illustrated",
+    caption: "Fig. The idea: dishes near your craving",
     hint: "Move the cursor",
     label: "Illustration: dishes on a map where similar dishes sit close together, with the five nearest to your cursor highlighted.",
   },
