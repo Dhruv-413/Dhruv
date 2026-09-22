@@ -24,7 +24,7 @@ Evidence labels used throughout this plan:
 | OG images | 7 routes export `alt`, `1200×630`, `image/png` | CODE `app/**/opengraph-image.tsx` |
 | Sitemap / robots | Built-in `sitemap.ts` / `robots.ts` exist | CODE |
 | Variable typography | Role classes with `clamp()` and `wdth`/`opsz` axes | CODE `app/globals.css:201,210,219,919`, `layout.tsx` (Bricolage, JetBrains Mono, Instrument Serif) |
-| Live regions | Polite status regions on GitHub ledger, Career track, Skills bento, page skeleton | CODE `GitHubLedger.tsx:119`, `CareerTrack.tsx:522`, `SkillsBento.tsx:202`, `PageSkeleton.tsx:7` |
+| Live regions | Polite status regions on GitHub ledger, Career track, Skills bento (the page-skeleton one went with the `loading.tsx` files in Stage 3) | CODE `GitHubLedger.tsx:119`, `CareerTrack.tsx:522`, `SkillsBento.tsx:202` |
 | Keyboard timelines | Native `input[type=range]` with `aria-valuetext` | CODE `CareerTrack.tsx:238-244`, `GitHubLedger.tsx:301-306`, `AzureFigure.tsx:124-130`. LIVE: ArrowRight moved 35→36 |
 | WebGL safeguards | Weak-device check (cores/memory ≤4), DPR cap `min(dpr,1.5)×quality`, context-loss handler, IntersectionObserver pause, hidden-tab pause; canvas fallback caps DPR at 2 | CODE `VoxelPortrait.tsx:247-248,352,531,597,616`; `PixelPortrait.tsx:72,192,205` |
 | WebGL deferral | `next/dynamic({ssr:false})`, armed on idle/touch/timeout | CODE `PortraitStage.tsx:15-25` |

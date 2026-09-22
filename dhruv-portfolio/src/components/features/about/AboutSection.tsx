@@ -8,7 +8,7 @@ import { MigrationFigure } from "./MigrationFigure";
 const { currentRole, venture } = SITE_CONFIG.person;
 
 // Owner-stated facts (2026-09-20). Keep this to what is true and short; the words light up one by one on scroll.
-const STATEMENT = `Weekdays, I move data from old systems to new ones as an intern at ${currentRole.organization}. Weekends, I work in ${venture.name}, my family's B2B sourcing business. The rest of the time, I build software.`;
+const STATEMENT = `Weekdays, I'm a ${currentRole.title} at ${currentRole.organization}. Weekends, I work in ${venture.name}, my family's B2B sourcing business. The rest of the time, I build software.`;
 const ACCENT = new Set([`${currentRole.organization}.`, `${venture.name},`]);
 
 // From timeline.json (education, ONGC, SAP India Hackfest). Numbers are readouts, not headlines (DESIGN.md §2).

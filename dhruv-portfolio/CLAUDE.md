@@ -5,7 +5,7 @@ Stack: Next.js 16 App Router · React 19 + React Compiler (`reactCompiler: true`
 zustand · react-hook-form + zod · EmailJS · recharts · Vercel Analytics/Speed Insights. Path alias: `@/*` → `src/*`.
 
 ## Architecture
-- `src/app/` — routes: `/` (Hero), `/projects`, `/skills`, `/career`, `/github`, `/contact`, plus `sitemap.ts`, `robots.ts`. (There is no API route: `/github` is server-rendered.) Every route has a `loading.tsx` skeleton and its own `metadata`.
+- `src/app/` — routes: `/` (Hero), `/projects`, `/skills`, `/career`, `/github`, `/contact`, plus `sitemap.ts`, `robots.ts`. (There is no API route: `/github` is server-rendered.) Every route has its own `metadata`. There are deliberately **no `loading.tsx` files**: a route-level Suspense boundary ships the prerendered HTML hidden (`<div hidden id="S:0">`), so pages go blank with JS off.
 - `src/components/features/<area>/` — page sections (hero, projects, skills, timeline, github, contact, stats).
   `components/ui/` — primitives (shadcn `button/card/input/label/select/textarea` + custom visual pieces such as
   `AnimatedBackground`, `typewriter-effect`, `ThemeToggle`). `components/shared/` — Header, Footer, Providers.
