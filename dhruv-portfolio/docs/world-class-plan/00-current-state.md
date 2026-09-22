@@ -141,3 +141,46 @@ Still flagged by them: the tech list (React.js, JWT…) is opaque to non-enginee
 - Confirm whether records had a unique ID (for the interaction's "technical version").
 - The About line ("Weekdays, I move data from old systems to new ones…") now echoes the hero line one scroll later: keep it, or reword?
 - Eye Gaze claims ("80%+ accuracy", "5.3°") haven't been re-confirmed yet.
+
+## Stage 2 log (23 Sep 2026, on `redesign`, uncommitted)
+
+| Change | Where | Verified (production `next build --webpack` + `next start`) |
+| --- | --- | --- |
+| First screen: display name capped by height (`min(18vw, 21svh)`); portrait capped at `100svh - 13rem` | `globals.css` `.t-display`, `HeroSection.tsx` | Name, line and Work/Resume/Contact end above the fold at 1536×674 (648 px; was 888), 1366×768, 1440×900, 1920×1080, 768×1024 and 390×844 |
+| **[03] Try it**: static three-panel demo (records → choice → staff table, trade-off and ledger) plus the "technical version" disclosure. Native radios; CSS `:has()` shows the chosen outcome; zero JS | `features/arrives/WhatArrives.tsx`, `.arrives` rules in `globals.css`, `lib/placement-sample.ts` | Works with JS **off** (radio → outcome, `<details>` opens). Without `:has()` all outcomes show, each labelled. 64 px targets; no overflow at 390 |
+| **[04] Selected work**: flagship doorway (title, facts and credits from `projects.json`; bridge line: "the records moved… I built the screens where its staff use them") | `features/projects/FlagshipDoorway.tsx` | Links come after the figure on phones |
+| Projects/Contact nav moved to the end (identity → premise → try → proof → action) | `features/about/ContinueNav.tsx` | — |
+| One sample dataset for the demo and the case-page sketch; invented "Eligible" column dropped | `lib/placement-sample.ts`, `PlacementDashboardSketch.tsx` | — |
+| `app/loading.tsx` removed | — | Its Suspense boundary shipped `/` inside `<div hidden id="S:0">`, so the page was **blank with JS off**. The live site does the same on every route |
+
+**Reviews:**
+
+- **a11y-motion-reviewer.** Fixed:
+  - primary-on-tint marks failed contrast; they're now solid accent chips;
+  - the sketch's `aria-label` was shortened and its doubled period fixed;
+  - `summary` gets the site focus ring.
+
+  Confirmed fine: heading order, table semantics, the `:has()` and fallback logic, radio semantics, targets.
+- **design-critic.** Fixed:
+  - panel titles are H3 size, not t-h2;
+  - accent limited to the mismatch, the outcome marks and the chosen row;
+  - radios stacked at `lg`;
+  - the constant "Sent" column dropped;
+  - the doorway's CTA order on phones;
+  - the serif accent dropped from the demo title.
+
+  Not applied:
+  - the MUJ figure's accent: it is the existing `PlacementArt`, the same as on the case page;
+  - the one-line name at short heights: it would collide with the portrait column. Stage 3.
+
+**Measured:**
+
+- Home JS ≈ 734 KB uncompressed. The only new client chunk is `PlacementArt` (13 KB); the demo and doorway are server components.
+- LCP element at 1440×900 is the portrait `<img>`, as in the production baseline; DESIGN.md wants the name. Stage 3/4.
+
+**Found, not fixed** (surface to owner):
+
+1. Every other route's `loading.tsx` also hides its prerendered HTML without JS (same `S:0` wrapper; the live site does this too).
+2. `next.config.ts` sets `Cache-Control: immutable` on `/_next/static/*` in **dev** too. Next warns this breaks dev: stale chunks, and new Tailwind classes not appearing. Scope it to production.
+
+**Gate:** not yet run. The test sheet is `stage-2/viewer-test-sheet.md`. The owner is turning off Vercel preview protection so testers can open a preview URL.

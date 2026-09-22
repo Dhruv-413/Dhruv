@@ -4,6 +4,9 @@ import { getPersonSchema, getWebsiteSchema } from "@/lib/schema";
 import { HeroSection } from "@/components/features/hero/HeroSection";
 import { Ticker } from "@/components/features/about/Ticker";
 import { AboutSection } from "@/components/features/about/AboutSection";
+import { ContinueNav } from "@/components/features/about/ContinueNav";
+import { WhatArrives } from "@/components/features/arrives/WhatArrives";
+import { FlagshipDoorway } from "@/components/features/projects/FlagshipDoorway";
 
 // Enhanced metadata for homepage
 export const metadata: Metadata = {
@@ -68,6 +71,9 @@ export default function Home() {
       <HeroSection />
       <Ticker />
       <AboutSection />
+      <WhatArrives />
+      <FlagshipDoorway />
+      <ContinueNav />
     </>
   );
 }

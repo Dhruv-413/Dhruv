@@ -199,7 +199,8 @@ body::after {
     font-family: var(--font-bricolage), system-ui, sans-serif;
     font-weight: 800;
     font-variation-settings: "wdth" 84, "opsz" 96;
-    font-size: clamp(4rem, 18vw, 17rem);
+    /* width-led, but capped by height so name + line + actions fit a short laptop screen (1536x674) */
+    font-size: clamp(4rem, min(18vw, 21svh), 17rem);
     line-height: 0.84;
     letter-spacing: -0.028em;
     text-transform: uppercase;
@@ -469,6 +470,7 @@ body::after {
 a:focus-visible,
 button:focus-visible,
 input[type="range"]:focus-visible,
+summary:focus-visible,
 [tabindex]:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
@@ -1435,5 +1437,42 @@ html {
 @media (prefers-reduced-motion: reduce) {
   .cell-wipe {
     animation: none !important;
+  }
+}
+
+/* ==========================================================================
+   "WHAT ARRIVES MATTERS" (home demo, static layer): CSS-only choice → outcome.
+   Without :has() every outcome shows (each is labelled with its choice), so nothing is ever hidden for good.
+   ========================================================================== */
+@layer components {
+  .arrives .arrives-empty,
+  .arrives .arrives-pick {
+    display: none;
+  }
+  @supports selector(:has(*)) {
+    .arrives [data-outcome] {
+      display: none;
+    }
+    .arrives .arrives-empty {
+      display: block;
+    }
+    .arrives:has(input:checked) .arrives-empty {
+      display: none;
+    }
+    .arrives:has(input[value="through"]:checked) [data-outcome="through"],
+    .arrives:has(input[value="hold"]:checked) [data-outcome="hold"],
+    .arrives:has(input[value="merge"]:checked) [data-outcome="merge"] {
+      display: block;
+    }
+    .arrives:has(input[value="through"]:checked) [data-row="through"],
+    .arrives:has(input[value="hold"]:checked) [data-row="hold"],
+    .arrives:has(input[value="merge"]:checked) [data-row="merge"] {
+      background: color-mix(in oklch, var(--primary) 12%, transparent);
+    }
+    .arrives:has(input[value="through"]:checked) [data-row="through"] .arrives-pick,
+    .arrives:has(input[value="hold"]:checked) [data-row="hold"] .arrives-pick,
+    .arrives:has(input[value="merge"]:checked) [data-row="merge"] .arrives-pick {
+      display: inline;
+    }
   }
 }

@@ -33,8 +33,10 @@ Five records, with the same fields as the reconstruction figure on the case page
 | 1 | Sample student 01 | CSE | 8.4 | 0 |
 | 2 | Sample student 02 | CSE | 7.1 | 0 |
 | 3 | Sample student 02 | Computer Sci. | 7.1 | 0 |
-| 4 | Sample student 04 | ECE | 6.2 | 2 |
-| 5 | Sample student 05 | ME | 6.8 | 1 |
+| 4 | Sample student 03 | ECE | 6.2 | 2 |
+| 5 | Sample student 04 | ME | 6.8 | 1 |
+
+The code source is `src/lib/placement-sample.ts`, shared with the case-page sketch. There is no "Eligible" column: the owner never stated the eligibility rule.
 
 #3 is #2 again, with the branch typed another way. It is the only exception, as the v2 scope requires.
 

@@ -1,35 +1,52 @@
 import { cn } from "@/lib/utils";
-
-// Synthetic rows. The portal is private and holds real student data, so nothing here comes from it.
-const ROWS = [
-  { name: "Sample student 01", branch: "CSE", cgpa: "8.4", backlogs: 0 },
-  { name: "Sample student 02", branch: "IT", cgpa: "7.1", backlogs: 0 },
-  { name: "Sample student 03", branch: "ECE", cgpa: "6.2", backlogs: 2 },
-  { name: "Sample student 04", branch: "CSE", cgpa: "9.0", backlogs: 0 },
-  { name: "Sample student 05", branch: "ME", cgpa: "6.8", backlogs: 1 },
-];
+import { SAMPLE_STUDENTS, type SampleRecord } from "@/lib/placement-sample";
 
 // Areas the owner confirmed the staff screens covered (2026-09-23).
 const TABS = ["Students", "Drives", "Stats"] as const;
+const COLS = "grid-cols-[1.7fr_0.9fr_0.6fr_0.7fr]";
+
+function describe(rows: SampleRecord[]): string {
+  const twice = rows.find((row) => row.mark === "Twice");
+  const updated = rows.find((row) => row.mark === "Updated");
+  return [
+    `Reconstruction, not a screenshot: the placement portal's staff screen, with ${rows.length} sample student rows (branch, CGPA, backlogs).`,
+    twice
+      ? `${twice.name} appears twice, as ${rows
+          .filter((row) => row.name === twice.name)
+          .map((row) => row.branch.replace(/\.$/, ""))
+          .join(" and as ")}.`
+      : "",
+    updated ? `${updated.name} is marked as updated.` : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+}
 
 /**
  * MUJ Placement Portal: a redrawn staff screen, because no real screenshot can be shared. Drawn from the owner's
- * description (student records with eligibility, drives, stats; staff and admin log in, students don't). It is a
- * picture of a UI, so it is one image to assistive tech, and the caption says plainly what it is.
+ * description (student records, drives, stats; staff and admin log in, students don't). It is a picture of a UI, so
+ * it is one image to assistive tech, and the caption says plainly what it is. `rows` lets the home demo show what an
+ * import produced; `compact` drops the key where the surrounding text already explains it.
  */
-export function PlacementDashboardSketch({ className }: { className?: string }) {
+export function PlacementDashboardSketch({
+  rows = SAMPLE_STUDENTS,
+  compact = false,
+  caption = "Fig. The staff screen, redrawn",
+  className,
+}: {
+  rows?: SampleRecord[];
+  compact?: boolean;
+  caption?: string;
+  className?: string;
+}) {
   return (
     <figure className={cn("w-full", className)}>
-      <div
-        role="img"
-        aria-label="Reconstruction, not a screenshot: a redrawn staff screen of the placement portal with Students, Drives and Stats tabs, and a table of five sample students showing branch, CGPA, backlogs and whether each is eligible."
-        className="overflow-hidden border border-border bg-card"
-      >
+      <div role="img" aria-label={describe(rows)} className="overflow-hidden border border-border bg-card">
         <div aria-hidden="true">
           <div className="t-label flex items-center justify-between gap-4 border-b border-border px-4 py-3 text-muted-foreground">
             <span>Placement portal / Staff</span>
             <span className="flex items-center gap-2">
-              <span className="size-1.5 bg-primary" />
+              <span className="size-1.5 bg-foreground" />
               Signed in: TnP staff
             </span>
           </div>
@@ -40,7 +57,7 @@ export function PlacementDashboardSketch({ className }: { className?: string }) 
                 key={tab}
                 className={cn(
                   "border-r border-border px-4 py-2.5",
-                  i === 0 ? "bg-primary text-primary-foreground" : "text-muted-foreground",
+                  i === 0 ? "border-b-2 border-b-foreground text-foreground" : "text-muted-foreground",
                 )}
               >
                 {tab}
@@ -49,43 +66,43 @@ export function PlacementDashboardSketch({ className }: { className?: string }) 
           </div>
 
           <div className="overflow-x-auto">
-            <div className="min-w-120 font-mono text-[0.8125rem]">
-              <div className="t-label grid grid-cols-[1.6fr_0.7fr_0.6fr_0.8fr_0.9fr] gap-3 border-b border-border px-4 py-2.5 text-muted-foreground">
+            <div className="min-w-88 font-mono text-[0.8125rem]">
+              <div className={cn("t-label grid gap-3 border-b border-border px-4 py-2.5 text-muted-foreground", COLS)}>
                 <span>Student</span>
                 <span>Branch</span>
                 <span>CGPA</span>
                 <span>Backlogs</span>
-                <span>Eligible</span>
               </div>
-              {ROWS.map((row) => {
-                const eligible = row.backlogs === 0 && Number(row.cgpa) >= 7;
-                return (
-                  <div
-                    key={row.name}
-                    className="grid grid-cols-[1.6fr_0.7fr_0.6fr_0.8fr_0.9fr] gap-3 border-b border-border px-4 py-2.5 last:border-b-0"
-                  >
-                    <span>{row.name}</span>
-                    <span className="text-muted-foreground">{row.branch}</span>
-                    <span>{row.cgpa}</span>
-                    <span className={row.backlogs ? "text-foreground" : "text-muted-foreground"}>{row.backlogs}</span>
-                    <span className="flex items-center gap-2">
-                      <span className={cn("size-2", eligible ? "bg-primary" : "border border-foreground/50")} />
-                      {eligible ? "Yes" : "No"}
-                    </span>
-                  </div>
-                );
-              })}
+              {rows.map((row, i) => (
+                <div
+                  key={`${row.name}-${i}`}
+                  className={cn(
+                    "grid gap-3 border-b border-border px-4 py-2.5 last:border-b-0",
+                    COLS,
+                    row.mark && "bg-primary/10",
+                  )}
+                >
+                  <span className="flex flex-wrap items-center gap-x-2 whitespace-nowrap">
+                    {row.name}
+                    {row.mark ? <span className="t-label bg-primary px-1.5 text-primary-foreground">{row.mark}</span> : null}
+                  </span>
+                  <span className="text-muted-foreground">{row.branch}</span>
+                  <span>{row.cgpa}</span>
+                  <span className={row.backlogs ? "text-foreground" : "text-muted-foreground"}>{row.backlogs}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </div>
       <figcaption className="t-label mt-3 flex flex-wrap justify-between gap-x-4 gap-y-1 text-muted-foreground">
-        <span>Fig. The staff screen, redrawn</span>
+        <span>{caption}</span>
         <span>Reconstruction, not a screenshot. Sample data</span>
-        <span className="w-full normal-case tracking-normal">
-          CGPA: grade average out of 10. Backlogs: failed courses not yet cleared. Eligible: may apply to placement drives
-          (company hiring rounds).
-        </span>
+        {compact ? null : (
+          <span className="w-full normal-case tracking-normal">
+            CGPA: grade average out of 10. Backlogs: failed courses not yet cleared.
+          </span>
+        )}
       </figcaption>
     </figure>
   );

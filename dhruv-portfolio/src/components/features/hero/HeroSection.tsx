@@ -124,7 +124,7 @@ export function HeroSection() {
           </div>
 
           {/* signature: 3D voxel portrait */}
-          <figure className="relative col-span-12 md:col-span-6 md:col-start-7 md:row-start-1 md:self-center">
+          <figure className="relative col-span-12 md:col-span-6 md:col-start-7 md:row-start-1 md:w-full md:max-w-[calc(100svh-13rem)] md:self-center md:justify-self-end">
             <PortraitStage label="Pixel-art portrait of Dhruv Gupta" />
             <span
               className="mark-plus absolute -top-1 left-0 text-muted-foreground"
