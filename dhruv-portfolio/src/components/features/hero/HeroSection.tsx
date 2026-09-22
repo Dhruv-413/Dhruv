@@ -61,7 +61,7 @@ export function HeroSection() {
             href={SITE_CONFIG.links.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-foreground transition-colors duration-(--dur-ui) hover:text-primary focus-visible:text-primary"
+            className="-my-3.5 flex items-center gap-2 py-3.5 text-foreground transition-colors duration-(--dur-ui) hover:text-primary focus-visible:text-primary"
           >
             GitHub <span aria-hidden="true">↗</span>
             <span className="sr-only"> (opens in a new tab)</span>
