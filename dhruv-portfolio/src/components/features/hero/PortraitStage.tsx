@@ -14,7 +14,10 @@ import { cn } from "@/lib/utils";
 const VoxelPortrait = dynamic(() => import("./VoxelPortrait").then((m) => m.VoxelPortrait), { ssr: false });
 const PixelPortrait = dynamic(() => import("./PixelPortrait").then((m) => m.PixelPortrait), { ssr: false });
 
-const SRC = "/images/portrait.png";
+// The master (portrait.png, 1.3 MB) is never requested: the page shows a same-size WebP, and the effects sample a
+// 64 px copy taken at the exact pixels a nearest-neighbour drawImage(1024 -> 64) reads.
+const SRC = "/images/portrait.webp";
+const CELLS_SRC = "/images/portrait-64.png";
 
 export function PortraitStage({ label, className }: { label: string; className?: string }) {
   const [ready, setReady] = useState(false);
@@ -51,8 +54,8 @@ export function PortraitStage({ label, className }: { label: string; className?:
       <Image
         src={SRC}
         alt={label}
-        width={64}
-        height={64}
+        width={1024}
+        height={1024}
         priority
         fetchPriority="high"
         unoptimized
@@ -65,14 +68,14 @@ export function PortraitStage({ label, className }: { label: string; className?:
       {mode === "webgl" ? (
         armed && (
           <VoxelPortrait
-            src={SRC}
+            src={CELLS_SRC}
             className="absolute inset-0"
             onReady={() => setReady(true)}
             onUnsupported={() => setMode("canvas")}
           />
         )
       ) : (
-        <PixelPortrait src={SRC} size={64} className="absolute inset-0" />
+        <PixelPortrait src={CELLS_SRC} size={64} className="absolute inset-0" />
       )}
     </div>
   );

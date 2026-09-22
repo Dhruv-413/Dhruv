@@ -17,6 +17,8 @@ export interface Project {
   private?: boolean;
   /** The story in plain sentences, in order. Rendered as numbered chapters on the case-study page. */
   chapters?: { title: string; body: string }[];
+  /** Who built which part, when it was a team. Rendered as a table on the case-study page. */
+  credits?: { who: string; what: string }[];
   technologies: string[];
   codeSnippet?: string;
   badges?: {
@@ -28,6 +30,8 @@ export interface Project {
     label: string;
     value: string;
     icon?: string;
+    /** A rough, unmeasured figure: shown with a visible "Estimate" label. */
+    estimate?: boolean;
   }[];
   links: {
     github?: string;

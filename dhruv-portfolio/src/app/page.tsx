@@ -8,13 +8,12 @@ import { AboutSection } from "@/components/features/about/AboutSection";
 // Enhanced metadata for homepage
 export const metadata: Metadata = {
   // absolute: the root title template would otherwise append the name a second time
-  title: { absolute: "Dhruv Gupta | Full Stack Developer & AI/ML Engineer Portfolio" },
-  description:
-    "Dhruv Gupta is a Full Stack Developer and AI/ML Engineer specializing in React, Next.js, Python, and enterprise software. Data Modernization and Migration Intern at Deloitte, B.Tech CS graduate of Manipal University Jaipur, and weekend contributor to the family B2B sourcing business Beaumonde.",
+  title: { absolute: SITE_CONFIG.title },
+  description: SITE_CONFIG.description,
   keywords: [
     "Dhruv Gupta",
-    "Full Stack Developer",
-    "AI/ML Engineer",
+    "Software Engineer",
+    "Data Engineer",
     "React Developer",
     "Next.js Developer",
     "Python Developer",
@@ -30,17 +29,15 @@ export const metadata: Metadata = {
     "Computer Vision",
   ],
   openGraph: {
-    title: "Dhruv Gupta | Full Stack Developer & AI/ML Engineer",
-    description:
-      "Full Stack Developer and AI/ML Engineer. Data Modernization and Migration Intern at Deloitte. Explore my projects, skills, and career.",
+    title: SITE_CONFIG.title,
+    description: SITE_CONFIG.description,
     url: SITE_CONFIG.siteUrl,
     type: "profile",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Dhruv Gupta | Full Stack Developer & AI/ML Engineer",
-    description:
-      "Full Stack Developer and AI/ML Engineer building production-ready web applications.",
+    title: SITE_CONFIG.title,
+    description: SITE_CONFIG.description,
   },
   alternates: {
     canonical: SITE_CONFIG.siteUrl,

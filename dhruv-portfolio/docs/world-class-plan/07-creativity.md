@@ -17,6 +17,8 @@ The site already says Dhruv's work is about moving something from where it is to
 
 ## Prototype scope (from explorable-explanation research, see Sources)
 
+> **Superseded in detail by `stage-1/interaction-script.md`** (23 Sep): records are *student records*, not applications; the visitor makes the import decision (the friend built the importer), and the result lands in the staff table Dhruv built.
+
 Four steps, about 45–60 seconds, under ~100 visible words.
 
 | Step | What the visitor sees and does | Copy budget |

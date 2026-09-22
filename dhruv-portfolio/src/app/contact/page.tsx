@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     "developer contact form",
   ],
   openGraph: {
-    title: "Contact Dhruv Gupta | Full Stack Developer",
+    title: `Contact ${SITE_CONFIG.name} | ${SITE_CONFIG.role}`,
     description:
       "Ready to build something amazing? Get in touch for freelance projects, collaboration opportunities, or to discuss your next web application.",
     url: `${SITE_CONFIG.siteUrl}/contact`,
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Contact Dhruv Gupta | Full Stack Developer",
+    title: `Contact ${SITE_CONFIG.name} | ${SITE_CONFIG.role}`,
     description:
       "Ready to build something amazing? Get in touch for freelance projects and collaboration opportunities.",
   },

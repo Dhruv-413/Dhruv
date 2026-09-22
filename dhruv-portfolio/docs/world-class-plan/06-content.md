@@ -54,7 +54,7 @@ Write every line for one specific reader: a recruiter mid-scroll at 11 pm, or "m
 - `not-found.tsx` ("Signal lost", map of dead and live cells) and `Footer.tsx` are already distinctive. No generic 404 advice applies.
 - No `/now` page, blog, uses page or newsletter at this stage. The GitHub page already shows live activity.
 
-## Owner inputs still needed
+## Owner inputs (answered 23 Sep; see `00-current-state.md` Stage 1 log)
 
 1. Sign-off on the positioning line.
 2. Flagship 2 choice (Crave Connect or EcoHive) and your exact role in it.

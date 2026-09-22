@@ -69,4 +69,4 @@ Sections are in the reading order Dhruv asked for. The *delivery* order is the s
 
 ## Status
 
-Planning documents only. No application source, dependencies, configuration or deployment were changed in producing v2. Each stage needs Dhruv's go-ahead before implementation.
+Stage 0 code is done on `redesign` (uncommitted; log in `00-current-state.md`): origin fix + build guard, portrait re-encode, JSON-LD image fix. It closes once deployed and re-measured. Owner action 1 is now a safety check rather than a blocker: the code falls back to the right domain, and the guard fails the deploy if Vercel holds a wrong value. Stage 1 is also done in code (log in `00-current-state.md`; interaction copy in `stage-1/interaction-script.md`). It closes once 1–2 real readers pass the comprehension check. Owner actions 2–4 are answered. Later stages still need Dhruv's go-ahead.

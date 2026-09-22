@@ -85,8 +85,9 @@ export function HeroSection() {
               className="fade-up max-w-[22ch] text-[clamp(1.6rem,2.8vw,2.75rem)] font-medium leading-[1.05] tracking-tight"
               style={{ "--d": "700ms" } as CSSProperties}
             >
-              I build scalable web applications and{" "}
-              <span className="t-serif text-primary">intelligent</span> systems.
+              {/* SITE_CONFIG.statement, with the accent on the part that matters */}
+              I move data from old systems to new ones, without losing{" "}
+              <span className="t-serif text-primary">what matters</span>.
             </p>
 
             <div

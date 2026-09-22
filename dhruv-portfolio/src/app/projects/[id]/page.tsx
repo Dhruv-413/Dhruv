@@ -9,6 +9,12 @@ import type { Project } from "@/types/project";
 import { ArrowLink, Tag } from "@/components/ui/page-primitives";
 import { cn } from "@/lib/utils";
 import { ProjectArt } from "@/components/features/projects/ProjectArt";
+import { PlacementDashboardSketch } from "@/components/features/projects/PlacementDashboardSketch";
+
+// Labelled reconstructions for projects whose real screens can't be shown (private code, real personal data).
+const RECONSTRUCTIONS: Record<string, React.ReactNode> = {
+  "muj-placement-portal": <PlacementDashboardSketch />,
+};
 
 // The JSON literal types differ per entry (e.g. `links`), so read it through the shared Project type.
 // Oldest first, same order as the index, so "build 03 of 05" and previous / next follow the story.
@@ -195,6 +201,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
                   <div key={metric.label} className="min-w-0 p-4">
                     <dt className="t-label text-muted-foreground">{metric.label}</dt>
                     <dd className={cn("t-h2 mt-2 text-primary [overflow-wrap:anywhere]", metricSize(metric.value))}>{metric.value}</dd>
+                    {metric.estimate ? <dd className="t-label mt-2 text-muted-foreground">Estimate</dd> : null}
                   </div>
                 ))}
               </dl>
@@ -240,6 +247,32 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
               </p>
             </>
           )}
+
+          {RECONSTRUCTIONS[project.id] ? <div className="mt-12">{RECONSTRUCTIONS[project.id]}</div> : null}
+
+          {project.credits?.length ? (
+            <div className="mt-12">
+              <table className="w-full border-collapse text-left">
+                <caption className="t-label mb-3 text-left text-muted-foreground">Who built what</caption>
+                <thead className="sr-only">
+                  <tr>
+                    <th scope="col">Who</th>
+                    <th scope="col">What they built</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {project.credits.map((credit) => (
+                    <tr key={credit.who} className="border-t border-border last:border-b">
+                      <th scope="row" className="w-[28%] py-4 pr-4 align-top text-lg font-medium">
+                        {credit.who}
+                      </th>
+                      <td className="py-4 align-top text-[1.0625rem] leading-relaxed text-muted-foreground">{credit.what}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : null}
 
           {project.codeSnippet && !project.private ? (
             <div className="mt-12">

@@ -35,9 +35,9 @@ Evidence labels used throughout this plan:
 
 | Item | Evidence |
 | --- | --- |
-| Correct production origin: **live site emits `http://localhost:3000`** in canonical, `og:url`, `og:image`, robots `Host`/`Sitemap`, every sitemap `<loc>` | LIVE `curl https://dhruvgupta.co` (22 Sep). Fallback at CODE `lib/constants.ts:2` |
-| Guard that stops a production build from publishing localhost | CODE (no check exists) |
-| `SITE_CONFIG.title` still says "Full Stack Developer & AI/ML Engineer" | CODE `lib/constants.ts:6` |
+| Correct production origin: **live site emits `http://localhost:3000`** in canonical, `og:url`, `og:image`, robots `Host`/`Sitemap`, every sitemap `<loc>` | LIVE `curl https://dhruvgupta.co` (22 Sep). **Fixed on `redesign`, not yet deployed**: see *Stage 0 log* below |
+| Guard that stops a production build from publishing localhost | **Added on `redesign`** (`next.config.ts`), not yet deployed |
+| `SITE_CONFIG.title` still says "Full Stack Developer & AI/ML Engineer" | **Fixed in Stage 1** (see *Stage 1 log*) |
 | Work/proof on the homepage: home is only `Hero → Ticker → About` | CODE `app/page.tsx:71-73` |
 | HTML `/resume` route, privacy notice page | CODE (`src/app` has neither) |
 | Named analytics events | CODE; **also needs Vercel Pro**, since custom events are not on Hobby (PRIMARY, see `evidence/claims-verified.md`) |
@@ -62,3 +62,82 @@ Evidence labels used throughout this plan:
 | Why the Jan 2026 rebuild | Weak design/UX, code hard to maintain, TnP needed new features |
 | Dhruv's own frontend work | Staff dashboards & tables, student-facing pages, role-based views / auth UI (**not** the upload screens) |
 | Handover | Walkthrough sessions; juniors built parts with them; otherwise repo + access |
+
+## Stage 0 log (22 Sep 2026, on `redesign`, uncommitted)
+
+| Change | Where | Verified (MEASURED, local `next build --webpack` + `next start`) |
+| --- | --- | --- |
+| Origin resolves from `NEXT_PUBLIC_SITE_URL`, normalised with `new URL().origin`; production falls back to `https://dhruvgupta.co`, never localhost | `lib/constants.ts` | With a trailing-slash value: 0 `localhost:3000` hits on `/`, `/projects`, a project page, `/career`, `/github`, `/contact`, `/skills`, `robots.txt`, `sitemap.xml`; canonical, `og:url`, `og:image`, robots `Host`/`Sitemap`, sitemap `<loc>` all `https://dhruvgupta.co` |
+| Build guard: a Vercel production build (`VERCEL_ENV=production`) fails unless the origin is exactly `https://dhruvgupta.co` | `next.config.ts` | `NEXT_PUBLIC_SITE_URL=http://localhost:3000` → build exits 1 with a message naming the fix. Variable unset (Vercel's likely state) → build passes and every output uses the real domain |
+| Static portrait: 1024 px WebP q85 (69,734 B) replaces the 1,285,175 B PNG; same intrinsic size, so the same `pixelated` downscale | `public/images/portrait.webp`, `PortraitStage.tsx` | Rendered at 698 px (1536 viewport, device scale): mean abs diff 1.53/255, PSNR 40.8 dB, 0.005% of channels differ by > 24. Side-by-side in `.playwright-mcp/evidence/stage0-portrait-side-by-side.png` |
+| Effects (WebGL + canvas) read a 64 px truecolor PNG (11,496 B) instead of the master | `public/images/portrait-64.png` | Chrome's `drawImage(1024→64)` with smoothing off reads pixel 16i+7 (measured); the file is sampled there → **0 differing channels** vs the old input in Chrome (Firefox/Safari may sample a neighbouring pixel; the input is now the same in every browser) |
+| JSON-LD `Person.image` pointed at a nonexistent `/profile-photo.jpg` | `lib/schema/person.ts` | Now `/images/portrait.webp` (200) |
+| `.env.example` origin | `.env.example` | `https://dhruvgupta.co` |
+
+Homepage portrait requests: 1,285,839 B → **~82 KB** (WebP + 64 px PNG). The master `portrait.png` stays in `public/` as the source but is no longer requested. Unchanged on purpose: the fade (`transition-opacity`, cause of the render delay still unproven) and `SITE_CONFIG.title` (waits for the positioning sign-off, Stage 1).
+
+**Still open to close Stage 0:** deploy to `main`, then re-curl production and re-run the PSI protocol (`04-performance.md`) for the before/after, and resubmit the sitemap in Search Console. If Vercel holds a wrong `NEXT_PUBLIC_SITE_URL`, the next production deploy will fail loudly by design: fix or delete the variable.
+
+## Stage 1 log (23 Sep 2026, on `redesign`, uncommitted)
+
+**Owner decisions** (all OWNER; also in memory `career-facts-owner-stated`):
+
+- **Positioning:** "I move data from old systems to new ones, without losing what matters."
+  - First approved as "…from where it is to where it's needed…".
+  - Changed after both simulated readers found it too abstract on the first screen.
+- **Role label:** Software & Data Engineer.
+- **MUJ credits:**
+  - Friend: backend, API, database and bulk importer.
+  - Dhruv: staff dashboards and tables, student profile pages, role-based views and sign-in.
+  - Juniors: parts of the rebuild; they run it now.
+- **Who logs in:** only staff and admins (the placement team, HODs and senior staff). Students never log in.
+- **Users:** roughly 80–100 (estimate). Sanity-checked against MUJ's directorate page (~12 staff) and 40+ departments.
+- **Uptime:** never measured, so removed.
+- **Manual entry:** now "Mostly gone" (estimate).
+- **Hindsight:** check data at import, write docs while building, add tests.
+- **Flagship 2:** Crave Connect.
+
+| Change | Where |
+| --- | --- |
+| One positioning source: `role`, `statement`, `title`, `description`, `jobTitle`, keywords | `lib/constants.ts`; `app/page.tsx` now reads it instead of duplicating strings; contact title |
+| Hero line, with the accent on "what matters" | `HeroSection.tsx` |
+| MUJ case study rewritten: outcome-first intro, 8 chapters covering the four beats (constraint: intranet and three months; rejected alternative: patch vs rebuild; limitation: "Next time"; artifact: below) | `data/projects.json` |
+| Estimate labels on metrics (`estimate?: boolean`, visible text "Estimate") | `types/project.ts`, `projects/[id]/page.tsx` |
+| "Who built what" credits table (`credits?`, real `<table>` with caption and `th scope`) | same |
+| Reconstruction: redrawn staff screen with sample rows, visible "Reconstruction, not a screenshot. Sample data" caption, one `role="img"` with an equivalent name, and a key for CGPA, backlogs and eligible | `components/features/projects/PlacementDashboardSketch.tsx` |
+| Removed: "99.9% uptime", "100+ active", "80% less", "real-time updates", and the JWT code snippet (it was the friend's backend) | `data/projects.json` |
+| Interaction script: every string, state and ARIA rule, plus the five-viewer test script | `stage-1/interaction-script.md` |
+
+**Verified:** tsc, lint and a webpack production build (with `VERCEL_ENV=production` and the site URL unset) all pass. The rendered `<title>`, meta description, `jobTitle` and OG image are correct. Screenshots are in `.playwright-mcp/evidence/stage1-*`:
+
+- The hero at 390×844 shows the name, line and all three CTAs above the fold.
+- At 1536×674 the line and CTAs sit below the fold, **unchanged from before**. This is the Stage 2 first-screen task.
+- The MUJ page was checked in both themes.
+
+**Reader check: SIMULATED, not evidence.** Two persona agents read the text: a non-technical recruiter, and a non-tech reader from outside India. Both:
+
+- could say what Dhruv built and what he didn't;
+- trusted the credits split;
+- found the original hero line abstract;
+- stumbled on jargon.
+
+Fixes applied:
+
+- the concrete hero line;
+- "placement office" defined; the "TnP" acronym dropped;
+- "role-based views" spelled out;
+- the first version restored, so the dates read clearly;
+- a key under the figure.
+
+Still flagged by them: the tech list (React.js, JWT…) is opaque to non-engineers, and two "Estimate" labels feel soft. Both are accepted as honest.
+
+**Stage 1 "done when" is not met until 1–2 real people** (at least one non-engineer) read the MUJ page and can say what Dhruv does, what he built and why it mattered.
+
+**Flagged for Stage 2 (concept, not copy):** the simulated recruiter asked "which is he?". The hero says *I move data* (the Deloitte job), but the flagship shows him building the *screens*, while the friend built the import. Stage 2's first screen and the interaction framing must bridge this: the staff screens are where moved data becomes usable. Don't reopen the positioning line for it.
+
+**Owner follow-ups:**
+
+- Update the resume PDF and LinkedIn headline to the new positioning.
+- Confirm whether records had a unique ID (for the interaction's "technical version").
+- The About line ("Weekdays, I move data from old systems to new ones…") now echoes the hero line one scroll later: keep it, or reword?
+- Eye Gaze claims ("80%+ accuracy", "5.3°") haven't been re-confirmed yet.

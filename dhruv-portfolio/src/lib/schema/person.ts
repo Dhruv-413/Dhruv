@@ -12,7 +12,7 @@ export function getPersonSchema() {
     "@id": `${SITE_CONFIG.siteUrl}/#person`,
     name: SITE_CONFIG.name,
     url: SITE_CONFIG.siteUrl,
-    image: `${SITE_CONFIG.siteUrl}/profile-photo.jpg`,
+    image: `${SITE_CONFIG.siteUrl}/images/portrait.webp`,
     jobTitle: SITE_CONFIG.person.jobTitle,
     description: SITE_CONFIG.description,
     email: SITE_CONFIG.contact.email,

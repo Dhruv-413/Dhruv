@@ -1,4 +1,14 @@
 import type { NextConfig } from "next";
+import { PRODUCTION_ORIGIN, SITE_CONFIG } from "./src/lib/constants";
+
+// Guard: a Vercel production build must publish the real domain in canonicals, OG, robots and the sitemap.
+// (The live site once shipped http://localhost:3000 everywhere because NEXT_PUBLIC_SITE_URL was unset.)
+if (process.env.VERCEL_ENV === "production" && SITE_CONFIG.siteUrl !== PRODUCTION_ORIGIN) {
+  throw new Error(
+    `NEXT_PUBLIC_SITE_URL resolves to "${SITE_CONFIG.siteUrl}", expected "${PRODUCTION_ORIGIN}". ` +
+      "Fix it in Vercel → Settings → Environment Variables (Production) or remove it, then redeploy.",
+  );
+}
 
 const nextConfig: NextConfig = {
   /* Performance optimizations */

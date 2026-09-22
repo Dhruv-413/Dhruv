@@ -23,7 +23,7 @@ Preserve scale and personality. The name and portrait are the brand; they should
 
 MEASURED (sharp, 22 Sep): current `portrait.png` is 1,285,175 B, 1024², continuous tone. Both effects sample it at 64×64. A **768 px WebP q82 is 45,676 B (−96%) with no visible difference at display size**. A 64-grid static frame destroys the face; 128-grid changes the look (comparison: `.playwright-mcp/evidence/portrait-compare-orig-64-128.png`).
 
-**Task:** keep the original as the master; serve an optimised WebP/AVIF for the static frame (via `next/image` responsive `sizes`, or pre-encoded at ~768 and ~1400 px for 2× screens). Confirm the WebGL/canvas effects still read the new asset correctly (same-origin, decodable). Then compare pixel edges and colour at desktop and mobile DPRs in both themes. Performance impact is measured separately (`04-performance.md`). **Do not promise it fixes LCP or CLS until traces show it.**
+**Task:** keep the original as the master; serve an optimised WebP/AVIF for the static frame (**done in Stage 0:** a 1024 px WebP, the master's own size; ~1400 px was impossible since the master is 1024 px, and a 768 px source would upscale on 2× screens). Confirm the WebGL/canvas effects still read the new asset correctly (same-origin, decodable). Then compare pixel edges and colour at desktop and mobile DPRs in both themes. Performance impact is measured separately (`04-performance.md`). **Do not promise it fixes LCP or CLS until traces show it.**
 
 ## P1 — Every project gets a credits table
 

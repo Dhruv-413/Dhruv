@@ -1,11 +1,29 @@
-// Site URL - defaults to localhost in development
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+// Public origin for canonicals, OG, sitemap and JSON-LD. Only NEXT_PUBLIC_* and NODE_ENV are read, so server and client
+// resolve the same value. Production falls back to the real domain, never localhost; next.config.ts fails a Vercel
+// production build whose value is not that domain.
+export const PRODUCTION_ORIGIN = "https://dhruvgupta.co";
+
+function resolveSiteUrl(): string {
+  const fallback = process.env.NODE_ENV === "production" ? PRODUCTION_ORIGIN : "http://localhost:3000";
+  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (!raw) return fallback;
+  try {
+    return new URL(raw).origin; // drops any trailing slash or path
+  } catch {
+    return fallback;
+  }
+}
+
+const SITE_URL = resolveSiteUrl();
 
 export const SITE_CONFIG = {
   name: "Dhruv Gupta",
-  title: "Dhruv Gupta | Full Stack Developer & AI/ML Engineer",
+  // Positioning signed off by the owner (2026-09-23). One source for <title>, meta, OG and JSON-LD; the hero repeats `statement` by hand to style its accent.
+  role: "Software & Data Engineer",
+  statement: "I move data from old systems to new ones, without losing what matters.",
+  title: "Dhruv Gupta | Software & Data Engineer",
   description:
-    "Full Stack Developer & AI/ML Engineer with expertise in React, Next.js, Python, and enterprise software. B.Tech CS graduate of Manipal University Jaipur. Data Modernization and Migration Intern at Deloitte, and a weekend contributor to Beaumonde, a family B2B sourcing business.",
+    "Software and data engineer. I move data from old systems to new ones, without losing what matters. Data Modernization and Migration Intern at Deloitte; B.Tech CS, Manipal University Jaipur.",
   url: SITE_URL,
   siteUrl: SITE_URL,
   links: {
@@ -32,8 +50,9 @@ export const SITE_CONFIG = {
   seo: {
     keywords: [
       "Dhruv Gupta",
-      "Full Stack Developer",
-      "AI/ML Engineer",
+      "Software Engineer",
+      "Data Engineer",
+      "Data Migration",
       "React Developer",
       "Next.js Developer",
       "Python Developer",
@@ -52,7 +71,7 @@ export const SITE_CONFIG = {
   },
   // Structured Data
   person: {
-    jobTitle: "Full Stack Developer & AI/ML Engineer",
+    jobTitle: "Software & Data Engineer",
     alumniOf: "Manipal University Jaipur",
     // Current roles, stated by the owner (2026-09-20). Single source for the hero, About, and structured data.
     currentRole: { title: "Data Modernization and Migration Intern", organization: "Deloitte" },
