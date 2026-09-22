@@ -184,3 +184,52 @@ Still flagged by them: the tech list (React.js, JWT…) is opaque to non-enginee
 2. `next.config.ts` sets `Cache-Control: immutable` on `/_next/static/*` in **dev** too. Next warns this breaks dev: stale chunks, and new Tailwind classes not appearing. Scope it to production.
 
 **Gate:** not yet run. The test sheet is `stage-2/viewer-test-sheet.md`. The owner is turning off Vercel preview protection so testers can open a preview URL.
+
+## Stage 3 log (23 Sep 2026, on `redesign`; three commits, not pushed)
+
+**The Stage 2 gate has NOT run yet.** The owner chose to move on. Stage 3's motion is kept in its own commit (3/3), so it can be reverted alone if the five-viewer test fails.
+
+| Commit | Change | Verified |
+| --- | --- | --- |
+| `da1f7e5` (1/3) | Every route's `loading.tsx` and `PageSkeleton` removed (owner-approved). The dev-only-breaking `immutable` header on `/_next/static` removed. About opens with the role instead of repeating the hero line | All routes plus the 404 serve visible HTML (no `<div hidden id="S:0">`). Production still sends `immutable` for static files (Next default) |
+| `119b2f5` (2/3) | **Crave Connect = flagship 2**, from the public repo history plus the owner. Case-study template: credits come straight after the outcome, plus an optional `codeSource` permalink. `/projects` gets "Start with these two". Stock Analysis gets a solo credits row | Permalink returns 200. Both themes checked. No overflow at 390 |
+| 3/3 | Motion layer for "What arrives matters", **CSS only**: an outcome's display change starts row-by-row arrival, a flash on marked rows, then the note and the trade-off; nothing under reduced motion. `ArrivesAnnouncer` is the one polite, atomic live region. Visible notes for held and merged records | 8 and 6 animations on pick and re-pick; 0 with reduced motion. The status text matches the outcome. The chunk holding the announcer is 8 KB |
+
+**Reviews (commit 3/3 also carries these fixes):**
+
+- **design-critic** on the Crave page and `/projects`:
+  - removed the duplicate "Who built what" chapters (the credits table covers them) and shortened Crave's intro;
+  - the reconstruction now sits mid-story (`figureAfter`: after "A made-up price" / "What arrived");
+  - removed the double hairline under the credits;
+  - Numbers-strip values are foreground, with the accent only on "Estimate";
+  - the menu sketch is two columns below `md`;
+  - "Start with these two" is aligned, with one fact per cell.
+- **a11y-motion-reviewer:**
+  - fixed a 320 px reflow in the menu sketch;
+  - the announcer now waits 450 ms for the choice to settle and reads the choice, note and trade-off (the counts are in the table);
+  - the whole-cell links have short names that include the visible title.
+- **Verified:** no horizontal page overflow at 320 or 390 on `/`, `/projects` and both case pages.
+
+**Crave Connect facts (PRIMARY: `github.com/arjunsaxaena/CraveConnect`, plus OWNER):**
+
+- Commits: the friend 65, Dhruv 15.
+- **Dhruv, 20 May – 6 Jun 2025:**
+  - early Go menu and restaurant services and their migrations;
+  - created `menu_extractor.py` (menu OCR text → Gemini via LangChain → categories and items);
+  - reworked the pipeline, with batch images.
+- **The friend:**
+  - the user and file services;
+  - from 16 Jun, the Python/FastAPI rebuild (19 tables), which replaced Dhruv's pipeline (his files are not in the current version);
+  - the pgvector recommendations (3 Jul); Docker.
+- The old code snippet (`queries.py`) and the "smart part" chapter were the friend's work; both are replaced.
+- The tech list now shows what Dhruv's code used, so the Skills page no longer ties FastAPI or Docker to him through this project.
+- **Limitation, shown on the page (owner-approved):** his prompt let the model estimate missing prices.
+- **Ending (OWNER):** meant as a startup (craving search plus a split-able shared cart). Research found Zomato and Blinkit close, so it was dropped. Lesson: research the market first.
+
+**Still open:**
+
+- the five-viewer gate;
+- EcoHive and Eye Gaze credits (owner facts needed);
+- MUJ's tech list includes the friend's backend (Node.js, JWT), so the Skills page ties PostgreSQL to MUJ, which is a stretch;
+- `/projects` and `/skills` page titles still say "AI/ML" (describing the projects, not the role);
+- the short-height hero's empty middle (the critic's #4).

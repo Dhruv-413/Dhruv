@@ -31,9 +31,9 @@ export function MenuExtractionSketch({ className }: { className?: string }) {
         aria-label="Reconstruction with a made-up menu: text read off a menu photo, with a heading, sizes on one line, an add-on, an OCR slip ('Piz2a') and an item with no price, becomes four structured menu items with categories and prices. The Cold Coffee price is marked as guessed."
         className="grid grid-cols-1 border border-border bg-card md:grid-cols-[1fr_auto_1.3fr]"
       >
-        <div aria-hidden="true" className="p-4">
+        <div aria-hidden="true" className="min-w-0 p-4">
           <p className="t-label text-muted-foreground">Menu photo, as OCR reads it</p>
-          <ul role="list" className="mt-3 space-y-2 font-mono text-[0.8125rem]">
+          <ul role="list" className="mt-3 space-y-2 overflow-x-auto font-mono text-[0.8125rem]">
             {OCR_LINES.map((line) => (
               <li key={line.text} className="flex flex-wrap items-baseline justify-between gap-x-3">
                 <span className={cn("whitespace-pre", line.note === "heading" && "text-muted-foreground")}>{line.text}</span>
@@ -47,19 +47,22 @@ export function MenuExtractionSketch({ className }: { className?: string }) {
           LLM <span className="ml-2">→</span>
         </div>
 
-        <div aria-hidden="true" className="p-4">
+        <div aria-hidden="true" className="min-w-0 p-4">
           <p className="t-label text-muted-foreground">Menu items, structured</p>
           <div className="mt-3 overflow-x-auto">
-            <div className="min-w-80 font-mono text-[0.8125rem]">
-              <div className="t-label grid grid-cols-[0.8fr_1.4fr_1.4fr] gap-3 border-b border-border pb-2 text-muted-foreground">
-                <span>Category</span>
+            <div className="font-mono text-[0.8125rem]">
+              <div className="t-label grid grid-cols-[1.3fr_1fr] gap-3 border-b border-border pb-2 text-muted-foreground md:grid-cols-[0.8fr_1.4fr_1.4fr]">
+                <span className="hidden md:block">Category</span>
                 <span>Item</span>
                 <span>Prices</span>
               </div>
               {ROWS.map((row) => (
-                <div key={row.item} className="grid grid-cols-[0.8fr_1.4fr_1.4fr] gap-3 border-b border-border py-2 last:border-b-0">
-                  <span className="text-muted-foreground">{row.category}</span>
-                  <span>{row.item}</span>
+                <div key={row.item} className="grid grid-cols-[1.3fr_1fr] gap-3 border-b border-border py-2 last:border-b-0 md:grid-cols-[0.8fr_1.4fr_1.4fr]">
+                  <span className="hidden text-muted-foreground md:block">{row.category}</span>
+                  <span>
+                    <span className="t-label block text-muted-foreground md:hidden">{row.category}</span>
+                    {row.item}
+                  </span>
                   <span className="flex flex-wrap items-center gap-x-2">
                     {row.prices}
                     {row.flag ? <span className="t-label bg-primary px-1.5 text-primary-foreground">{row.flag}</span> : null}

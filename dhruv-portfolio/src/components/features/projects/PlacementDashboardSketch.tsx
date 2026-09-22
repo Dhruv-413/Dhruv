@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 import { SAMPLE_STUDENTS, type SampleRecord } from "@/lib/placement-sample";
 
@@ -76,7 +77,10 @@ export function PlacementDashboardSketch({
               {rows.map((row, i) => (
                 <div
                   key={`${row.name}-${i}`}
+                  data-mark={row.mark}
+                  style={{ "--i": i } as CSSProperties}
                   className={cn(
+                    "sketch-row",
                     "grid gap-3 border-b border-border px-4 py-2.5 last:border-b-0",
                     COLS,
                     row.mark && "bg-primary/10",

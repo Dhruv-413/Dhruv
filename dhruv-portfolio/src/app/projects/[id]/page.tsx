@@ -75,6 +75,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
     project.links?.github ? { label: "Source on GitHub", href: project.links.github } : null,
   ].filter((link): link is { label: string; href: string } => link !== null);
 
+  const figure = RECONSTRUCTIONS[project.id];
+  const split = project.figureAfter ?? project.chapters?.length ?? 0;
   const facts = [
     ["Kind", project.kind],
     ["When", project.period],
@@ -202,8 +204,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
                 {project.metrics.map((metric) => (
                   <div key={metric.label} className="min-w-0 p-4">
                     <dt className="t-label text-muted-foreground">{metric.label}</dt>
-                    <dd className={cn("t-h2 mt-2 text-primary [overflow-wrap:anywhere]", metricSize(metric.value))}>{metric.value}</dd>
-                    {metric.estimate ? <dd className="t-label mt-2 text-muted-foreground">Estimate</dd> : null}
+                    <dd className={cn("t-h2 mt-2 [overflow-wrap:anywhere]", metricSize(metric.value))}>{metric.value}</dd>
+                    {metric.estimate ? <dd className="t-label mt-2 text-primary">Estimate</dd> : null}
                   </div>
                 ))}
               </dl>
@@ -236,7 +238,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
                 </thead>
                 <tbody>
                   {project.credits.map((credit) => (
-                    <tr key={credit.who} className="border-t border-border last:border-b">
+                    <tr key={credit.who} className="border-t border-border">
                       <th scope="row" className="w-[28%] py-4 pr-4 align-top text-lg font-medium">
                         {credit.who}
                       </th>
@@ -249,22 +251,33 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
           ) : null}
 
           {project.chapters?.length ? (
-            <ol role="list" className="border-t border-border">
-              {project.chapters.map((chapter, i) => (
-                <li
-                  key={chapter.title}
-                  data-reveal
-                  className="grid grid-cols-12 gap-x-(--gutter) gap-y-3 border-b border-border py-8 md:py-12"
-                >
-                  <h2 className="t-label col-span-12 text-muted-foreground lg:col-span-3">
-                    <span className="text-primary">{String(i + 1).padStart(2, "0")}</span> / {chapter.title}
-                  </h2>
-                  <p className="col-span-12 max-w-[34ch] text-[clamp(1.375rem,2.4vw,2.125rem)] font-medium leading-[1.18] tracking-tight lg:col-span-9">
-                    {chapter.body}
-                  </p>
-                </li>
-              ))}
-            </ol>
+            // Split around the reconstruction so the figure sits beside the chapter it illustrates.
+            [project.chapters.slice(0, split), project.chapters.slice(split)].map((part, p) =>
+              part.length ? (
+                <div key={p}>
+                  {p === 1 && figure ? <div className="py-10 md:py-14">{figure}</div> : null}
+                  <ol role="list" start={p === 0 ? 1 : split + 1} className="border-t border-border">
+                    {part.map((chapter, j) => {
+                      const n = (p === 0 ? 0 : split) + j + 1;
+                      return (
+                        <li
+                          key={chapter.title}
+                          data-reveal
+                          className="grid grid-cols-12 gap-x-(--gutter) gap-y-3 border-b border-border py-8 md:py-12"
+                        >
+                          <h2 className="t-label col-span-12 text-muted-foreground lg:col-span-3">
+                            <span className="text-primary">{String(n).padStart(2, "0")}</span> / {chapter.title}
+                          </h2>
+                          <p className="col-span-12 max-w-[34ch] text-[clamp(1.375rem,2.4vw,2.125rem)] font-medium leading-[1.18] tracking-tight lg:col-span-9">
+                            {chapter.body}
+                          </p>
+                        </li>
+                      );
+                    })}
+                  </ol>
+                </div>
+              ) : null,
+            )
           ) : (
             <>
               <h2 className="t-label text-muted-foreground">Overview</h2>
@@ -274,7 +287,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
             </>
           )}
 
-          {RECONSTRUCTIONS[project.id] ? <div className="mt-12">{RECONSTRUCTIONS[project.id]}</div> : null}
+          {/* no chapter to anchor it (or it belongs after the last one): the figure closes the story */}
+          {figure && split >= (project.chapters?.length ?? 0) ? <div className="mt-12">{figure}</div> : null}
 
 
           {project.codeSnippet && !project.private ? (

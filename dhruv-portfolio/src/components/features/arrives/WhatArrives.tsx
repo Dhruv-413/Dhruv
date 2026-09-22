@@ -1,6 +1,7 @@
 import { ArrowLink } from "@/components/ui/page-primitives";
 import { PlacementDashboardSketch } from "@/components/features/projects/PlacementDashboardSketch";
 import { CHOICES, OUTCOMES, SENT_RECORDS } from "@/lib/placement-sample";
+import { ArrivesAnnouncer } from "./ArrivesAnnouncer";
 
 /**
  * "What arrives matters" (docs/world-class-plan/stage-1/interaction-script.md), static base layer. A server component
@@ -93,6 +94,12 @@ export function WhatArrives() {
           {CHOICES.map((choice) => (
             <div key={choice} data-outcome={choice} className="mt-6">
               <p className="t-label text-muted-foreground">If you pick: {OUTCOMES[choice].label}</p>
+              {OUTCOMES[choice].note ? (
+                <p className="arrives-note t-label mt-2 inline-flex items-center gap-2 border border-foreground px-2 py-1 text-foreground">
+                  <span aria-hidden="true" className="size-1.5 bg-primary" />
+                  {OUTCOMES[choice].note}
+                </p>
+              ) : null}
               <div className="mt-4 grid grid-cols-12 items-start gap-x-(--gutter) gap-y-6">
                 <PlacementDashboardSketch
                   rows={OUTCOMES[choice].rows}
@@ -100,7 +107,7 @@ export function WhatArrives() {
                   caption="Fig. The staff screen, the part I built"
                   className="col-span-12 lg:col-span-7"
                 />
-                <p className="col-span-12 max-w-[26ch] text-[clamp(1.375rem,2.4vw,2.125rem)] font-medium leading-[1.18] tracking-tight lg:col-span-5">
+                <p className="arrives-tradeoff col-span-12 max-w-[26ch] text-[clamp(1.375rem,2.4vw,2.125rem)] font-medium leading-[1.18] tracking-tight lg:col-span-5">
                   {OUTCOMES[choice].tradeOff}
                 </p>
               </div>
@@ -133,6 +140,8 @@ export function WhatArrives() {
           </table>
         </div>
       </div>
+
+      <ArrivesAnnouncer sectionId="what-arrives" />
 
       <details className="group mt-10 border-y border-border">
         <summary className="t-label flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-3 text-foreground [&::-webkit-details-marker]:hidden">

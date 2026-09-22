@@ -1475,4 +1475,45 @@ html {
       display: inline;
     }
   }
+
+  /* Motion layer: an outcome going from display:none to shown starts these animations, so each choice replays the
+     arrival (rows land one by one, the marked row flashes, then the note and the trade-off). No JS; transform and
+     opacity only; none of it under reduced motion, where the final state simply shows. */
+  @media (prefers-reduced-motion: no-preference) {
+    .arrives [data-outcome] .sketch-row {
+      animation: arrive-row var(--dur-reveal) var(--ease-out) both;
+      animation-delay: calc(var(--i) * 70ms);
+    }
+    .arrives [data-outcome] .sketch-row[data-mark] > :first-child {
+      animation: arrive-flash 900ms var(--ease-out) both;
+      animation-delay: calc(var(--i) * 70ms + 220ms);
+    }
+    .arrives [data-outcome] .arrives-note {
+      animation: arrive-fade var(--dur-reveal) var(--ease-out) both;
+      animation-delay: 380ms;
+    }
+    .arrives [data-outcome] .arrives-tradeoff {
+      animation: arrive-fade var(--dur-section) var(--ease-out) both;
+      animation-delay: 460ms;
+    }
+  }
+}
+
+@keyframes arrive-row {
+  from {
+    opacity: 0;
+    transform: translateX(-0.75rem);
+  }
+}
+@keyframes arrive-flash {
+  0%,
+  30% {
+    opacity: 0.35;
+  }
+}
+@keyframes arrive-fade {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
 }

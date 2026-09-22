@@ -2,7 +2,7 @@
   {
     "id": "crave-connect",
     "title": "Crave Connect",
-    "description": "A food app for when you can't say what you want: describe a craving, get dishes back, and share a cart your friends can add to and split. I built the first pipeline that turned menu photos into menu items. We stopped when research showed Zomato and Blinkit were already close.",
+    "description": "A food-app startup idea, built with a friend. I built the pipeline that turned menu photos into menu items. We stopped when research showed Zomato and Blinkit were already close.",
     "longDescription": "A food-app startup idea, built with a friend in 2025: find dishes from a craving described in your own words, and share a cart friends can add to and split. I built the first menu pipeline (menu photo, OCR, an LLM, then structured items with sizes, add-ons and categories) and early Go services for menus and restaurants; my friend rebuilt the backend in Python with FastAPI and built the semantic recommendations. We dropped it after research showed Zomato and Blinkit were already close.",
     "category": "Backend",
     "featured": true,
@@ -14,10 +14,6 @@
       {
         "title": "The idea",
         "body": "A food app for when you can't say what you want. Describe a craving in your own words and get dishes back, then share a cart friends add to and split, like Splitwise."
-      },
-      {
-        "title": "Who built what",
-        "body": "I built the first pipeline that turned a restaurant's menu photos into menu items, and early Go services for menus and restaurants. My friend built the rest, then rebuilt the backend."
       },
       {
         "title": "What arrived",
@@ -40,6 +36,7 @@
         "body": "Research the market before the first commit, not after the build."
       }
     ],
+    "figureAfter": 4,
     "credits": [
       {
         "who": "Me",
@@ -92,10 +89,6 @@
         "body": "They asked a friend and me for one portal, with all their data in one central database on the university intranet."
       },
       {
-        "title": "Who built what",
-        "body": "My friend built the backend, the database and the bulk importer. I built what the staff see: dashboards, student profiles, and screens that show each person only what their role allows."
-      },
-      {
         "title": "Who uses it",
         "body": "The placement team, heads of department and senior staff, each seeing what their role allows. Students never log in."
       },
@@ -116,6 +109,7 @@
         "body": "Check data as it's imported, not after it lands. Write the docs while building. And add automated tests: we had few."
       }
     ],
+    "figureAfter": 4,
     "credits": [
       {
         "who": "Me",

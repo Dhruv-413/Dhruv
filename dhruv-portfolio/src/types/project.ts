@@ -17,6 +17,8 @@ export interface Project {
   private?: boolean;
   /** The story in plain sentences, in order. Rendered as numbered chapters on the case-study page. */
   chapters?: { title: string; body: string }[];
+  /** Show the project's reconstruction figure after this many chapters (default: after the last). */
+  figureAfter?: number;
   /** Who built which part, when it was a team. Rendered as a table on the case-study page. */
   credits?: { who: string; what: string }[];
   technologies: string[];
