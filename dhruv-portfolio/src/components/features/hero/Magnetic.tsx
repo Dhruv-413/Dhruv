@@ -46,7 +46,7 @@ export function Magnetic({
 
   return (
     <span ref={fieldRef} className={cn("-m-4 inline-flex p-4", className)}>
-      <span ref={innerRef} className="inline-flex transition-transform duration-(--dur-ui) ease-(--ease-out)">
+      <span ref={innerRef} className="inline-flex w-full transition-transform duration-(--dur-ui) ease-(--ease-out)">
         {children}
       </span>
     </span>

@@ -29,7 +29,6 @@ export function FlagshipPair() {
           <li key={project.id}>
             <Link
               href={`/projects/${project.id}`}
-              aria-label={`${project.title}: read the case study`}
               className="group flex h-full min-h-44 flex-col p-5 transition-colors duration-(--dur-ui) ease-(--ease-out) hover:bg-foreground hover:text-background focus-visible:bg-foreground focus-visible:text-background md:p-8"
             >
               <span className="t-label text-muted-foreground transition-colors duration-(--dur-ui) group-hover:text-background/70 group-focus-visible:text-background/70">

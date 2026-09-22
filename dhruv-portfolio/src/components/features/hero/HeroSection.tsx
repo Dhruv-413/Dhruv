@@ -14,14 +14,18 @@ const META = [
   ["Studied", "B.Tech in CSE, MUJ, 2026. CGPA 8.24"],
 ] as const;
 
+// Below sm the three actions sit in a fixed 3-column grid: with flex-wrap, the wider fallback font wrapped them to two
+// rows until the mono font loaded, and the swap back shifted the portrait (CLS 0.02-0.05 on mobile).
 const button =
-  "t-label inline-flex h-12 items-center gap-2 border px-4 transition-colors lg:gap-3 lg:px-5 duration-(--dur-ui) ease-(--ease-out)";
+  "t-label inline-flex h-12 items-center gap-2 border px-4 transition-colors lg:gap-3 lg:px-5 duration-(--dur-ui) ease-(--ease-out) max-sm:w-full max-sm:justify-center max-sm:px-2";
 
 /** One word of the display name; each letter rises out of a clip (CSS only, so it runs before hydration). */
 function NameWord({ text, offset }: { text: string; offset: number }) {
   return (
     <span
-      className="block overflow-hidden pt-[0.02em] pb-[0.06em]"
+      // nowrap: the letters are inline-blocks, so until the display font loads the wider fallback could break a word
+      // between letters, and the swap back to one line shifted the whole hero (measured CLS 0.1-0.19 on mobile)
+      className="block overflow-hidden whitespace-nowrap pt-[0.02em] pb-[0.06em]"
       aria-hidden="true"
     >
       {text.split("").map((char, i) => (
@@ -91,10 +95,10 @@ export function HeroSection() {
             </p>
 
             <div
-              className="fade-up flex flex-wrap gap-2 lg:gap-3 md:mt-auto"
+              className="fade-up grid grid-cols-3 gap-2 sm:flex sm:flex-wrap lg:gap-3 md:mt-auto"
               style={{ "--d": "850ms" } as CSSProperties}
             >
-              <Magnetic>
+              <Magnetic className="max-sm:m-0 max-sm:flex max-sm:p-0">
                 <Link
                   href="/projects"
                   className={cn(

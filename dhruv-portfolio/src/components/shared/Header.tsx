@@ -85,9 +85,11 @@ export function Header() {
         <Link
           href="/"
           className="t-label flex items-center gap-3 font-bold"
-          aria-label="Dhruv Gupta, home"
         >
-          <span>DG</span>
+          {/* visible text stays inside the accessible name (WCAG 2.5.3) */}
+          <span>
+            DG<span className="sr-only">, Dhruv Gupta, home</span>
+          </span>
           <span className="hidden whitespace-nowrap font-normal text-muted-foreground lg:inline">
             Portfolio / 2026
           </span>
